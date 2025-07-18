@@ -12,7 +12,7 @@ import {
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-app-purple via-app-sky to-app-pink">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="flex items-center justify-between p-4 bg-white/10 backdrop-blur-sm">
         <h1 className="text-xl font-bold text-white">TeleHiba</h1>
