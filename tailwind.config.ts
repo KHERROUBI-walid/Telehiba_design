@@ -57,6 +57,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // TeleHiba custom colors
+        "app-purple": "hsl(var(--app-purple))",
+        "app-sky": "hsl(var(--app-sky))",
+        "app-pink": "hsl(var(--app-pink))",
+        "app-yellow": "hsl(var(--app-yellow))",
+        "app-dark-blue": "hsl(var(--app-dark-blue))",
       },
       borderRadius: {
         lg: "var(--radius)",
