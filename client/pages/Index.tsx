@@ -12,7 +12,7 @@ import {
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="flex items-center justify-between p-4 bg-white/10 backdrop-blur-sm">
         <h1 className="text-xl font-bold text-white">TeleHiba</h1>
@@ -24,8 +24,8 @@ export default function Index() {
         </div>
       </header>
 
-      {/* Search Bar and Location */}
-      <div className="p-4 space-y-3">
+            {/* Search Bar and Location */}
+<parameter name="file_path">client/pages/Index.tsx
         {/* Location - visible on small screens below search */}
         <div className="flex md:hidden justify-center">
           <div className="bg-app-dark-blue text-white px-4 py-2 rounded-full text-sm flex items-center gap-2">
