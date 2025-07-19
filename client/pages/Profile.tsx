@@ -144,9 +144,12 @@ export default function Profile() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <button className="text-white hover:bg-white/20 rounded-full p-1 transition-colors">
+          <Link
+            to="/notifications"
+            className="text-white hover:bg-white/20 rounded-full p-1 transition-colors"
+          >
             <Bell className="w-6 h-6" />
-          </button>
+          </Link>
         </div>
       </header>
 
