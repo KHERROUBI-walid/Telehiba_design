@@ -144,10 +144,10 @@ export default function Index() {
             <span className="text-xs text-app-purple font-medium">Home</span>
           </button>
 
-          <button className="flex flex-col items-center gap-1 px-4">
+          <Link to="/orders" className="flex flex-col items-center gap-1 px-4">
             <List className="w-6 h-6 text-gray-400" />
-            <span className="text-xs text-gray-400">List</span>
-          </button>
+            <span className="text-xs text-gray-400">Orders</span>
+          </Link>
 
           <button className="bg-app-yellow w-12 h-12 rounded-full flex items-center justify-center -mt-2 shadow-lg">
             <Plus className="w-6 h-6 text-white" />
