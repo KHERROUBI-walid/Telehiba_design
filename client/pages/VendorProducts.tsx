@@ -34,6 +34,7 @@ export default function VendorProducts() {
 
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
   const products: Product[] = [
     {
