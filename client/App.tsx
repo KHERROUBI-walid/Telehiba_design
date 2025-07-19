@@ -12,6 +12,7 @@ import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import Chat from "./pages/Chat";
+import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
