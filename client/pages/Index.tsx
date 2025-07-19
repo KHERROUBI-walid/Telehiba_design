@@ -153,10 +153,10 @@ export default function Index() {
             <Plus className="w-6 h-6 text-white" />
           </button>
 
-          <button className="flex flex-col items-center gap-1 px-4">
+          <Link to="/chat" className="flex flex-col items-center gap-1 px-4">
             <MessageCircle className="w-6 h-6 text-gray-400" />
             <span className="text-xs text-gray-400">Chat</span>
-          </button>
+          </Link>
 
           <Link to="/profile" className="flex flex-col items-center gap-1 px-4">
             <User className="w-6 h-6 text-gray-400" />
