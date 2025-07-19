@@ -286,18 +286,14 @@ export default function Index() {
             <span className="text-xs font-medium">Tous</span>
           </button>
           {categories.map((category) => (
-            <button
+            <Link
               key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all ${
-                selectedCategory === category.id
-                  ? `bg-gradient-to-br ${category.gradient} text-white`
-                  : "bg-gray-100 text-gray-600"
-              }`}
+              to={`/category-products?category=${category.id}`}
+              className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all bg-gradient-to-br ${category.gradient} text-white hover:shadow-lg hover:scale-105`}
             >
               <span className="text-lg mb-1">{category.icon}</span>
               <span className="text-xs font-medium">{category.name}</span>
-            </button>
+            </Link>
           ))}
         </div>
       </div>
