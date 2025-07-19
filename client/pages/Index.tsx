@@ -98,29 +98,41 @@ export default function Index() {
       <div className="px-4 pb-24 bg-white">
         <h3 className="text-gray-800 font-semibold mb-4">Vendors</h3>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+          <Link
+            to="/vendor-products?vendor=Dr. Sarah Johnson&city=New York, USA"
+            className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
+          >
             <div className="w-full h-24 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3"></div>
             <h4 className="font-medium text-gray-800">Dr. Sarah Johnson</h4>
             <p className="text-sm text-gray-500">New York, USA</p>
-          </div>
+          </Link>
 
-          <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+          <Link
+            to="/vendor-products?vendor=Dr. Michael Chen&city=Brooklyn, NY"
+            className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
+          >
             <div className="w-full h-24 bg-gradient-to-br from-app-pink to-app-purple rounded-xl mb-3"></div>
             <h4 className="font-medium text-gray-800">Dr. Michael Chen</h4>
             <p className="text-sm text-gray-500">Brooklyn, NY</p>
-          </div>
+          </Link>
 
-          <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+          <Link
+            to="/vendor-products?vendor=Dr. Emma Wilson&city=Manhattan, NY"
+            className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
+          >
             <div className="w-full h-24 bg-gradient-to-br from-app-sky to-app-pink rounded-xl mb-3"></div>
             <h4 className="font-medium text-gray-800">Dr. Emma Wilson</h4>
             <p className="text-sm text-gray-500">Manhattan, NY</p>
-          </div>
+          </Link>
 
-          <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+          <Link
+            to="/vendor-products?vendor=Dr. James Rodriguez&city=Queens, NY"
+            className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
+          >
             <div className="w-full h-24 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3"></div>
             <h4 className="font-medium text-gray-800">Dr. James Rodriguez</h4>
             <p className="text-sm text-gray-500">Queens, NY</p>
-          </div>
+          </Link>
         </div>
       </div>
 
