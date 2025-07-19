@@ -8,6 +8,8 @@ import {
   ShoppingCart,
   Bell,
   User,
+  X,
+  Trash2,
 } from "lucide-react";
 
 interface Product {
