@@ -151,6 +151,14 @@ export default function VendorProducts() {
     });
   };
 
+  const clearItemFromCart = (productId: number) => {
+    setCart((prev) => prev.filter((item) => item.product.id !== productId));
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
   const getItemQuantity = (productId: number) => {
     const item = cart.find((item) => item.product.id === productId);
     return item ? item.quantity : 0;
