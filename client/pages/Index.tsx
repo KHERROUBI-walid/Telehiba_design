@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Search,
@@ -9,13 +10,206 @@ import {
   MessageCircle,
   User,
   MapPin,
+  ChevronRight,
+  Star,
 } from "lucide-react";
 
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+  vendor: {
+    name: string;
+    avatar: string;
+    city: string;
+  };
+  rating: number;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  gradient: string;
+}
+
+interface Vendor {
+  id: number;
+  name: string;
+  avatar: string;
+  city: string;
+  specialty: string;
+  rating: number;
+  gradient: string;
+}
+
 export default function Index() {
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
+  const categories: Category[] = [
+    {
+      id: "vegetables",
+      name: "Vegetables",
+      icon: "🥬",
+      gradient: "from-app-purple to-app-pink",
+    },
+    {
+      id: "fruits",
+      name: "Fruits",
+      icon: "🍎",
+      gradient: "from-app-sky to-app-purple",
+    },
+    {
+      id: "clothes",
+      name: "Clothes",
+      icon: "👕",
+      gradient: "from-app-pink to-app-sky",
+    },
+    {
+      id: "medicine",
+      name: "Medicine",
+      icon: "💊",
+      gradient: "from-app-purple to-app-sky",
+    },
+    {
+      id: "electronics",
+      name: "Electronics",
+      icon: "📱",
+      gradient: "from-app-sky to-app-pink",
+    },
+  ];
+
+  const vendors: Vendor[] = [
+    {
+      id: 1,
+      name: "Dr. Sarah Johnson",
+      avatar: "👩‍⚕️",
+      city: "New York, USA",
+      specialty: "Fruits & Vegetables",
+      rating: 4.8,
+      gradient: "from-app-purple to-app-sky",
+    },
+    {
+      id: 2,
+      name: "Dr. Michael Chen",
+      avatar: "👨‍⚕️",
+      city: "Brooklyn, NY",
+      specialty: "Medicine & Health",
+      rating: 4.9,
+      gradient: "from-app-pink to-app-purple",
+    },
+    {
+      id: 3,
+      name: "Dr. Emma Wilson",
+      avatar: "👩‍🍳",
+      city: "Manhattan, NY",
+      specialty: "Organic Foods",
+      rating: 4.7,
+      gradient: "from-app-sky to-app-pink",
+    },
+    {
+      id: 4,
+      name: "Dr. James Rodriguez",
+      avatar: "👨‍💼",
+      city: "Queens, NY",
+      specialty: "General Store",
+      rating: 4.6,
+      gradient: "from-app-purple to-app-sky",
+    },
+  ];
+
+  const products: Product[] = [
+    {
+      id: 1,
+      name: "Fresh Organic Tomatoes",
+      price: 4.99,
+      image: "🍅",
+      category: "vegetables",
+      vendor: {
+        name: "Dr. Sarah Johnson",
+        avatar: "👩‍⚕️",
+        city: "New York, USA",
+      },
+      rating: 4.8,
+    },
+    {
+      id: 2,
+      name: "Red Apples",
+      price: 3.5,
+      image: "🍎",
+      category: "fruits",
+      vendor: {
+        name: "Dr. Sarah Johnson",
+        avatar: "👩‍⚕️",
+        city: "New York, USA",
+      },
+      rating: 4.7,
+    },
+    {
+      id: 3,
+      name: "Cotton T-Shirt",
+      price: 19.99,
+      image: "👕",
+      category: "clothes",
+      vendor: {
+        name: "Dr. Michael Chen",
+        avatar: "👨‍⚕️",
+        city: "Brooklyn, NY",
+      },
+      rating: 4.9,
+    },
+    {
+      id: 4,
+      name: "Fresh Carrots",
+      price: 2.99,
+      image: "🥕",
+      category: "vegetables",
+      vendor: {
+        name: "Dr. Emma Wilson",
+        avatar: "👩‍🍳",
+        city: "Manhattan, NY",
+      },
+      rating: 4.6,
+    },
+    {
+      id: 5,
+      name: "Bananas",
+      price: 2.49,
+      image: "🍌",
+      category: "fruits",
+      vendor: {
+        name: "Dr. Emma Wilson",
+        avatar: "👩‍🍳",
+        city: "Manhattan, NY",
+      },
+      rating: 4.5,
+    },
+    {
+      id: 6,
+      name: "Denim Jeans",
+      price: 39.99,
+      image: "👖",
+      category: "clothes",
+      vendor: {
+        name: "Dr. James Rodriguez",
+        avatar: "👨‍💼",
+        city: "Queens, NY",
+      },
+      rating: 4.8,
+    },
+  ];
+
+  const filteredProducts =
+    selectedCategory === "all"
+      ? products
+      : products.filter((product) => product.category === selectedCategory);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="flex items-center justify-between p-4 bg-white/10 backdrop-blur-sm bg-gradient-to-r from-app-purple to-app-sky">
+      <header className="flex items-center justify-between p-4 bg-gradient-to-r from-app-purple to-app-sky">
         <h1 className="text-xl font-bold text-white">TeleHiba</h1>
         <div className="flex items-center gap-3">
           <Link to="/notifications">
@@ -70,72 +264,148 @@ export default function Index() {
         </p>
       </div>
 
-      {/* Category Buttons */}
-      <div className="px-4 mb-6 bg-white">
-        <div className="grid grid-cols-3 gap-4">
-          <button className="bg-gradient-to-br from-app-purple to-app-pink rounded-2xl p-4 text-white flex flex-col items-center justify-center aspect-square">
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mb-2">
-              🥬
-            </div>
-            <span className="text-sm font-medium">Vegetables</span>
+      {/* Categories Section */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between px-4 mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">Catégories</h3>
+          <button className="flex items-center gap-1 text-app-purple text-sm font-medium">
+            Voir tout
+            <ChevronRight className="w-4 h-4" />
           </button>
-
-          <button className="bg-gradient-to-br from-app-sky to-app-purple rounded-2xl p-4 text-white flex flex-col items-center justify-center aspect-square">
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mb-2">
-              🍎
-            </div>
-            <span className="text-sm font-medium">Fruits</span>
+        </div>
+        <div className="flex gap-4 overflow-x-auto px-4 pb-2">
+          <button
+            onClick={() => setSelectedCategory("all")}
+            className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all ${
+              selectedCategory === "all"
+                ? "bg-app-purple text-white"
+                : "bg-gray-100 text-gray-600"
+            }`}
+          >
+            <span className="text-lg mb-1">🏪</span>
+            <span className="text-xs font-medium">Tous</span>
           </button>
-
-          <button className="bg-gradient-to-br from-app-pink to-app-sky rounded-2xl p-4 text-white flex flex-col items-center justify-center aspect-square">
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mb-2">
-              👕
-            </div>
-            <span className="text-sm font-medium">Clothes</span>
-          </button>
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setSelectedCategory(category.id)}
+              className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all ${
+                selectedCategory === category.id
+                  ? `bg-gradient-to-br ${category.gradient} text-white`
+                  : "bg-gray-100 text-gray-600"
+              }`}
+            >
+              <span className="text-lg mb-1">{category.icon}</span>
+              <span className="text-xs font-medium">{category.name}</span>
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Vendor Section */}
-      <div className="px-4 pb-24 bg-white">
-        <h3 className="text-gray-800 font-semibold mb-4">Vendors</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <Link
-            to="/vendor-products?vendor=Dr. Sarah Johnson&city=New York, USA"
-            className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
-          >
-            <div className="w-full h-24 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3"></div>
-            <h4 className="font-medium text-gray-800">Dr. Sarah Johnson</h4>
-            <p className="text-sm text-gray-500">New York, USA</p>
-          </Link>
-
-          <Link
-            to="/vendor-products?vendor=Dr. Michael Chen&city=Brooklyn, NY"
-            className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
-          >
-            <div className="w-full h-24 bg-gradient-to-br from-app-pink to-app-purple rounded-xl mb-3"></div>
-            <h4 className="font-medium text-gray-800">Dr. Michael Chen</h4>
-            <p className="text-sm text-gray-500">Brooklyn, NY</p>
-          </Link>
-
-          <Link
-            to="/vendor-products?vendor=Dr. Emma Wilson&city=Manhattan, NY"
-            className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
-          >
-            <div className="w-full h-24 bg-gradient-to-br from-app-sky to-app-pink rounded-xl mb-3"></div>
-            <h4 className="font-medium text-gray-800">Dr. Emma Wilson</h4>
-            <p className="text-sm text-gray-500">Manhattan, NY</p>
-          </Link>
-
-          <Link
-            to="/vendor-products?vendor=Dr. James Rodriguez&city=Queens, NY"
-            className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
-          >
-            <div className="w-full h-24 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3"></div>
-            <h4 className="font-medium text-gray-800">Dr. James Rodriguez</h4>
-            <p className="text-sm text-gray-500">Queens, NY</p>
-          </Link>
+      {/* Vendors Section */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between px-4 mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">Vendeurs</h3>
+          <button className="flex items-center gap-1 text-app-purple text-sm font-medium">
+            Voir tout
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
+        <div className="flex gap-4 overflow-x-auto px-4 pb-2">
+          {vendors.map((vendor) => (
+            <Link
+              key={vendor.id}
+              to={`/vendor-products?vendor=${vendor.name}&city=${vendor.city}`}
+              className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow w-48"
+            >
+              <div
+                className={`w-full h-20 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center text-2xl`}
+              >
+                {vendor.avatar}
+              </div>
+              <h4 className="font-medium text-gray-800 text-sm mb-1">
+                {vendor.name}
+              </h4>
+              <p className="text-xs text-gray-500 mb-2">{vendor.city}</p>
+              <p className="text-xs text-app-purple font-medium mb-2">
+                {vendor.specialty}
+              </p>
+              <div className="flex items-center gap-1">
+                <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                <span className="text-xs text-gray-600">{vendor.rating}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Products Section */}
+      <div className="px-4 pb-24">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">
+            {selectedCategory === "all"
+              ? "Produits Populaires"
+              : `Produits ${categories.find((c) => c.id === selectedCategory)?.name}`}
+          </h3>
+          <button className="flex items-center gap-1 text-app-purple text-sm font-medium">
+            Voir tout
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100"
+            >
+              {/* Product Image */}
+              <div className="w-full h-32 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3 flex items-center justify-center text-4xl">
+                {product.image}
+              </div>
+
+              {/* Product Info */}
+              <h4 className="font-medium text-gray-800 text-sm mb-1">
+                {product.name}
+              </h4>
+
+              {/* Vendor Info */}
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-xs">
+                  {product.vendor.avatar}
+                </div>
+                <div>
+                  <p className="text-xs text-gray-600 font-medium">
+                    {product.vendor.name}
+                  </p>
+                  <p className="text-xs text-gray-500">{product.vendor.city}</p>
+                </div>
+              </div>
+
+              {/* Rating */}
+              <div className="flex items-center gap-1 mb-2">
+                <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                <span className="text-xs text-gray-600">{product.rating}</span>
+              </div>
+
+              {/* Price */}
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-app-purple">
+                  ${product.price}
+                </span>
+                <button className="bg-app-purple text-white px-3 py-1 rounded-lg text-xs font-medium hover:bg-opacity-90 transition-colors">
+                  Ajouter
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {filteredProducts.length === 0 && (
+          <div className="text-center text-gray-500 mt-8">
+            <p>Aucun produit trouvé dans cette catégorie</p>
+          </div>
+        )}
       </div>
 
       {/* Bottom Navigation */}
