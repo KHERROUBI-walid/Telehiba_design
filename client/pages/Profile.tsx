@@ -178,12 +178,12 @@ export default function Profile() {
                     </span>
                   </div>
                 </div>
-                <button
-                  onClick={() => setIsEditing(!isEditing)}
-                  className="bg-app-purple text-white p-2 rounded-full hover:bg-opacity-90 transition-colors"
+                <Link
+                  to="/edit-profile"
+                  className="bg-app-purple text-white p-2 rounded-full hover:bg-opacity-90 transition-colors inline-block"
                 >
                   <Edit3 className="w-4 h-4" />
-                </button>
+                </Link>
               </div>
 
               <p className="text-sm text-gray-600 mt-2 mb-3">
