@@ -430,9 +430,9 @@ export default function VendorProducts() {
                     </span>
                   </div>
 
-                  {/* Checkout Button */}
+                  {/* Send Order Button */}
                   <button className="w-full bg-app-purple text-white py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors">
-                    Proceed to Checkout
+                    Send the order
                   </button>
                 </div>
               )}
