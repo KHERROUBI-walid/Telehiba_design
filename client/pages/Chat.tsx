@@ -453,6 +453,9 @@ export default function Chat() {
           </div>
         )}
       </div>
+
+      {/* Bottom Navigation - only show in conversation list view */}
+      <BottomNavigation />
     </div>
   );
 }
