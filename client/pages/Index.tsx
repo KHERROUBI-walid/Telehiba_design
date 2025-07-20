@@ -388,7 +388,10 @@ export default function Index() {
       {/* Vendors Section */}
       <div className="mb-6">
         <div className="flex items-center justify-between px-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">Vendeurs</h3>
+          <h3 className="text-lg font-semibold text-gray-800">
+            Vendeurs{" "}
+            {(searchTerm || selectedCity) && `(${filteredVendors.length})`}
+          </h3>
           <Link
             to="/all-vendors"
             className="flex items-center gap-1 text-app-purple text-sm font-medium hover:text-app-purple/80 transition-colors"
@@ -397,32 +400,43 @@ export default function Index() {
             <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
-        <div className="flex gap-4 overflow-x-auto px-4 pb-2">
-          {vendors.map((vendor) => (
-            <Link
-              key={vendor.id}
-              to={`/vendor-products?vendor=${vendor.name}&city=${vendor.city}`}
-              className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow w-48"
-            >
-              <div
-                className={`w-full h-20 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center text-2xl`}
+
+        {filteredVendors.length > 0 ? (
+          <div className="flex gap-4 overflow-x-auto px-4 pb-2">
+            {filteredVendors.map((vendor) => (
+              <Link
+                key={vendor.id}
+                to={`/vendor-products?vendor=${vendor.name}&city=${vendor.city}`}
+                className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow w-48"
               >
-                {vendor.avatar}
-              </div>
-              <h4 className="font-medium text-gray-800 text-sm mb-1">
-                {vendor.name}
-              </h4>
-              <p className="text-xs text-gray-500 mb-2">{vendor.city}</p>
-              <p className="text-xs text-app-purple font-medium mb-2">
-                {vendor.specialty}
-              </p>
-              <div className="flex items-center gap-1">
-                <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                <span className="text-xs text-gray-600">{vendor.rating}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+                <div
+                  className={`w-full h-20 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center text-2xl`}
+                >
+                  {vendor.avatar}
+                </div>
+                <h4 className="font-medium text-gray-800 text-sm mb-1">
+                  {vendor.name}
+                </h4>
+                <p className="text-xs text-gray-500 mb-2">{vendor.city}</p>
+                <p className="text-xs text-app-purple font-medium mb-2">
+                  {vendor.specialty}
+                </p>
+                <div className="flex items-center gap-1">
+                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                  <span className="text-xs text-gray-600">{vendor.rating}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : searchTerm || selectedCity ? (
+          <div className="text-center py-8 px-4">
+            <div className="text-gray-400 text-3xl mb-2">👩‍⚕️</div>
+            <p className="text-gray-500 text-sm">Aucun vendeur trouvé</p>
+            <p className="text-gray-400 text-xs">
+              Essayez de modifier vos critères de recherche
+            </p>
+          </div>
+        ) : null}
       </div>
 
       {/* Products Section */}
