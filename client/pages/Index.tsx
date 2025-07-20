@@ -45,14 +45,20 @@ interface Vendor {
   gradient: string;
 }
 
+interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
 export default function Index() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [cart, setCart] = useState<CartItem[]>([]);
 
   const categories: Category[] = [
     {
       id: "vegetables",
       name: "Vegetables",
-      icon: "🥬",
+      icon: "��",
       gradient: "from-app-purple to-app-pink",
     },
     {
