@@ -1,12 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, List, Plus, MessageCircle, User } from "lucide-react";
+import { Home, List, ShoppingCart, MessageCircle, User } from "lucide-react";
 
 interface BottomNavigationProps {
   isVisible?: boolean;
+  onCartClick?: () => void;
+  cartItemCount?: number;
 }
 
 export default function BottomNavigation({
   isVisible = true,
+  onCartClick,
+  cartItemCount = 0,
 }: BottomNavigationProps) {
   const location = useLocation();
 
