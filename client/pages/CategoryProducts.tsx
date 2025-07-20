@@ -284,7 +284,7 @@ export default function CategoryProducts() {
     },
   ];
 
-  const sortedProducts = [...categoryProducts].sort((a, b) => {
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case "price":
         return a.price - b.price;
