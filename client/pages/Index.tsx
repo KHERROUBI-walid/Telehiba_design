@@ -14,20 +14,6 @@ import {
 import BottomNavigation from "../components/BottomNavigation";
 import { useCart, Product } from "../context/CartContext";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  vendor: {
-    name: string;
-    avatar: string;
-    city: string;
-  };
-  rating: number;
-}
-
 interface Category {
   id: string;
   name: string;
@@ -45,14 +31,15 @@ interface Vendor {
   gradient: string;
 }
 
-interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
 export default function Index() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const {
+    addToCart,
+    removeFromCart,
+    getItemQuantity,
+    getTotalItems,
+    openCart,
+  } = useCart();
 
   const categories: Category[] = [
     {
