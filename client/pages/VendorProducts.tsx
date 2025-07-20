@@ -460,6 +460,9 @@ export default function VendorProducts() {
           </button>
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNavigation isVisible={!isCartOpen} />
     </div>
   );
 }
