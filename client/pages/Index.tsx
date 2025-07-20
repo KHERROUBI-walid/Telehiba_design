@@ -215,16 +215,17 @@ export default function Index() {
     category.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  // Filter vendors based on search term and city
+  // Filter vendors based on search term and city (use current location if no city filter)
   const filteredVendors = vendors.filter((vendor) => {
     const matchesSearch =
       vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vendor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCity = selectedCity === "" || vendor.city === selectedCity;
+    const cityToMatch = selectedCity || currentLocation;
+    const matchesCity = cityToMatch === "" || vendor.city === cityToMatch;
     return matchesSearch && matchesCity;
   });
 
-  // Filter products based on category, search term, and city
+  // Filter products based on category, search term, and city (use current location if no city filter)
   const baseFilteredProducts =
     selectedCategory === "all"
       ? products
@@ -234,8 +235,9 @@ export default function Index() {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const cityToMatch = selectedCity || currentLocation;
     const matchesCity =
-      selectedCity === "" || product.vendor.city === selectedCity;
+      cityToMatch === "" || product.vendor.city === cityToMatch;
     return matchesSearch && matchesCity;
   });
 
