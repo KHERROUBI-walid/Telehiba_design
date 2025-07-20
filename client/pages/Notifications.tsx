@@ -18,6 +18,7 @@ import {
   MoreVertical,
   Filter,
 } from "lucide-react";
+import BottomNavigation from "../components/BottomNavigation";
 
 interface Notification {
   id: number;
