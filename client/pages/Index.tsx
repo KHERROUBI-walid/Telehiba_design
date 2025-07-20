@@ -4,15 +4,12 @@ import {
   Search,
   Filter,
   Bell,
-  Home,
-  List,
-  Plus,
-  MessageCircle,
   User,
   MapPin,
   ChevronRight,
   Star,
 } from "lucide-react";
+import BottomNavigation from "../components/BottomNavigation";
 
 interface Product {
   id: number;
@@ -76,7 +73,7 @@ export default function Index() {
     {
       id: "electronics",
       name: "Electronics",
-      icon: "📱",
+      icon: "��",
       gradient: "from-app-sky to-app-pink",
     },
   ];
