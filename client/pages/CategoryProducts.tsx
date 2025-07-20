@@ -273,6 +273,17 @@ export default function CategoryProducts() {
     },
   ];
 
+  // Filter products based on search term and city (vendor city)
+  const filteredProducts = categoryProducts.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCity =
+      selectedCity === "" || product.vendor.city === selectedCity;
+    return matchesSearch && matchesCity;
+  });
+
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case "price":
