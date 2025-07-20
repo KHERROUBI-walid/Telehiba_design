@@ -345,6 +345,9 @@ export default function Profile() {
           </button>
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNavigation />
     </div>
   );
 }
