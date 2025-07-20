@@ -336,7 +336,9 @@ export default function Index() {
       {/* Categories Section */}
       <div className="mb-6">
         <div className="flex items-center justify-between px-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">Catégories</h3>
+          <h3 className="text-lg font-semibold text-gray-800">
+            Catégories {searchTerm && `(${filteredCategories.length})`}
+          </h3>
           <Link
             to="/all-categories"
             className="flex items-center gap-1 text-app-purple text-sm font-medium hover:text-app-purple/80 transition-colors"
@@ -345,29 +347,42 @@ export default function Index() {
             <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
-        <div className="flex gap-4 overflow-x-auto px-4 pb-2">
-          <button
-            onClick={() => setSelectedCategory("all")}
-            className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all ${
-              selectedCategory === "all"
-                ? "bg-app-purple text-white"
-                : "bg-gray-100 text-gray-600"
-            }`}
-          >
-            <span className="text-lg mb-1">🏪</span>
-            <span className="text-xs font-medium">Tous</span>
-          </button>
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              to={`/category-products?category=${category.id}`}
-              className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all bg-gradient-to-br ${category.gradient} text-white hover:shadow-lg hover:scale-105`}
-            >
-              <span className="text-lg mb-1">{category.icon}</span>
-              <span className="text-xs font-medium">{category.name}</span>
-            </Link>
-          ))}
-        </div>
+
+        {filteredCategories.length > 0 ? (
+          <div className="flex gap-4 overflow-x-auto px-4 pb-2">
+            {!searchTerm && (
+              <button
+                onClick={() => setSelectedCategory("all")}
+                className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all ${
+                  selectedCategory === "all"
+                    ? "bg-app-purple text-white"
+                    : "bg-gray-100 text-gray-600"
+                }`}
+              >
+                <span className="text-lg mb-1">🏪</span>
+                <span className="text-xs font-medium">Tous</span>
+              </button>
+            )}
+            {filteredCategories.map((category) => (
+              <Link
+                key={category.id}
+                to={`/category-products?category=${category.id}`}
+                className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all bg-gradient-to-br ${category.gradient} text-white hover:shadow-lg hover:scale-105`}
+              >
+                <span className="text-lg mb-1">{category.icon}</span>
+                <span className="text-xs font-medium">{category.name}</span>
+              </Link>
+            ))}
+          </div>
+        ) : searchTerm ? (
+          <div className="text-center py-8 px-4">
+            <div className="text-gray-400 text-3xl mb-2">🔍</div>
+            <p className="text-gray-500 text-sm">Aucune catégorie trouvée</p>
+            <p className="text-gray-400 text-xs">
+              Essayez un autre terme de recherche
+            </p>
+          </div>
+        ) : null}
       </div>
 
       {/* Vendors Section */}
