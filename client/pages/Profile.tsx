@@ -349,7 +349,10 @@ export default function Profile() {
       </div>
 
       {/* Bottom Navigation */}
-      <BottomNavigation />
+      <BottomNavigation
+        onCartClick={openCart}
+        cartItemCount={getTotalItems()}
+      />
     </div>
   );
 }
