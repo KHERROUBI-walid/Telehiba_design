@@ -72,6 +72,8 @@ const statusConfig = {
 };
 
 export default function Orders() {
+  const { getTotalItems, openCart } = useCart();
+
   // Mock orders data
   const orders: Order[] = [
     {
