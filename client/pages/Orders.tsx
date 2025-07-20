@@ -12,6 +12,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
+import { useCart } from "../context/CartContext";
 
 interface OrderItem {
   id: number;
