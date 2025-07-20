@@ -28,6 +28,12 @@ export default function VendorProducts() {
       rating: 4.8,
       category: "vegetables",
       description: "Fresh, organic tomatoes grown locally",
+      vendor: {
+        id: 1,
+        name: vendorName,
+        avatar: "👩‍⚕️",
+        city: vendorCity,
+      },
     },
     {
       id: 2,
@@ -37,6 +43,12 @@ export default function VendorProducts() {
       rating: 4.7,
       category: "fruits",
       description: "Sweet and crispy red apples",
+      vendor: {
+        id: 1,
+        name: vendorName,
+        avatar: "👩‍⚕️",
+        city: vendorCity,
+      },
     },
     {
       id: 3,
@@ -46,6 +58,12 @@ export default function VendorProducts() {
       rating: 4.9,
       category: "clothes",
       description: "100% cotton comfortable t-shirt",
+      vendor: {
+        id: 1,
+        name: vendorName,
+        avatar: "👩‍⚕️",
+        city: vendorCity,
+      },
     },
     {
       id: 4,
@@ -55,6 +73,12 @@ export default function VendorProducts() {
       rating: 4.6,
       category: "vegetables",
       description: "Organic carrots perfect for cooking",
+      vendor: {
+        id: 1,
+        name: vendorName,
+        avatar: "👩‍⚕️",
+        city: vendorCity,
+      },
     },
     {
       id: 5,
@@ -64,6 +88,12 @@ export default function VendorProducts() {
       rating: 4.5,
       category: "fruits",
       description: "Ripe yellow bananas rich in potassium",
+      vendor: {
+        id: 1,
+        name: vendorName,
+        avatar: "👩‍⚕️",
+        city: vendorCity,
+      },
     },
     {
       id: 6,
@@ -73,6 +103,12 @@ export default function VendorProducts() {
       rating: 4.8,
       category: "clothes",
       description: "Premium denim jeans with perfect fit",
+      vendor: {
+        id: 1,
+        name: vendorName,
+        avatar: "👩‍⚕️",
+        city: vendorCity,
+      },
     },
     {
       id: 7,
@@ -82,6 +118,12 @@ export default function VendorProducts() {
       rating: 4.4,
       category: "vegetables",
       description: "Fresh green spinach leaves",
+      vendor: {
+        id: 1,
+        name: vendorName,
+        avatar: "👩‍⚕️",
+        city: vendorCity,
+      },
     },
     {
       id: 8,
@@ -91,6 +133,12 @@ export default function VendorProducts() {
       rating: 4.6,
       category: "fruits",
       description: "Juicy oranges packed with vitamin C",
+      vendor: {
+        id: 1,
+        name: vendorName,
+        avatar: "👩‍⚕️",
+        city: vendorCity,
+      },
     },
   ];
 
