@@ -23,6 +23,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
+import { useCart } from "../context/CartContext";
 
 interface UserProfile {
   name: string;
