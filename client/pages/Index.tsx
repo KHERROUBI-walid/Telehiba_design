@@ -34,6 +34,8 @@ interface Vendor {
 
 export default function Index() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCity, setSelectedCity] = useState<string>("");
   const {
     addToCart,
     removeFromCart,
@@ -52,7 +54,7 @@ export default function Index() {
     {
       id: "fruits",
       name: "Fruits",
-      icon: "🍎",
+      icon: "��",
       gradient: "from-app-sky to-app-purple",
     },
     {
