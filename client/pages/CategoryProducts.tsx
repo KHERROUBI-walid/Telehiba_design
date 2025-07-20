@@ -310,7 +310,7 @@ export default function CategoryProducts() {
             <div>
               <h1 className="text-lg font-bold text-white">{category.name}</h1>
               <p className="text-sm text-white/80">
-                {categoryProducts.length} produits • {categoryVendors.length}{" "}
+                {filteredProducts.length} produits • {categoryVendors.length}{" "}
                 vendeurs
               </p>
             </div>
