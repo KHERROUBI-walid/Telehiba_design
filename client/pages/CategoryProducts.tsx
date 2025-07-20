@@ -81,7 +81,13 @@ export default function CategoryProducts() {
   const categoryId = searchParams.get("category") || "vegetables";
   const [sortBy, setSortBy] = useState<"price" | "rating" | "name">("rating");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const { getTotalItems, openCart } = useCart();
+  const {
+    addToCart,
+    removeFromCart,
+    getItemQuantity,
+    getTotalItems,
+    openCart,
+  } = useCart();
 
   const category =
     categoryData[categoryId as keyof typeof categoryData] ||
