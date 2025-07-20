@@ -11,6 +11,8 @@ import {
   Filter,
   Grid3X3,
   List as ListIcon,
+  Search,
+  X,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
 import { useCart } from "../context/CartContext";
@@ -76,6 +78,8 @@ export default function CategoryProducts() {
   const categoryId = searchParams.get("category") || "vegetables";
   const [sortBy, setSortBy] = useState<"price" | "rating" | "name">("rating");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCity, setSelectedCity] = useState<string>("");
   const {
     addToCart,
     removeFromCart,
@@ -89,7 +93,7 @@ export default function CategoryProducts() {
     categoryData.vegetables;
 
   // Mock data - vendors that have products in this category
-  const categoryVendors: Vendor[] = [
+  const allCategoryVendors: Vendor[] = [
     {
       id: 1,
       name: "Dr. Sarah Johnson",
@@ -120,7 +124,53 @@ export default function CategoryProducts() {
       gradient: "from-app-pink to-app-purple",
       totalProducts: 15,
     },
+    {
+      id: 4,
+      name: "Dr. Lisa Martinez",
+      avatar: "👩‍🌾",
+      city: "Paris, France",
+      specialty: "Organic Vegetables",
+      rating: 4.6,
+      gradient: "from-app-purple to-app-pink",
+      totalProducts: 10,
+    },
+    {
+      id: 5,
+      name: "Dr. Ahmed Hassan",
+      avatar: "👨‍🌾",
+      city: "Montreal, Canada",
+      specialty: "Farm Fresh",
+      rating: 4.8,
+      gradient: "from-app-sky to-app-purple",
+      totalProducts: 14,
+    },
+    {
+      id: 6,
+      name: "Dr. Sophie Dubois",
+      avatar: "👩‍🍳",
+      city: "Lyon, France",
+      specialty: "Gourmet Produce",
+      rating: 4.9,
+      gradient: "from-app-pink to-app-sky",
+      totalProducts: 9,
+    },
   ];
+
+  // Get unique cities for filter
+  const uniqueCities = Array.from(
+    new Set(allCategoryVendors.map((vendor) => vendor.city)),
+  );
+
+  // Filter vendors based on search term and city
+  const filteredVendors = allCategoryVendors.filter((vendor) => {
+    const matchesSearch =
+      vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vendor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCity = selectedCity === "" || vendor.city === selectedCity;
+    return matchesSearch && matchesCity;
+  });
+
+  const categoryVendors = filteredVendors;
 
   // Mock products for the category
   const categoryProducts: Product[] = [
@@ -267,40 +317,108 @@ export default function CategoryProducts() {
 
       {/* Vendors Section */}
       <div className="p-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-800 mb-3">
-          Vendeurs dans cette catégorie
-        </h3>
-        <div className="flex gap-4 overflow-x-auto pb-2">
-          {categoryVendors.map((vendor) => (
-            <Link
-              key={vendor.id}
-              to={`/vendor-products?vendor=${vendor.name}&city=${vendor.city}`}
-              className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow w-48"
-            >
-              <div
-                className={`w-full h-16 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center text-xl`}
-              >
-                {vendor.avatar}
-              </div>
-              <h4 className="font-medium text-gray-800 text-sm mb-1">
-                {vendor.name}
-              </h4>
-              <p className="text-xs text-gray-500 mb-1">{vendor.city}</p>
-              <p className="text-xs text-app-purple font-medium mb-2">
-                {vendor.specialty}
-              </p>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                  <span className="text-xs text-gray-600">{vendor.rating}</span>
-                </div>
-                <span className="text-xs text-gray-500">
-                  {vendor.totalProducts} produits
-                </span>
-              </div>
-            </Link>
-          ))}
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">
+            Vendeurs qui ont des produits de cette categorie
+          </h3>
+          <span className="text-sm text-gray-500">
+            {categoryVendors.length} vendeur
+            {categoryVendors.length > 1 ? "s" : ""}
+          </span>
         </div>
+
+        {/* Search and Filter Bar */}
+        <div className="flex gap-3 mb-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Rechercher un vendeur..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-10 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-app-purple focus:border-transparent text-sm"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          <select
+            value={selectedCity}
+            onChange={(e) => setSelectedCity(e.target.value)}
+            className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-app-purple focus:border-transparent text-sm bg-white min-w-[140px]"
+          >
+            <option value="">Toutes les villes</option>
+            {uniqueCities.map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Vendors List */}
+        {categoryVendors.length > 0 ? (
+          <div className="flex gap-4 overflow-x-auto pb-2">
+            {categoryVendors.map((vendor) => (
+              <Link
+                key={vendor.id}
+                to={`/vendor-products?vendor=${vendor.name}&city=${vendor.city}`}
+                className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow w-48"
+              >
+                <div
+                  className={`w-full h-16 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center text-xl`}
+                >
+                  {vendor.avatar}
+                </div>
+                <h4 className="font-medium text-gray-800 text-sm mb-1">
+                  {vendor.name}
+                </h4>
+                <p className="text-xs text-gray-500 mb-1">{vendor.city}</p>
+                <p className="text-xs text-app-purple font-medium mb-2">
+                  {vendor.specialty}
+                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                    <span className="text-xs text-gray-600">
+                      {vendor.rating}
+                    </span>
+                  </div>
+                  <span className="text-xs text-gray-500">
+                    {vendor.totalProducts} produits
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <div className="text-gray-400 text-4xl mb-2">🔍</div>
+            <p className="text-gray-500 text-sm mb-1">Aucun vendeur trouvé</p>
+            <p className="text-gray-400 text-xs">
+              {searchTerm || selectedCity
+                ? "Essayez de modifier vos critères de recherche"
+                : "Aucun vendeur disponible dans cette catégorie"}
+            </p>
+            {(searchTerm || selectedCity) && (
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  setSelectedCity("");
+                }}
+                className="mt-3 text-app-purple text-sm hover:underline"
+              >
+                Effacer les filtres
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Filter and Sort */}
