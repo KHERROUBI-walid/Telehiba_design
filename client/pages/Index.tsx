@@ -54,7 +54,7 @@ export default function Index() {
     {
       id: "fruits",
       name: "Fruits",
-      icon: "��",
+      icon: "🍎",
       gradient: "from-app-sky to-app-purple",
     },
     {
@@ -203,10 +203,39 @@ export default function Index() {
     },
   ];
 
-  const filteredProducts =
+  // Get unique cities for filter
+  const uniqueCities = Array.from(
+    new Set(vendors.map((vendor) => vendor.city)),
+  );
+
+  // Filter categories based on search term
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  // Filter vendors based on search term and city
+  const filteredVendors = vendors.filter((vendor) => {
+    const matchesSearch =
+      vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vendor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCity = selectedCity === "" || vendor.city === selectedCity;
+    return matchesSearch && matchesCity;
+  });
+
+  // Filter products based on category, search term, and city
+  const baseFilteredProducts =
     selectedCategory === "all"
       ? products
       : products.filter((product) => product.category === selectedCategory);
+
+  const filteredProducts = baseFilteredProducts.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCity =
+      selectedCity === "" || product.vendor.city === selectedCity;
+    return matchesSearch && matchesCity;
+  });
 
   return (
     <div className="min-h-screen bg-white">
