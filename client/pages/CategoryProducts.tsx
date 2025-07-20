@@ -12,6 +12,7 @@ import {
   Grid3X3,
   List as ListIcon,
 } from "lucide-react";
+import BottomNavigation from "../components/BottomNavigation";
 
 interface Product {
   id: number;
