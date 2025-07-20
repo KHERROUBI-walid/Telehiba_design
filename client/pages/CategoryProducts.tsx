@@ -720,8 +720,8 @@ export default function CategoryProducts() {
         <>
           <VendorsSection />
           <ProductsSection />
-        </>
-            )}
+                </>
+      )}
 
       {/* Bottom Navigation */}
       <BottomNavigation
