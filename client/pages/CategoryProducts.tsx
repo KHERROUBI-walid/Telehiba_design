@@ -43,11 +43,6 @@ interface Vendor {
   totalProducts: number;
 }
 
-interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
 const categoryData = {
   vegetables: {
     name: "Vegetables",
