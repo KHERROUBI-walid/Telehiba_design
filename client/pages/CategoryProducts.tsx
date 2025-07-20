@@ -155,7 +155,7 @@ export default function CategoryProducts() {
       vendor: {
         id: 2,
         name: "Dr. Emma Wilson",
-        avatar: "👩‍🍳",
+        avatar: "👩��🍳",
         city: "Manhattan, NY",
       },
       rating: 4.6,
@@ -544,18 +544,6 @@ export default function CategoryProducts() {
           })}
         </div>
       </div>
-
-      {/* Floating Cart Button */}
-      {getTotalItems() > 0 && (
-        <div className="fixed bottom-20 right-4">
-          <button className="bg-app-yellow text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg relative hover:bg-opacity-90 transition-colors">
-            <ShoppingCart className="w-6 h-6" />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center">
-              {getTotalItems()}
-            </span>
-          </button>
-        </div>
-      )}
 
       {/* Bottom Navigation */}
       <BottomNavigation
