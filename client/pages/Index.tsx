@@ -258,8 +258,8 @@ export default function Index() {
 
       {/* Search Bar and Location */}
       <div className="p-4 space-y-3 bg-white">
-        {/* Location - visible on small screens below search */}
-        <div className="flex md:hidden justify-center">
+        {/* Location Selector */}
+        <div className="flex justify-center">
           <select
             value={currentLocation}
             onChange={(e) => setCurrentLocation(e.target.value)}
@@ -282,29 +282,6 @@ export default function Index() {
         </div>
 
         <div className="space-y-3">
-          {/* Location - visible on larger screens */}
-          <div className="hidden md:flex justify-center">
-            <select
-              value={currentLocation}
-              onChange={(e) => setCurrentLocation(e.target.value)}
-              className="bg-app-dark-blue text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 border-none outline-none cursor-pointer appearance-none"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                backgroundPosition: "right 8px center",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "16px",
-                paddingRight: "32px",
-              }}
-            >
-              <option value="New York, USA">📍 New York, USA</option>
-              <option value="Manhattan, NY">📍 Manhattan, NY</option>
-              <option value="Brooklyn, NY">📍 Brooklyn, NY</option>
-              <option value="Paris, France">📍 Paris, France</option>
-              <option value="Montreal, Canada">📍 Montreal, Canada</option>
-              <option value="Lyon, France">📍 Lyon, France</option>
-            </select>
-          </div>
-
           {/* Search Bar */}
           <div className="relative">
             <div className="flex items-center bg-gray-50 rounded-full px-4 py-3 shadow-lg">
