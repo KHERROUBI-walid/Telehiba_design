@@ -393,51 +393,85 @@ export default function Index() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100"
-            >
-              {/* Product Image */}
-              <div className="w-full h-32 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3 flex items-center justify-center text-4xl">
-                {product.image}
-              </div>
+          {filteredProducts.map((product) => {
+            const quantity = getItemQuantity(product.id);
 
-              {/* Product Info */}
-              <h4 className="font-medium text-gray-800 text-sm mb-1">
-                {product.name}
-              </h4>
-
-              {/* Vendor Info */}
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-5 h-5 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-xs">
-                  {product.vendor.avatar}
+            return (
+              <div
+                key={product.id}
+                className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100"
+              >
+                {/* Product Image */}
+                <div className="w-full h-32 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3 flex items-center justify-center text-4xl">
+                  {product.image}
                 </div>
-                <div>
-                  <p className="text-xs text-gray-600 font-medium">
-                    {product.vendor.name}
-                  </p>
-                  <p className="text-xs text-gray-500">{product.vendor.city}</p>
+
+                {/* Product Info */}
+                <h4 className="font-medium text-gray-800 text-sm mb-1">
+                  {product.name}
+                </h4>
+
+                {/* Vendor Info */}
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-5 h-5 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-xs">
+                    {product.vendor.avatar}
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 font-medium">
+                      {product.vendor.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {product.vendor.city}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Rating */}
-              <div className="flex items-center gap-1 mb-2">
-                <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                <span className="text-xs text-gray-600">{product.rating}</span>
-              </div>
+                {/* Rating */}
+                <div className="flex items-center gap-1 mb-2">
+                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                  <span className="text-xs text-gray-600">
+                    {product.rating}
+                  </span>
+                </div>
 
-              {/* Price */}
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-app-purple">
-                  ${product.price}
-                </span>
-                <button className="bg-app-purple text-white px-3 py-1 rounded-lg text-xs font-medium hover:bg-opacity-90 transition-colors">
-                  Ajouter
-                </button>
+                {/* Price */}
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-bold text-app-purple">
+                    ${product.price}
+                  </span>
+                </div>
+
+                {/* Add to Cart Controls */}
+                {quantity === 0 ? (
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="w-full bg-app-purple text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-opacity-90 transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span className="text-sm">Ajouter</span>
+                  </button>
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => removeFromCart(product.id)}
+                      className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
+                    >
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <span className="font-medium text-gray-800">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={() => addToCart(product)}
+                      className="w-8 h-8 bg-app-purple text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {filteredProducts.length === 0 && (
