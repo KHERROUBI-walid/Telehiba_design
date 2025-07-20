@@ -402,33 +402,7 @@ export default function Index() {
       </div>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200">
-        <div className="flex items-center justify-around py-3">
-          <button className="flex flex-col items-center gap-1 px-4">
-            <Home className="w-6 h-6 text-app-purple" />
-            <span className="text-xs text-app-purple font-medium">Home</span>
-          </button>
-
-          <Link to="/orders" className="flex flex-col items-center gap-1 px-4">
-            <List className="w-6 h-6 text-gray-400" />
-            <span className="text-xs text-gray-400">Orders</span>
-          </Link>
-
-          <button className="bg-app-yellow w-12 h-12 rounded-full flex items-center justify-center -mt-2 shadow-lg">
-            <Plus className="w-6 h-6 text-white" />
-          </button>
-
-          <Link to="/chat" className="flex flex-col items-center gap-1 px-4">
-            <MessageCircle className="w-6 h-6 text-gray-400" />
-            <span className="text-xs text-gray-400">Chat</span>
-          </Link>
-
-          <Link to="/profile" className="flex flex-col items-center gap-1 px-4">
-            <User className="w-6 h-6 text-gray-400" />
-            <span className="text-xs text-gray-400">Profile</span>
-          </Link>
-        </div>
-      </nav>
+      <BottomNavigation />
     </div>
   );
 }
