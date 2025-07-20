@@ -13,6 +13,7 @@ import {
   List as ListIcon,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
+import { useCart } from "../context/CartContext";
 
 interface Product {
   id: number;
