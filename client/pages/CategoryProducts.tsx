@@ -51,7 +51,7 @@ interface CartItem {
 const categoryData = {
   vegetables: {
     name: "Vegetables",
-    icon: "����",
+    icon: "🥬",
     gradient: "from-app-purple to-app-pink",
   },
   fruits: {
@@ -589,7 +589,10 @@ export default function CategoryProducts() {
       )}
 
       {/* Bottom Navigation */}
-      <BottomNavigation />
+      <BottomNavigation
+        onCartClick={openCart}
+        cartItemCount={getTotalItems()}
+      />
     </div>
   );
 }
