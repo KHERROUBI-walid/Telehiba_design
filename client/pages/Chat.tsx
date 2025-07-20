@@ -18,6 +18,7 @@ import {
   Check,
   CheckCheck,
 } from "lucide-react";
+import BottomNavigation from "../components/BottomNavigation";
 
 interface Message {
   id: number;
