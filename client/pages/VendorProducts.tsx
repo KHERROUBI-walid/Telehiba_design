@@ -454,7 +454,11 @@ export default function VendorProducts() {
       )}
 
       {/* Bottom Navigation */}
-      <BottomNavigation isVisible={!isCartOpen} />
+      <BottomNavigation
+        isVisible={!isCartOpen}
+        onCartClick={openCart}
+        cartItemCount={getTotalItems()}
+      />
     </div>
   );
 }
