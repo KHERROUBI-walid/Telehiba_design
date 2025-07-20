@@ -431,7 +431,7 @@ export default function Index() {
         ) : searchTerm || selectedCity ? (
           <div className="text-center py-8 px-4">
             <div className="text-gray-400 text-3xl mb-2">👩‍⚕️</div>
-            <p className="text-gray-500 text-sm">Aucun vendeur trouv��</p>
+            <p className="text-gray-500 text-sm">Aucun vendeur trouvé</p>
             <p className="text-gray-400 text-xs">
               Essayez de modifier vos critères de recherche
             </p>
@@ -540,8 +540,16 @@ export default function Index() {
         </div>
 
         {filteredProducts.length === 0 && (
-          <div className="text-center text-gray-500 mt-8">
-            <p>Aucun produit trouvé dans cette catégorie</p>
+          <div className="text-center py-8">
+            <div className="text-gray-400 text-4xl mb-2">📦</div>
+            <p className="text-gray-500 text-sm mb-1">Aucun produit trouvé</p>
+            <p className="text-gray-400 text-xs">
+              {searchTerm || selectedCity
+                ? "Essayez de modifier vos critères de recherche"
+                : selectedCategory === "all"
+                  ? "Aucun produit disponible"
+                  : "Aucun produit dans cette catégorie"}
+            </p>
           </div>
         )}
       </div>
