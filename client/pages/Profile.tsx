@@ -46,6 +46,7 @@ interface UserStats {
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [showNotifications, setShowNotifications] = useState(true);
+  const { getTotalItems, openCart } = useCart();
 
   const userProfile: UserProfile = {
     name: "Marie Dubois",
