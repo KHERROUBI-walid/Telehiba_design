@@ -1,17 +1,8 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import {
-  ArrowLeft,
-  Star,
-  Plus,
-  Minus,
-  ShoppingCart,
-  Bell,
-  User,
-  X,
-  Trash2,
-} from "lucide-react";
+import { ArrowLeft, Star, Plus, Minus, Bell, User, Filter } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
+import { useCart, Product } from "../context/CartContext";
 
 interface Product {
   id: number;
