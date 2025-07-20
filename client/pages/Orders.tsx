@@ -11,6 +11,7 @@ import {
   Calendar,
   DollarSign,
 } from "lucide-react";
+import BottomNavigation from "../components/BottomNavigation";
 
 interface OrderItem {
   id: number;
