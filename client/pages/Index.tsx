@@ -8,6 +8,9 @@ import {
   MapPin,
   ChevronRight,
   Star,
+  Plus,
+  Minus,
+  ShoppingCart,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
 
