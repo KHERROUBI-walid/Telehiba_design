@@ -22,6 +22,7 @@ import {
   Star,
   ChevronRight,
 } from "lucide-react";
+import BottomNavigation from "../components/BottomNavigation";
 
 interface UserProfile {
   name: string;
