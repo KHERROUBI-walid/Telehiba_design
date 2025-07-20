@@ -51,8 +51,16 @@ export default function BottomNavigation({
           </span>
         </Link>
 
-        <button className="bg-app-yellow w-12 h-12 rounded-full flex items-center justify-center -mt-2 shadow-lg hover:bg-opacity-90 transition-colors">
-          <Plus className="w-6 h-6 text-white" />
+        <button
+          onClick={onCartClick}
+          className="bg-app-yellow w-12 h-12 rounded-full flex items-center justify-center -mt-2 shadow-lg hover:bg-opacity-90 transition-colors relative"
+        >
+          <ShoppingCart className="w-6 h-6 text-white" />
+          {cartItemCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+              {cartItemCount}
+            </span>
+          )}
         </button>
 
         <Link
