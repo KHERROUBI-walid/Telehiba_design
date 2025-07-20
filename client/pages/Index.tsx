@@ -10,6 +10,7 @@ import {
   Star,
   Plus,
   Minus,
+  X,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
 import { useCart, Product } from "../context/CartContext";
