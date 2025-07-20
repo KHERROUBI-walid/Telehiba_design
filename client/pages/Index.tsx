@@ -10,9 +10,9 @@ import {
   Star,
   Plus,
   Minus,
-  ShoppingCart,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
+import { useCart, Product } from "../context/CartContext";
 
 interface Product {
   id: number;
