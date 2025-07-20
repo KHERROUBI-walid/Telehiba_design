@@ -396,6 +396,9 @@ export default function Notifications() {
           </button>
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNavigation />
     </div>
   );
 }
