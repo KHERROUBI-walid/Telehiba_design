@@ -304,10 +304,13 @@ export default function Index() {
       <div className="mb-6">
         <div className="flex items-center justify-between px-4 mb-4">
           <h3 className="text-lg font-semibold text-gray-800">Vendeurs</h3>
-          <button className="flex items-center gap-1 text-app-purple text-sm font-medium">
+          <Link
+            to="/all-vendors"
+            className="flex items-center gap-1 text-app-purple text-sm font-medium hover:text-app-purple/80 transition-colors"
+          >
             Voir tout
             <ChevronRight className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
         <div className="flex gap-4 overflow-x-auto px-4 pb-2">
           {vendors.map((vendor) => (
