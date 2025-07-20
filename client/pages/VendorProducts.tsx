@@ -14,19 +14,20 @@ interface Product {
   description: string;
 }
 
-interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
 export default function VendorProducts() {
   const [searchParams] = useSearchParams();
   const vendorName = searchParams.get("vendor") || "Dr. Sarah Johnson";
   const vendorCity = searchParams.get("city") || "New York, USA";
 
-  const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const {
+    addToCart,
+    removeFromCart,
+    getItemQuantity,
+    getTotalItems,
+    openCart,
+    isCartOpen,
+  } = useCart();
 
   const products: Product[] = [
     {
