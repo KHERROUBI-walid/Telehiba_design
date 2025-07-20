@@ -11,6 +11,7 @@ import {
   X,
   Trash2,
 } from "lucide-react";
+import BottomNavigation from "../components/BottomNavigation";
 
 interface Product {
   id: number;
