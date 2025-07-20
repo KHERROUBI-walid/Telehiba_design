@@ -309,6 +309,9 @@ export default function Orders() {
           </div>
         )}
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNavigation />
     </div>
   );
 }
