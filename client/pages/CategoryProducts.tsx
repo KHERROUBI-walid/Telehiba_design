@@ -586,6 +586,9 @@ export default function CategoryProducts() {
           </button>
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <BottomNavigation />
     </div>
   );
 }
