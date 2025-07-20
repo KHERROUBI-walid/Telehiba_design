@@ -183,7 +183,7 @@ export default function CategoryProducts() {
       vendor: {
         id: 1,
         name: "Dr. Sarah Johnson",
-        avatar: "👩‍⚕️",
+        avatar: "👩���⚕️",
         city: "New York, USA",
       },
       rating: 4.8,
@@ -721,10 +721,16 @@ export default function CategoryProducts() {
           <VendorsSection />
           <ProductsSection />
         </>
-      )}
+            )}
 
       {/* Bottom Navigation */}
-      <div className="p-4 border-b border-gray-200">
+      <BottomNavigation
+        onCartClick={openCart}
+        cartItemCount={getTotalItems()}
+      />
+    </div>
+  );
+}
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-800">
             Vendeurs qui ont des produits de cette categorie
