@@ -262,25 +262,63 @@ export default function Index() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="space-y-3">
           {/* Location - visible on larger screens */}
-          <div className="hidden md:flex bg-app-dark-blue text-white px-4 py-2 rounded-full text-sm items-center gap-2">
-            <MapPin className="w-4 h-4" />
-            New York, USA
+          <div className="hidden md:flex justify-center">
+            <div className="bg-app-dark-blue text-white px-4 py-2 rounded-full text-sm flex items-center gap-2">
+              <MapPin className="w-4 h-4" />
+              New York, USA
+            </div>
           </div>
 
           {/* Search Bar */}
-          <div className="flex-1 relative">
+          <div className="relative">
             <div className="flex items-center bg-gray-50 rounded-full px-4 py-3 shadow-lg">
               <Search className="w-5 h-5 text-gray-400 mr-3" />
               <input
                 type="text"
-                placeholder="Search Doctor"
-                className="flex-1 outline-none text-xs placeholder-gray-400 bg-transparent"
-                style={{ fontSize: "9px" }}
+                placeholder="Rechercher catégories, vendeurs, produits..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="flex-1 outline-none text-sm placeholder-gray-400 bg-transparent"
               />
-              <Filter className="w-5 h-5 text-gray-400 ml-3" />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="text-gray-400 hover:text-gray-600 mr-2"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
+          </div>
+
+          {/* City Filter */}
+          <div className="flex gap-3">
+            <select
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+              className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-app-purple focus:border-transparent text-sm bg-white"
+            >
+              <option value="">Toutes les villes</option>
+              {uniqueCities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+
+            {(searchTerm || selectedCity) && (
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  setSelectedCity("");
+                }}
+                className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
+              >
+                Effacer
+              </button>
+            )}
           </div>
         </div>
       </div>
