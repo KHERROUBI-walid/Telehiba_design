@@ -4,16 +4,6 @@ import { ArrowLeft, Star, Plus, Minus, Bell, User, Filter } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
 import { useCart, Product } from "../context/CartContext";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  rating: number;
-  category: string;
-  description: string;
-}
-
 export default function VendorProducts() {
   const [searchParams] = useSearchParams();
   const vendorName = searchParams.get("vendor") || "Dr. Sarah Johnson";
