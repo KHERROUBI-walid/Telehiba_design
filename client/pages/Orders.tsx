@@ -314,7 +314,10 @@ export default function Orders() {
       </div>
 
       {/* Bottom Navigation */}
-      <BottomNavigation />
+      <BottomNavigation
+        onCartClick={openCart}
+        cartItemCount={getTotalItems()}
+      />
     </div>
   );
 }
