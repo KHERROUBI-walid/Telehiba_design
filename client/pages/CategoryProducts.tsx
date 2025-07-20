@@ -51,7 +51,7 @@ interface CartItem {
 const categoryData = {
   vegetables: {
     name: "Vegetables",
-    icon: "🥬",
+    icon: "����",
     gradient: "from-app-purple to-app-pink",
   },
   fruits: {
@@ -79,9 +79,9 @@ const categoryData = {
 export default function CategoryProducts() {
   const [searchParams] = useSearchParams();
   const categoryId = searchParams.get("category") || "vegetables";
-  const [cart, setCart] = useState<CartItem[]>([]);
   const [sortBy, setSortBy] = useState<"price" | "rating" | "name">("rating");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const { getTotalItems, openCart } = useCart();
 
   const category =
     categoryData[categoryId as keyof typeof categoryData] ||
