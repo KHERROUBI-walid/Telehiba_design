@@ -431,7 +431,7 @@ export default function Index() {
         ) : searchTerm || selectedCity ? (
           <div className="text-center py-8 px-4">
             <div className="text-gray-400 text-3xl mb-2">👩‍⚕️</div>
-            <p className="text-gray-500 text-sm">Aucun vendeur trouvé</p>
+            <p className="text-gray-500 text-sm">Aucun vendeur trouv��</p>
             <p className="text-gray-400 text-xs">
               Essayez de modifier vos critères de recherche
             </p>
@@ -446,6 +446,7 @@ export default function Index() {
             {selectedCategory === "all"
               ? "Produits Populaires"
               : `Produits ${categories.find((c) => c.id === selectedCategory)?.name}`}
+            {(searchTerm || selectedCity) && ` (${filteredProducts.length})`}
           </h3>
           <Link
             to="/all-products"
