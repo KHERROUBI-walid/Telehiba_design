@@ -348,10 +348,13 @@ export default function Index() {
               ? "Produits Populaires"
               : `Produits ${categories.find((c) => c.id === selectedCategory)?.name}`}
           </h3>
-          <button className="flex items-center gap-1 text-app-purple text-sm font-medium">
+          <Link
+            to="/all-products"
+            className="flex items-center gap-1 text-app-purple text-sm font-medium hover:text-app-purple/80 transition-colors"
+          >
             Voir tout
             <ChevronRight className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
