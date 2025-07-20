@@ -36,6 +36,8 @@ export default function Index() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCity, setSelectedCity] = useState<string>("");
+  const [currentLocation, setCurrentLocation] =
+    useState<string>("New York, USA");
   const {
     addToCart,
     removeFromCart,
@@ -149,7 +151,7 @@ export default function Index() {
       id: 3,
       name: "Cotton T-Shirt",
       price: 19.99,
-      image: "👕",
+      image: "����",
       category: "clothes",
       vendor: {
         id: 2,
