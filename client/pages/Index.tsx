@@ -35,9 +35,7 @@ interface Vendor {
 export default function Index() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCity, setSelectedCity] = useState<string>("");
-  const [currentLocation, setCurrentLocation] =
-    useState<string>("New York, USA");
+  const [currentLocation, setCurrentLocation] = useState<string>("");
   const {
     addToCart,
     removeFromCart,
