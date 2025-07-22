@@ -40,6 +40,7 @@ export default function Index() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentLocation, setCurrentLocation] = useState<string>("");
+  const [showMenu, setShowMenu] = useState(false);
   const {
     addToCart,
     removeFromCart,
