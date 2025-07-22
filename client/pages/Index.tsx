@@ -304,33 +304,17 @@ export default function Index() {
             </div>
           </div>
 
-          {/* City Filter */}
-          <div className="flex gap-3">
-            <select
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-app-purple focus:border-transparent text-sm bg-white"
-            >
-              <option value="">Toutes les villes</option>
-              {uniqueCities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
-
-            {(searchTerm || selectedCity) && (
+          {/* Clear search button */}
+          {searchTerm && (
+            <div className="flex justify-center">
               <button
-                onClick={() => {
-                  setSearchTerm("");
-                  setSelectedCity("");
-                }}
+                onClick={() => setSearchTerm("")}
                 className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
               >
-                Effacer
+                Effacer la recherche
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
