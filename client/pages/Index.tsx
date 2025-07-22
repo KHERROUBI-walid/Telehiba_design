@@ -220,12 +220,11 @@ export default function Index() {
     const matchesSearch =
       vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vendor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
-    const cityToMatch = selectedCity || currentLocation;
-    const matchesCity = cityToMatch === "" || vendor.city === cityToMatch;
+    const matchesCity = currentLocation === "" || vendor.city === currentLocation;
     return matchesSearch && matchesCity;
   });
 
-  // Filter products based on category, search term, and city (use current location if no city filter)
+  // Filter products based on category, search term, and current location
   const baseFilteredProducts =
     selectedCategory === "all"
       ? products
@@ -235,9 +234,7 @@ export default function Index() {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const cityToMatch = selectedCity || currentLocation;
-    const matchesCity =
-      cityToMatch === "" || product.vendor.city === cityToMatch;
+    const matchesCity = currentLocation === "" || product.vendor.city === currentLocation;
     return matchesSearch && matchesCity;
   });
 
