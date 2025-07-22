@@ -207,6 +207,7 @@ export default function CategoryProducts() {
       rating: 4.6,
       description: "Sweet and crunchy carrots, rich in vitamins",
       inStock: true,
+      unit: "Kg",
     },
     {
       id: 3,
