@@ -11,6 +11,10 @@ import {
   Plus,
   Minus,
   X,
+  Menu,
+  MessageCircle,
+  AlertTriangle,
+  Info,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
 import { useCart, Product } from "../context/CartContext";
