@@ -628,7 +628,7 @@ export default function CategoryProducts() {
                         <Minus className="w-4 h-4" />
                       </button>
                       <span className="font-medium text-gray-800">
-                        {quantity}
+                        {quantity} {product.unit || ''}
                       </span>
                       <button
                         onClick={() => addToCart(product)}
