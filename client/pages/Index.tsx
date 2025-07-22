@@ -490,12 +490,12 @@ export default function Index() {
         ) : null}
       </div>
 
-      {/* Products Section */}
-      <div className="px-4 pb-24">
-        <div className="flex items-center justify-between mb-4">
+      {/* Products by Vendor Section */}
+      <div className="pb-24">
+        <div className="flex items-center justify-between px-4 mb-4">
           <h3 className="text-lg font-semibold text-gray-800">
             {selectedCategory === "all"
-              ? "Produits Populaires"
+              ? "Produits par Vendeur"
               : `Produits ${categories.find((c) => c.id === selectedCategory)?.name}`}
             {(searchTerm || currentLocation) && ` (${filteredProducts.length})`}
           </h3>
@@ -508,101 +508,132 @@ export default function Index() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          {filteredProducts.map((product) => {
-            const quantity = getItemQuantity(product.id);
+        {(() => {
+          // Group products by vendor
+          const productsByVendor = filteredProducts.reduce((acc, product) => {
+            const vendorKey = `${product.vendor.name}-${product.vendor.city}`;
+            if (!acc[vendorKey]) {
+              acc[vendorKey] = {
+                vendor: product.vendor,
+                products: []
+              };
+            }
+            acc[vendorKey].products.push(product);
+            return acc;
+          }, {} as Record<string, { vendor: any; products: typeof filteredProducts }>);
 
-            return (
-              <div
-                key={product.id}
-                className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100"
-              >
-                {/* Product Image */}
-                <div className="w-full h-32 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3 flex items-center justify-center text-4xl">
-                  {product.image}
-                </div>
+          const vendorGroups = Object.values(productsByVendor);
 
-                {/* Product Info */}
-                <h4 className="font-medium text-gray-800 text-sm mb-1">
-                  {product.name}
-                </h4>
-
-                {/* Vendor Info */}
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-5 h-5 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-xs">
-                    {product.vendor.avatar}
+          return vendorGroups.length > 0 ? (
+            <div className="space-y-6">
+              {vendorGroups.map((group, index) => (
+                <div key={index} className="border-b border-gray-100 pb-6 last:border-b-0">
+                  {/* Vendor Header */}
+                  <div className="px-4 mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-xl">
+                        {group.vendor.avatar}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-800 text-base">
+                          {group.vendor.name}
+                        </h4>
+                        <p className="text-sm text-gray-500">{group.vendor.city}</p>
+                      </div>
+                      <div className="ml-auto">
+                        <span className="text-sm text-app-purple font-medium">
+                          {group.products.length} produit{group.products.length > 1 ? 's' : ''}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-600 font-medium">
-                      {product.vendor.name}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {product.vendor.city}
-                    </p>
+
+                  {/* Products Carousel */}
+                  <div className="overflow-x-auto">
+                    <div className="flex gap-4 px-4 pb-2">
+                      {group.products.map((product) => {
+                        const quantity = getItemQuantity(product.id);
+
+                        return (
+                          <div
+                            key={product.id}
+                            className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 w-48"
+                          >
+                            {/* Product Image */}
+                            <div className="w-full h-32 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3 flex items-center justify-center text-3xl">
+                              {product.image}
+                            </div>
+
+                            {/* Product Info */}
+                            <h5 className="font-medium text-gray-800 text-sm mb-2 line-clamp-2">
+                              {product.name}
+                            </h5>
+
+                            {/* Rating */}
+                            <div className="flex items-center gap-1 mb-2">
+                              <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                              <span className="text-xs text-gray-600">
+                                {product.rating}
+                              </span>
+                            </div>
+
+                            {/* Price */}
+                            <div className="flex items-center justify-between mb-3">
+                              <span className="font-bold text-app-purple text-sm">
+                                ${product.price}
+                              </span>
+                            </div>
+
+                            {/* Add to Cart Controls */}
+                            {quantity === 0 ? (
+                              <button
+                                onClick={() => addToCart(product)}
+                                className="w-full bg-app-purple text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-opacity-90 transition-colors"
+                              >
+                                <Plus className="w-3 h-3" />
+                                <span className="text-xs">Ajouter</span>
+                              </button>
+                            ) : (
+                              <div className="flex items-center justify-between">
+                                <button
+                                  onClick={() => removeFromCart(product.id)}
+                                  className="w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
+                                >
+                                  <Minus className="w-3 h-3" />
+                                </button>
+                                <span className="font-medium text-gray-800 text-sm">
+                                  {quantity}
+                                </span>
+                                <button
+                                  onClick={() => addToCart(product)}
+                                  className="w-7 h-7 bg-app-purple text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-colors"
+                                >
+                                  <Plus className="w-3 h-3" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
-
-                {/* Rating */}
-                <div className="flex items-center gap-1 mb-2">
-                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                  <span className="text-xs text-gray-600">
-                    {product.rating}
-                  </span>
-                </div>
-
-                {/* Price */}
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-bold text-app-purple">
-                    ${product.price}
-                  </span>
-                </div>
-
-                {/* Add to Cart Controls */}
-                {quantity === 0 ? (
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="w-full bg-app-purple text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-opacity-90 transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                    <span className="text-sm">Ajouter</span>
-                  </button>
-                ) : (
-                  <div className="flex items-center justify-between">
-                    <button
-                      onClick={() => removeFromCart(product.id)}
-                      className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
-                    >
-                      <Minus className="w-4 h-4" />
-                    </button>
-                    <span className="font-medium text-gray-800">
-                      {quantity}
-                    </span>
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="w-8 h-8 bg-app-purple text-white rounded-full flex items-center justify-center hover:bg-opacity-90 transition-colors"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-8">
-            <div className="text-gray-400 text-4xl mb-2">📦</div>
-            <p className="text-gray-500 text-sm mb-1">Aucun produit trouvé</p>
-            <p className="text-gray-400 text-xs">
-              {searchTerm || currentLocation
-                ? "Essayez de modifier vos critères de recherche"
-                : selectedCategory === "all"
-                  ? "Aucun produit disponible"
-                  : "Aucun produit dans cette catégorie"}
-            </p>
-          </div>
-        )}
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 px-4">
+              <div className="text-gray-400 text-4xl mb-2">📦</div>
+              <p className="text-gray-500 text-sm mb-1">Aucun produit trouvé</p>
+              <p className="text-gray-400 text-xs">
+                {searchTerm || currentLocation
+                  ? "Essayez de modifier vos critères de recherche"
+                  : selectedCategory === "all"
+                    ? "Aucun produit disponible"
+                    : "Aucun produit dans cette catégorie"}
+              </p>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Bottom Navigation */}
