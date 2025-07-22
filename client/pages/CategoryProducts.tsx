@@ -258,6 +258,7 @@ export default function CategoryProducts() {
       rating: 4.5,
       description: "Fresh broccoli crowns, packed with nutrients",
       inStock: false,
+      unit: "unité",
     },
     {
       id: 6,
