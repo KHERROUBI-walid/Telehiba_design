@@ -15,6 +15,7 @@ export interface Product {
   rating: number;
   description?: string;
   inStock?: boolean;
+  unit?: string; // e.g., "Kg", "L", "unité"
 }
 
 export interface CartItem {
