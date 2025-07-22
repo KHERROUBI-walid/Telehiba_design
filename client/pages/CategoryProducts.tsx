@@ -275,6 +275,7 @@ export default function CategoryProducts() {
       rating: 4.3,
       description: "Crisp and refreshing cucumbers, perfect for salads",
       inStock: true,
+      unit: "unité",
     },
   ];
 
