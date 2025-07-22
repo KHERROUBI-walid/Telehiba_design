@@ -272,6 +272,7 @@ export default function Index() {
               paddingRight: "32px",
             }}
           >
+            <option value="">🌍 Toutes les villes</option>
             <option value="New York, USA">📍 New York, USA</option>
             <option value="Manhattan, NY">📍 Manhattan, NY</option>
             <option value="Brooklyn, NY">📍 Brooklyn, NY</option>
