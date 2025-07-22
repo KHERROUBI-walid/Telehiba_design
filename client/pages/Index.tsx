@@ -437,7 +437,7 @@ export default function Index() {
             {selectedCategory === "all"
               ? "Produits Populaires"
               : `Produits ${categories.find((c) => c.id === selectedCategory)?.name}`}
-            {(searchTerm || selectedCity) && ` (${filteredProducts.length})`}
+            {(searchTerm || currentLocation) && ` (${filteredProducts.length})`}
           </h3>
           <Link
             to="/all-products"
