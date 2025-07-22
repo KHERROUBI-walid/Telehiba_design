@@ -535,7 +535,7 @@ export default function Index() {
             <div className="text-gray-400 text-4xl mb-2">📦</div>
             <p className="text-gray-500 text-sm mb-1">Aucun produit trouvé</p>
             <p className="text-gray-400 text-xs">
-              {searchTerm || selectedCity
+              {searchTerm || currentLocation
                 ? "Essayez de modifier vos critères de recherche"
                 : selectedCategory === "all"
                   ? "Aucun produit disponible"
