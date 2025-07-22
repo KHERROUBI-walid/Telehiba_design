@@ -263,7 +263,7 @@ export default function Index() {
           <Link to="/notifications">
             <Bell className="w-6 h-6 text-white hover:text-white/80 transition-colors" />
           </Link>
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             <button
               onClick={() => setShowMenu(!showMenu)}
               className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
