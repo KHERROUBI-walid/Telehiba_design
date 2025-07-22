@@ -190,6 +190,7 @@ export default function CategoryProducts() {
       description:
         "Locally grown organic tomatoes, perfect for salads and cooking",
       inStock: true,
+      unit: "Kg",
     },
     {
       id: 2,
