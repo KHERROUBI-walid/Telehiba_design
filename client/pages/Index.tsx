@@ -381,7 +381,7 @@ export default function Index() {
         <div className="flex items-center justify-between px-4 mb-4">
           <h3 className="text-lg font-semibold text-gray-800">
             Vendeurs{" "}
-            {(searchTerm || selectedCity) && `(${filteredVendors.length})`}
+            {(searchTerm || currentLocation) && `(${filteredVendors.length})`}
           </h3>
           <Link
             to="/all-vendors"
