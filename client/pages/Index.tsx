@@ -250,8 +250,50 @@ export default function Index() {
           <Link to="/notifications">
             <Bell className="w-6 h-6 text-white hover:text-white/80 transition-colors" />
           </Link>
-          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-            <User className="w-5 h-5 text-white" />
+          <div className="relative">
+            <button
+              onClick={() => setShowMenu(!showMenu)}
+              className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+            >
+              <Menu className="w-5 h-5 text-white" />
+            </button>
+
+            {showMenu && (
+              <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg border border-gray-200 w-48 py-2 z-50">
+                <Link
+                  to="/contact"
+                  className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                  onClick={() => setShowMenu(false)}
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Nous contacter
+                </Link>
+                <Link
+                  to="/report-problem"
+                  className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                  onClick={() => setShowMenu(false)}
+                >
+                  <AlertTriangle className="w-4 h-4" />
+                  Signaler un problème
+                </Link>
+                <Link
+                  to="/about"
+                  className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                  onClick={() => setShowMenu(false)}
+                >
+                  <Info className="w-4 h-4" />
+                  À propos de nous
+                </Link>
+                <Link
+                  to="/help"
+                  className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                  onClick={() => setShowMenu(false)}
+                >
+                  <Info className="w-4 h-4" />
+                  Aide & Support
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </header>
