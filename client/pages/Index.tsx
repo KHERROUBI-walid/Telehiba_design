@@ -41,6 +41,7 @@ export default function Index() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentLocation, setCurrentLocation] = useState<string>("");
   const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const {
     addToCart,
     removeFromCart,
@@ -48,6 +49,18 @@ export default function Index() {
     getTotalItems,
     openCart,
   } = useCart();
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const categories: Category[] = [
     {
