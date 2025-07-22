@@ -241,6 +241,7 @@ export default function CategoryProducts() {
       rating: 4.7,
       description: "Colorful bell peppers, great for cooking and grilling",
       inStock: true,
+      unit: "Kg",
     },
     {
       id: 5,
