@@ -148,6 +148,7 @@ export default function Index() {
         city: "New York, USA",
       },
       rating: 4.8,
+      unit: "Kg",
     },
     {
       id: 2,
@@ -162,6 +163,7 @@ export default function Index() {
         city: "New York, USA",
       },
       rating: 4.7,
+      unit: "Kg",
     },
     {
       id: 3,
@@ -176,6 +178,7 @@ export default function Index() {
         city: "Brooklyn, NY",
       },
       rating: 4.9,
+      unit: "unité",
     },
     {
       id: 4,
@@ -190,6 +193,7 @@ export default function Index() {
         city: "Manhattan, NY",
       },
       rating: 4.6,
+      unit: "Kg",
     },
     {
       id: 5,
@@ -204,6 +208,7 @@ export default function Index() {
         city: "Manhattan, NY",
       },
       rating: 4.5,
+      unit: "Kg",
     },
     {
       id: 6,
@@ -218,6 +223,7 @@ export default function Index() {
         city: "Queens, NY",
       },
       rating: 4.8,
+      unit: "unité",
     },
   ];
 
