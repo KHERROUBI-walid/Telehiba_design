@@ -224,6 +224,7 @@ export default function CategoryProducts() {
       rating: 4.4,
       description: "Fresh green spinach, perfect for smoothies and salads",
       inStock: true,
+      unit: "Kg",
     },
     {
       id: 4,
