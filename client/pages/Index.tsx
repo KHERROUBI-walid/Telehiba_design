@@ -419,7 +419,7 @@ export default function Index() {
               </Link>
             ))}
           </div>
-        ) : searchTerm || selectedCity ? (
+        ) : searchTerm || currentLocation ? (
           <div className="text-center py-8 px-4">
             <div className="text-gray-400 text-3xl mb-2">👩‍⚕️</div>
             <p className="text-gray-500 text-sm">Aucun vendeur trouvé</p>
