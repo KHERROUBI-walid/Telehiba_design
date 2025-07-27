@@ -364,9 +364,14 @@ export default function CategoryProducts() {
               className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow w-48"
             >
               <div
-                className={`w-full h-16 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center text-xl`}
+                className={`w-full h-16 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center overflow-hidden`}
               >
-                {vendor.avatar}
+                <img
+                  src={vendor.avatar}
+                  alt={vendor.name}
+                  className="w-12 h-12 rounded-full object-cover border-2 border-white/50"
+                  loading="lazy"
+                />
               </div>
               <h4 className="font-medium text-gray-800 text-sm mb-1">
                 {vendor.name}
