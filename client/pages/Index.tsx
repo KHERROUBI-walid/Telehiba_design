@@ -345,6 +345,50 @@ export default function Index() {
         </div>
       </header>
 
+      {/* Promotional Banner */}
+      <div className="mx-4 mt-6 mb-6 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-r from-app-purple via-app-sky to-app-pink rounded-3xl opacity-90"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent rounded-3xl"></div>
+        <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/20 rounded-full animate-pulse"></div>
+        <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
+
+        <div className="relative p-8 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/30">
+                  <span className="text-2xl">🛍️</span>
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold drop-shadow-lg">
+                    Choisi ton vendeur, tes produits
+                  </h2>
+                  <p className="text-sm opacity-90 mt-1">
+                    Envoi la commande et attends la notif 📱
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 mt-4">
+                <div className="flex items-center gap-2 bg-white/20 rounded-full px-4 py-2 backdrop-blur-sm">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-xs font-medium">En ligne maintenant</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/20 rounded-full px-4 py-2 backdrop-blur-sm">
+                  <span className="text-xs font-medium">🚀 Livraison rapide</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="hidden md:block">
+              <div className="w-24 h-24 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-sm border border-white/30 group-hover:scale-110 transition-transform duration-500">
+                <span className="text-4xl animate-bounce" style={{animationDuration: '2s'}}>🎯</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Search Bar and Location */}
       <div className="relative p-6 bg-gradient-to-b from-white/80 to-white backdrop-blur-sm">
         {/* Location Selector */}
@@ -362,13 +406,13 @@ export default function Index() {
                 paddingRight: "40px",
               }}
             >
-              <option value="">🌍 Toutes les villes</option>
-              <option value="New York, USA">📍 New York, USA</option>
-              <option value="Manhattan, NY">📍 Manhattan, NY</option>
-              <option value="Brooklyn, NY">📍 Brooklyn, NY</option>
-              <option value="Paris, France">📍 Paris, France</option>
-              <option value="Montreal, Canada">📍 Montreal, Canada</option>
-              <option value="Lyon, France">📍 Lyon, France</option>
+              <option value="" style={{color: '#000'}}>🌍 Toutes les villes</option>
+              <option value="New York, USA" style={{color: '#000'}}>📍 New York, USA</option>
+              <option value="Manhattan, NY" style={{color: '#000'}}>📍 Manhattan, NY</option>
+              <option value="Brooklyn, NY" style={{color: '#000'}}>📍 Brooklyn, NY</option>
+              <option value="Paris, France" style={{color: '#000'}}>📍 Paris, France</option>
+              <option value="Montreal, Canada" style={{color: '#000'}}>📍 Montreal, Canada</option>
+              <option value="Lyon, France" style={{color: '#000'}}>📍 Lyon, France</option>
             </select>
             <div className="absolute inset-0 bg-gradient-to-r from-app-purple/20 to-app-sky/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
           </div>
@@ -411,50 +455,6 @@ export default function Index() {
               </button>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Promotional Banner */}
-      <div className="mx-4 mb-8 relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-r from-app-purple via-app-sky to-app-pink rounded-3xl opacity-90"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent rounded-3xl"></div>
-        <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/20 rounded-full animate-pulse"></div>
-        <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
-
-        <div className="relative p-8 text-white">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/30">
-                  <span className="text-2xl">🛍️</span>
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold drop-shadow-lg">
-                    Choisi ton vendeur, tes produits
-                  </h2>
-                  <p className="text-sm opacity-90 mt-1">
-                    Envoi la commande et attends la notif 📱
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 mt-4">
-                <div className="flex items-center gap-2 bg-white/20 rounded-full px-4 py-2 backdrop-blur-sm">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-xs font-medium">En ligne maintenant</span>
-                </div>
-                <div className="flex items-center gap-2 bg-white/20 rounded-full px-4 py-2 backdrop-blur-sm">
-                  <span className="text-xs font-medium">🚀 Livraison rapide</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="hidden md:block">
-              <div className="w-24 h-24 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-sm border border-white/30 group-hover:scale-110 transition-transform duration-500">
-                <span className="text-4xl animate-bounce" style={{animationDuration: '2s'}}>🎯</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
