@@ -603,8 +603,13 @@ export default function CategoryProducts() {
 
                 {/* Vendor Info */}
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-5 h-5 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-xs">
-                    {product.vendor.avatar}
+                  <div className="w-5 h-5 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center overflow-hidden">
+                    <img
+                      src={product.vendor.avatar}
+                      alt={product.vendor.name}
+                      className="w-full h-full object-cover rounded-full"
+                      loading="lazy"
+                    />
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 font-medium">
@@ -725,7 +730,7 @@ export default function CategoryProducts() {
             <div className="text-center py-16">
               <div className="text-gray-400 text-6xl mb-4">🔍</div>
               <p className="text-gray-500 text-lg mb-2">
-                Aucun résultat trouvé
+                Aucun résultat trouv��
               </p>
               <p className="text-gray-400 text-sm mb-4">
                 Essayez de modifier vos critères de recherche
