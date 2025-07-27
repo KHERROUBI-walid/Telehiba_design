@@ -247,7 +247,7 @@ export default function CategoryProducts() {
       id: 5,
       name: "Broccoli",
       price: 3.49,
-      image: "��",
+      image: "🥦",
       category: "vegetables",
       vendor: {
         id: 2,
@@ -507,8 +507,13 @@ export default function CategoryProducts() {
 
                     {/* Vendor Info */}
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="w-5 h-5 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-xs">
-                        {product.vendor.avatar}
+                      <div className="w-5 h-5 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center overflow-hidden">
+                        <img
+                          src={product.vendor.avatar}
+                          alt={product.vendor.name}
+                          className="w-full h-full object-cover rounded-full"
+                          loading="lazy"
+                        />
                       </div>
                       <div>
                         <p className="text-xs text-gray-600 font-medium">
