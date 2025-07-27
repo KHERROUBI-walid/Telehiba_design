@@ -106,7 +106,7 @@ export default function CartSidebar() {
                               <Minus className="w-3 h-3" />
                             </button>
                             <span className="font-medium text-sm">
-                              {item.quantity} {item.product.unit || ''}
+                              {item.quantity} {item.product.unit || ""}
                             </span>
                             <button
                               onClick={() => addToCart(item.product)}

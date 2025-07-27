@@ -556,7 +556,7 @@ export default function CategoryProducts() {
                                 <Minus className="w-3 h-3" />
                               </button>
                               <span className="font-medium text-gray-800 min-w-[1rem] text-center">
-                                {quantity} {product.unit || ''}
+                                {quantity} {product.unit || ""}
                               </span>
                               <button
                                 onClick={() => addToCart(product)}
@@ -654,7 +654,7 @@ export default function CategoryProducts() {
                         <Minus className="w-4 h-4" />
                       </button>
                       <span className="font-medium text-gray-800">
-                        {quantity} {product.unit || ''}
+                        {quantity} {product.unit || ""}
                       </span>
                       <button
                         onClick={() => addToCart(product)}

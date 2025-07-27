@@ -99,7 +99,8 @@ export default function Index() {
     {
       id: 1,
       name: "Dr. Sarah Johnson",
-      avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face",
       city: "New York, USA",
       specialty: "Fruits & Vegetables",
       rating: 4.8,
@@ -108,7 +109,8 @@ export default function Index() {
     {
       id: 2,
       name: "Dr. Michael Chen",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
       city: "Brooklyn, NY",
       specialty: "Medicine & Health",
       rating: 4.9,
@@ -117,7 +119,8 @@ export default function Index() {
     {
       id: 3,
       name: "Dr. Emma Wilson",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=80&h=80&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=80&h=80&fit=crop&crop=face",
       city: "Manhattan, NY",
       specialty: "Organic Foods",
       rating: 4.7,
@@ -126,7 +129,8 @@ export default function Index() {
     {
       id: 4,
       name: "Dr. James Rodriguez",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
       city: "Queens, NY",
       specialty: "General Store",
       rating: 4.6,
@@ -139,12 +143,14 @@ export default function Index() {
       id: 1,
       name: "Fresh Organic Tomatoes",
       price: 4.99,
-      image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=300&h=300&fit=crop&crop=center",
+      image:
+        "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=300&h=300&fit=crop&crop=center",
       category: "vegetables",
       vendor: {
         id: 1,
         name: "Dr. Sarah Johnson",
-        avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=60&h=60&fit=crop&crop=face",
+        avatar:
+          "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=60&h=60&fit=crop&crop=face",
         city: "New York, USA",
       },
       rating: 4.8,
@@ -154,12 +160,14 @@ export default function Index() {
       id: 2,
       name: "Red Apples",
       price: 3.5,
-      image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&h=300&fit=crop&crop=center",
+      image:
+        "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&h=300&fit=crop&crop=center",
       category: "fruits",
       vendor: {
         id: 1,
         name: "Dr. Sarah Johnson",
-        avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=60&h=60&fit=crop&crop=face",
+        avatar:
+          "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=60&h=60&fit=crop&crop=face",
         city: "New York, USA",
       },
       rating: 4.7,
@@ -169,12 +177,14 @@ export default function Index() {
       id: 3,
       name: "Cotton T-Shirt",
       price: 19.99,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop&crop=center",
+      image:
+        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop&crop=center",
       category: "clothes",
       vendor: {
         id: 2,
         name: "Dr. Michael Chen",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face",
+        avatar:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face",
         city: "Brooklyn, NY",
       },
       rating: 4.9,
@@ -184,12 +194,14 @@ export default function Index() {
       id: 4,
       name: "Fresh Carrots",
       price: 2.99,
-      image: "https://images.unsplash.com/photo-1445282768818-728615cc910a?w=300&h=300&fit=crop&crop=center",
+      image:
+        "https://images.unsplash.com/photo-1445282768818-728615cc910a?w=300&h=300&fit=crop&crop=center",
       category: "vegetables",
       vendor: {
         id: 3,
         name: "Dr. Emma Wilson",
-        avatar: "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=60&h=60&fit=crop&crop=face",
+        avatar:
+          "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=60&h=60&fit=crop&crop=face",
         city: "Manhattan, NY",
       },
       rating: 4.6,
@@ -199,12 +211,14 @@ export default function Index() {
       id: 5,
       name: "Bananas",
       price: 2.49,
-      image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&h=300&fit=crop&crop=center",
+      image:
+        "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&h=300&fit=crop&crop=center",
       category: "fruits",
       vendor: {
         id: 3,
         name: "Dr. Emma Wilson",
-        avatar: "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=60&h=60&fit=crop&crop=face",
+        avatar:
+          "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=60&h=60&fit=crop&crop=face",
         city: "Manhattan, NY",
       },
       rating: 4.5,
@@ -214,12 +228,14 @@ export default function Index() {
       id: 6,
       name: "Denim Jeans",
       price: 39.99,
-      image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=300&fit=crop&crop=center",
+      image:
+        "https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=300&fit=crop&crop=center",
       category: "clothes",
       vendor: {
         id: 4,
         name: "Dr. James Rodriguez",
-        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
+        avatar:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
         city: "Queens, NY",
       },
       rating: 4.8,
@@ -242,7 +258,8 @@ export default function Index() {
     const matchesSearch =
       vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vendor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCity = currentLocation === "" || vendor.city === currentLocation;
+    const matchesCity =
+      currentLocation === "" || vendor.city === currentLocation;
     return matchesSearch && matchesCity;
   });
 
@@ -256,7 +273,8 @@ export default function Index() {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCity = currentLocation === "" || product.vendor.city === currentLocation;
+    const matchesCity =
+      currentLocation === "" || product.vendor.city === currentLocation;
     return matchesSearch && matchesCity;
   });
 
@@ -265,8 +283,14 @@ export default function Index() {
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-app-purple/10 to-app-sky/10 rounded-full animate-pulse"></div>
-        <div className="absolute top-1/3 -left-10 w-32 h-32 bg-gradient-to-br from-app-pink/10 to-app-purple/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
-        <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-gradient-to-br from-app-sky/10 to-app-pink/10 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div
+          className="absolute top-1/3 -left-10 w-32 h-32 bg-gradient-to-br from-app-pink/10 to-app-purple/10 rounded-full animate-bounce"
+          style={{ animationDuration: "3s" }}
+        ></div>
+        <div
+          className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-gradient-to-br from-app-sky/10 to-app-pink/10 rounded-full animate-pulse"
+          style={{ animationDelay: "1s" }}
+        ></div>
       </div>
 
       {/* Header */}
@@ -278,8 +302,12 @@ export default function Index() {
             </div>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white drop-shadow-lg">TeleHiba</h1>
-            <p className="text-xs text-white/80">Votre marketplace de confiance</p>
+            <h1 className="text-xl font-bold text-white drop-shadow-lg">
+              TeleHiba
+            </h1>
+            <p className="text-xs text-white/80">
+              Votre marketplace de confiance
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -294,7 +322,9 @@ export default function Index() {
               onClick={() => setShowMenu(!showMenu)}
               className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-110 group"
             >
-              <Menu className={`w-5 h-5 text-white transition-transform duration-300 ${showMenu ? 'rotate-90' : 'group-hover:rotate-12'}`} />
+              <Menu
+                className={`w-5 h-5 text-white transition-transform duration-300 ${showMenu ? "rotate-90" : "group-hover:rotate-12"}`}
+              />
             </button>
 
             {showMenu && (
@@ -350,7 +380,10 @@ export default function Index() {
         <div className="absolute inset-0 bg-gradient-to-r from-app-purple via-app-sky to-app-pink rounded-3xl opacity-90"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent rounded-3xl"></div>
         <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/20 rounded-full animate-pulse"></div>
-        <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
+        <div
+          className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/10 rounded-full animate-bounce"
+          style={{ animationDuration: "3s" }}
+        ></div>
 
         <div className="relative p-8 text-white">
           <div className="flex items-center justify-between">
@@ -372,17 +405,26 @@ export default function Index() {
               <div className="flex items-center gap-4 mt-4">
                 <div className="flex items-center gap-2 bg-white/20 rounded-full px-4 py-2 backdrop-blur-sm">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-xs font-medium">En ligne maintenant</span>
+                  <span className="text-xs font-medium">
+                    En ligne maintenant
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 bg-white/20 rounded-full px-4 py-2 backdrop-blur-sm">
-                  <span className="text-xs font-medium">🚀 Livraison rapide</span>
+                  <span className="text-xs font-medium">
+                    🚀 Livraison rapide
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="hidden md:block">
               <div className="w-24 h-24 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-sm border border-white/30 group-hover:scale-110 transition-transform duration-500">
-                <span className="text-4xl animate-bounce" style={{animationDuration: '2s'}}>🎯</span>
+                <span
+                  className="text-4xl animate-bounce"
+                  style={{ animationDuration: "2s" }}
+                >
+                  🎯
+                </span>
               </div>
             </div>
           </div>
@@ -406,13 +448,27 @@ export default function Index() {
                 paddingRight: "40px",
               }}
             >
-              <option value="" style={{color: '#000'}}>🌍 Toutes les villes</option>
-              <option value="New York, USA" style={{color: '#000'}}>📍 New York, USA</option>
-              <option value="Manhattan, NY" style={{color: '#000'}}>📍 Manhattan, NY</option>
-              <option value="Brooklyn, NY" style={{color: '#000'}}>📍 Brooklyn, NY</option>
-              <option value="Paris, France" style={{color: '#000'}}>📍 Paris, France</option>
-              <option value="Montreal, Canada" style={{color: '#000'}}>📍 Montreal, Canada</option>
-              <option value="Lyon, France" style={{color: '#000'}}>📍 Lyon, France</option>
+              <option value="" style={{ color: "#000" }}>
+                🌍 Toutes les villes
+              </option>
+              <option value="New York, USA" style={{ color: "#000" }}>
+                📍 New York, USA
+              </option>
+              <option value="Manhattan, NY" style={{ color: "#000" }}>
+                📍 Manhattan, NY
+              </option>
+              <option value="Brooklyn, NY" style={{ color: "#000" }}>
+                📍 Brooklyn, NY
+              </option>
+              <option value="Paris, France" style={{ color: "#000" }}>
+                📍 Paris, France
+              </option>
+              <option value="Montreal, Canada" style={{ color: "#000" }}>
+                📍 Montreal, Canada
+              </option>
+              <option value="Lyon, France" style={{ color: "#000" }}>
+                📍 Lyon, France
+              </option>
             </select>
             <div className="absolute inset-0 bg-gradient-to-r from-app-purple/20 to-app-sky/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
           </div>
@@ -466,25 +522,25 @@ export default function Index() {
           // Add sections based on which ones have results
           if (filteredCategories.length > 0) {
             sections.push({
-              type: 'categories',
+              type: "categories",
               count: filteredCategories.length,
-              priority: 1
+              priority: 1,
             });
           }
 
           if (filteredVendors.length > 0) {
             sections.push({
-              type: 'vendors',
+              type: "vendors",
               count: filteredVendors.length,
-              priority: 2
+              priority: 2,
             });
           }
 
           if (filteredProducts.length > 0) {
             sections.push({
-              type: 'products',
+              type: "products",
               count: filteredProducts.length,
-              priority: 3
+              priority: 3,
             });
           }
 
@@ -494,9 +550,13 @@ export default function Index() {
           return (
             <div className="space-y-6">
               {sections.map((section, index) => {
-                if (section.type === 'categories') {
+                if (section.type === "categories") {
                   return (
-                    <div key="categories" className="mb-6 animate-in slide-in-from-top-5 duration-300" style={{animationDelay: `${index * 100}ms`}}>
+                    <div
+                      key="categories"
+                      className="mb-6 animate-in slide-in-from-top-5 duration-300"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
                       <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-4 rounded-r-2xl mx-4 mb-4">
                         <div className="flex items-center justify-between">
                           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
@@ -519,16 +579,24 @@ export default function Index() {
                             to={`/category-products?category=${category.id}`}
                             className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all bg-gradient-to-br ${category.gradient} text-white hover:shadow-lg hover:scale-105 animate-pulse`}
                           >
-                            <span className="text-lg mb-1">{category.icon}</span>
-                            <span className="text-xs font-medium">{category.name}</span>
+                            <span className="text-lg mb-1">
+                              {category.icon}
+                            </span>
+                            <span className="text-xs font-medium">
+                              {category.name}
+                            </span>
                           </Link>
                         ))}
                       </div>
                     </div>
                   );
-                } else if (section.type === 'vendors') {
+                } else if (section.type === "vendors") {
                   return (
-                    <div key="vendors" className="mb-6 animate-in slide-in-from-top-5 duration-300" style={{animationDelay: `${index * 100}ms`}}>
+                    <div
+                      key="vendors"
+                      className="mb-6 animate-in slide-in-from-top-5 duration-300"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
                       <div className="bg-gradient-to-r from-blue-50 to-sky-50 border-l-4 border-blue-500 p-4 rounded-r-2xl mx-4 mb-4">
                         <div className="flex items-center justify-between">
                           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
@@ -564,13 +632,17 @@ export default function Index() {
                             <h4 className="font-medium text-gray-800 text-sm mb-1">
                               {vendor.name}
                             </h4>
-                            <p className="text-xs text-gray-500 mb-2">{vendor.city}</p>
+                            <p className="text-xs text-gray-500 mb-2">
+                              {vendor.city}
+                            </p>
                             <p className="text-xs text-app-purple font-medium mb-2">
                               {vendor.specialty}
                             </p>
                             <div className="flex items-center gap-1">
                               <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                              <span className="text-xs text-gray-600">{vendor.rating}</span>
+                              <span className="text-xs text-gray-600">
+                                {vendor.rating}
+                              </span>
                             </div>
                           </Link>
                         ))}
@@ -586,9 +658,12 @@ export default function Index() {
                 <div className="text-center py-16 mx-4">
                   <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8">
                     <div className="text-gray-400 text-6xl mb-4">🔍</div>
-                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucun résultat trouvé</h3>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                      Aucun résultat trouvé
+                    </h3>
                     <p className="text-gray-500 text-sm mb-4">
-                      Aucune catégorie, vendeur ou produit ne correspond à "{searchTerm}"
+                      Aucune catégorie, vendeur ou produit ne correspond à "
+                      {searchTerm}"
                     </p>
                     <button
                       onClick={() => setSearchTerm("")}
@@ -609,7 +684,9 @@ export default function Index() {
             {/* Categories Section */}
             <div className="mb-6">
               <div className="flex items-center justify-between px-4 mb-4">
-                <h3 className="text-lg font-semibold text-gray-800">Catégories</h3>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Catégories
+                </h3>
                 <Link
                   to="/all-categories"
                   className="flex items-center gap-1 text-app-purple text-sm font-medium hover:text-app-purple/80 transition-colors"
@@ -680,13 +757,17 @@ export default function Index() {
                       <h4 className="font-medium text-gray-800 text-sm mb-1">
                         {vendor.name}
                       </h4>
-                      <p className="text-xs text-gray-500 mb-2">{vendor.city}</p>
+                      <p className="text-xs text-gray-500 mb-2">
+                        {vendor.city}
+                      </p>
                       <p className="text-xs text-app-purple font-medium mb-2">
                         {vendor.specialty}
                       </p>
                       <div className="flex items-center gap-1">
                         <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                        <span className="text-xs text-gray-600">{vendor.rating}</span>
+                        <span className="text-xs text-gray-600">
+                          {vendor.rating}
+                        </span>
                       </div>
                     </Link>
                   ))}
@@ -694,7 +775,9 @@ export default function Index() {
               ) : currentLocation ? (
                 <div className="text-center py-8 px-4">
                   <div className="text-gray-400 text-3xl mb-2">👩‍⚕️</div>
-                  <p className="text-gray-500 text-sm">Aucun vendeur trouvé dans cette ville</p>
+                  <p className="text-gray-500 text-sm">
+                    Aucun vendeur trouvé dans cette ville
+                  </p>
                   <p className="text-gray-400 text-xs">
                     Essayez de sélectionner "Toutes les villes"
                   </p>
@@ -725,24 +808,33 @@ export default function Index() {
 
         {(() => {
           // Group products by vendor
-          const productsByVendor = filteredProducts.reduce((acc, product) => {
-            const vendorKey = `${product.vendor.name}-${product.vendor.city}`;
-            if (!acc[vendorKey]) {
-              acc[vendorKey] = {
-                vendor: product.vendor,
-                products: []
-              };
-            }
-            acc[vendorKey].products.push(product);
-            return acc;
-          }, {} as Record<string, { vendor: any; products: typeof filteredProducts }>);
+          const productsByVendor = filteredProducts.reduce(
+            (acc, product) => {
+              const vendorKey = `${product.vendor.name}-${product.vendor.city}`;
+              if (!acc[vendorKey]) {
+                acc[vendorKey] = {
+                  vendor: product.vendor,
+                  products: [],
+                };
+              }
+              acc[vendorKey].products.push(product);
+              return acc;
+            },
+            {} as Record<
+              string,
+              { vendor: any; products: typeof filteredProducts }
+            >,
+          );
 
           const vendorGroups = Object.values(productsByVendor);
 
           return vendorGroups.length > 0 ? (
             <div className="space-y-6">
               {vendorGroups.map((group, index) => (
-                <div key={index} className="border-b border-gray-100 pb-6 last:border-b-0">
+                <div
+                  key={index}
+                  className="border-b border-gray-100 pb-6 last:border-b-0"
+                >
                   {/* Vendor Header */}
                   <div className="px-4 mb-4">
                     <div className="flex items-center gap-3">
@@ -758,11 +850,14 @@ export default function Index() {
                         <h4 className="font-semibold text-gray-800 text-base">
                           {group.vendor.name}
                         </h4>
-                        <p className="text-sm text-gray-500">{group.vendor.city}</p>
+                        <p className="text-sm text-gray-500">
+                          {group.vendor.city}
+                        </p>
                       </div>
                       <div className="ml-auto">
                         <span className="text-sm text-app-purple font-medium">
-                          {group.products.length} produit{group.products.length > 1 ? 's' : ''}
+                          {group.products.length} produit
+                          {group.products.length > 1 ? "s" : ""}
                         </span>
                       </div>
                     </div>
@@ -828,7 +923,7 @@ export default function Index() {
                                   <Minus className="w-3 h-3" />
                                 </button>
                                 <span className="font-medium text-gray-800 text-sm">
-                                  {quantity} {product.unit || ''}
+                                  {quantity} {product.unit || ""}
                                 </span>
                                 <button
                                   onClick={() => addToCart(product)}
