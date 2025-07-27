@@ -261,55 +261,83 @@ export default function Index() {
   });
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-app-purple/10 to-app-sky/10 rounded-full animate-pulse"></div>
+        <div className="absolute top-1/3 -left-10 w-32 h-32 bg-gradient-to-br from-app-pink/10 to-app-purple/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-gradient-to-br from-app-sky/10 to-app-pink/10 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+      </div>
+
       {/* Header */}
-      <header className="flex items-center justify-between p-4 bg-gradient-to-r from-app-purple to-app-sky">
-        <h1 className="text-xl font-bold text-white">TeleHiba</h1>
+      <header className="relative flex items-center justify-between p-4 bg-gradient-to-r from-app-purple via-app-sky to-app-pink shadow-lg backdrop-blur-sm">
         <div className="flex items-center gap-3">
-          <Link to="/notifications">
-            <Bell className="w-6 h-6 text-white hover:text-white/80 transition-colors" />
+          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/30">
+            <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center">
+              <span className="text-app-purple font-bold text-sm">T</span>
+            </div>
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-white drop-shadow-lg">TeleHiba</h1>
+            <p className="text-xs text-white/80">Votre marketplace de confiance</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link to="/notifications" className="relative group">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/30 group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110">
+              <Bell className="w-5 h-5 text-white" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+            </div>
           </Link>
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+              className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-all duration-300 hover:scale-110 group"
             >
-              <Menu className="w-5 h-5 text-white" />
+              <Menu className={`w-5 h-5 text-white transition-transform duration-300 ${showMenu ? 'rotate-90' : 'group-hover:rotate-12'}`} />
             </button>
 
             {showMenu && (
-              <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg border border-gray-200 w-48 py-2 z-50">
+              <div className="absolute right-0 top-12 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/50 w-52 py-3 z-50 animate-in slide-in-from-top-5 duration-300">
                 <Link
                   to="/contact"
-                  className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-app-purple/10 hover:to-app-sky/10 transition-all duration-300 group"
                   onClick={() => setShowMenu(false)}
                 >
-                  <MessageCircle className="w-4 h-4" />
-                  Nous contacter
+                  <div className="w-8 h-8 bg-gradient-to-br from-app-purple to-app-sky rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <MessageCircle className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-medium">Nous contacter</span>
                 </Link>
                 <Link
                   to="/report-problem"
-                  className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-app-pink/10 hover:to-app-purple/10 transition-all duration-300 group"
                   onClick={() => setShowMenu(false)}
                 >
-                  <AlertTriangle className="w-4 h-4" />
-                  Signaler un problème
+                  <div className="w-8 h-8 bg-gradient-to-br from-app-pink to-app-purple rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <AlertTriangle className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-medium">Signaler un problème</span>
                 </Link>
                 <Link
                   to="/about"
-                  className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-app-sky/10 hover:to-app-pink/10 transition-all duration-300 group"
                   onClick={() => setShowMenu(false)}
                 >
-                  <Info className="w-4 h-4" />
-                  À propos de nous
+                  <div className="w-8 h-8 bg-gradient-to-br from-app-sky to-app-pink rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Info className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-medium">À propos de nous</span>
                 </Link>
                 <Link
                   to="/help"
-                  className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-app-purple/10 hover:to-app-sky/10 transition-all duration-300 group"
                   onClick={() => setShowMenu(false)}
                 >
-                  <Info className="w-4 h-4" />
-                  Aide & Support
+                  <div className="w-8 h-8 bg-gradient-to-br from-app-purple to-app-sky rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Info className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-medium">Aide & Support</span>
                 </Link>
               </div>
             )}
