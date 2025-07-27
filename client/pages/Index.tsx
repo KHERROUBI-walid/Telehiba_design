@@ -99,7 +99,7 @@ export default function Index() {
     {
       id: 1,
       name: "Dr. Sarah Johnson",
-      avatar: "👩‍⚕️",
+      avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face",
       city: "New York, USA",
       specialty: "Fruits & Vegetables",
       rating: 4.8,
@@ -108,7 +108,7 @@ export default function Index() {
     {
       id: 2,
       name: "Dr. Michael Chen",
-      avatar: "👨‍⚕️",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
       city: "Brooklyn, NY",
       specialty: "Medicine & Health",
       rating: 4.9,
@@ -117,7 +117,7 @@ export default function Index() {
     {
       id: 3,
       name: "Dr. Emma Wilson",
-      avatar: "👩‍🍳",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=80&h=80&fit=crop&crop=face",
       city: "Manhattan, NY",
       specialty: "Organic Foods",
       rating: 4.7,
@@ -126,7 +126,7 @@ export default function Index() {
     {
       id: 4,
       name: "Dr. James Rodriguez",
-      avatar: "👨‍💼",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
       city: "Queens, NY",
       specialty: "General Store",
       rating: 4.6,
