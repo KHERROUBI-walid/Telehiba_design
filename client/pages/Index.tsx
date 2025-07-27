@@ -535,10 +535,15 @@ export default function Index() {
                 className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow w-48"
               >
                 <div
-                  className={`w-full h-20 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center text-2xl`}
-                >
-                  {vendor.avatar}
-                </div>
+                className={`w-full h-20 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center overflow-hidden relative`}
+              >
+                <img
+                  src={vendor.avatar}
+                  alt={vendor.name}
+                  className="w-16 h-16 rounded-full object-cover border-4 border-white/50 shadow-lg"
+                  loading="lazy"
+                />
+              </div>
                 <h4 className="font-medium text-gray-800 text-sm mb-1">
                   {vendor.name}
                 </h4>
