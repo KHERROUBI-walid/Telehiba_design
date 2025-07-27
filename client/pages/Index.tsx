@@ -458,116 +458,252 @@ export default function Index() {
         </div>
       </div>
 
-      {/* Categories Section */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between px-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">
-            Catégories {searchTerm && `(${filteredCategories.length})`}
-          </h3>
-          <Link
-            to="/all-categories"
-            className="flex items-center gap-1 text-app-purple text-sm font-medium hover:text-app-purple/80 transition-colors"
-          >
-            Voir tout
-            <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
+      {(() => {
+        // When searching, prioritize sections with results
+        if (searchTerm) {
+          const sections = [];
 
-        {filteredCategories.length > 0 ? (
-          <div className="flex gap-4 overflow-x-auto px-4 pb-2">
-            {!searchTerm && (
-              <button
-                onClick={() => setSelectedCategory("all")}
-                className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all ${
-                  selectedCategory === "all"
-                    ? "bg-app-purple text-white"
-                    : "bg-gray-100 text-gray-600"
-                }`}
-              >
-                <span className="text-lg mb-1">🏪</span>
-                <span className="text-xs font-medium">Tous</span>
-              </button>
-            )}
-            {filteredCategories.map((category) => (
-              <Link
-                key={category.id}
-                to={`/category-products?category=${category.id}`}
-                className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all bg-gradient-to-br ${category.gradient} text-white hover:shadow-lg hover:scale-105`}
-              >
-                <span className="text-lg mb-1">{category.icon}</span>
-                <span className="text-xs font-medium">{category.name}</span>
-              </Link>
-            ))}
-          </div>
-        ) : searchTerm ? (
-          <div className="text-center py-8 px-4">
-            <div className="text-gray-400 text-3xl mb-2">🔍</div>
-            <p className="text-gray-500 text-sm">Aucune catégorie trouvée</p>
-            <p className="text-gray-400 text-xs">
-              Essayez un autre terme de recherche
-            </p>
-          </div>
-        ) : null}
-      </div>
+          // Add sections based on which ones have results
+          if (filteredCategories.length > 0) {
+            sections.push({
+              type: 'categories',
+              count: filteredCategories.length,
+              priority: 1
+            });
+          }
 
-      {/* Vendors Section */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between px-4 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">
-            Vendeurs{" "}
-            {(searchTerm || currentLocation) && `(${filteredVendors.length})`}
-          </h3>
-          <Link
-            to="/all-vendors"
-            className="flex items-center gap-1 text-app-purple text-sm font-medium hover:text-app-purple/80 transition-colors"
-          >
-            Voir tout
-            <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
+          if (filteredVendors.length > 0) {
+            sections.push({
+              type: 'vendors',
+              count: filteredVendors.length,
+              priority: 2
+            });
+          }
 
-        {filteredVendors.length > 0 ? (
-          <div className="flex gap-4 overflow-x-auto px-4 pb-2">
-            {filteredVendors.map((vendor) => (
-              <Link
-                key={vendor.id}
-                to={`/vendor-products?vendor=${vendor.name}&city=${vendor.city}`}
-                className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow w-48"
-              >
-                <div
-                className={`w-full h-20 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center overflow-hidden relative`}
-              >
-                <img
-                  src={vendor.avatar}
-                  alt={vendor.name}
-                  className="w-16 h-16 rounded-full object-cover border-4 border-white/50 shadow-lg"
-                  loading="lazy"
-                />
-              </div>
-                <h4 className="font-medium text-gray-800 text-sm mb-1">
-                  {vendor.name}
-                </h4>
-                <p className="text-xs text-gray-500 mb-2">{vendor.city}</p>
-                <p className="text-xs text-app-purple font-medium mb-2">
-                  {vendor.specialty}
-                </p>
-                <div className="flex items-center gap-1">
-                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                  <span className="text-xs text-gray-600">{vendor.rating}</span>
+          if (filteredProducts.length > 0) {
+            sections.push({
+              type: 'products',
+              count: filteredProducts.length,
+              priority: 3
+            });
+          }
+
+          // Sort by count (descending) to show section with most results first
+          sections.sort((a, b) => b.count - a.count);
+
+          return (
+            <div className="space-y-6">
+              {sections.map((section, index) => {
+                if (section.type === 'categories') {
+                  return (
+                    <div key="categories" className="mb-6 animate-in slide-in-from-top-5 duration-300" style={{animationDelay: `${index * 100}ms`}}>
+                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-4 rounded-r-2xl mx-4 mb-4">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                            🎯 Catégories trouvées ({filteredCategories.length})
+                          </h3>
+                          <Link
+                            to="/all-categories"
+                            className="flex items-center gap-1 text-green-600 text-sm font-medium hover:text-green-700 transition-colors"
+                          >
+                            Voir tout
+                            <ChevronRight className="w-4 h-4" />
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 overflow-x-auto px-4 pb-2">
+                        {filteredCategories.map((category) => (
+                          <Link
+                            key={category.id}
+                            to={`/category-products?category=${category.id}`}
+                            className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all bg-gradient-to-br ${category.gradient} text-white hover:shadow-lg hover:scale-105 animate-pulse`}
+                          >
+                            <span className="text-lg mb-1">{category.icon}</span>
+                            <span className="text-xs font-medium">{category.name}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                } else if (section.type === 'vendors') {
+                  return (
+                    <div key="vendors" className="mb-6 animate-in slide-in-from-top-5 duration-300" style={{animationDelay: `${index * 100}ms`}}>
+                      <div className="bg-gradient-to-r from-blue-50 to-sky-50 border-l-4 border-blue-500 p-4 rounded-r-2xl mx-4 mb-4">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                            🎯 Vendeurs trouvés ({filteredVendors.length})
+                          </h3>
+                          <Link
+                            to="/all-vendors"
+                            className="flex items-center gap-1 text-blue-600 text-sm font-medium hover:text-blue-700 transition-colors"
+                          >
+                            Voir tout
+                            <ChevronRight className="w-4 h-4" />
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 overflow-x-auto px-4 pb-2">
+                        {filteredVendors.map((vendor) => (
+                          <Link
+                            key={vendor.id}
+                            to={`/vendor-products?vendor=${vendor.name}&city=${vendor.city}`}
+                            className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow w-48 ring-2 ring-blue-200 animate-pulse"
+                          >
+                            <div
+                              className={`w-full h-20 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center overflow-hidden relative`}
+                            >
+                              <img
+                                src={vendor.avatar}
+                                alt={vendor.name}
+                                className="w-16 h-16 rounded-full object-cover border-4 border-white/50 shadow-lg"
+                                loading="lazy"
+                              />
+                            </div>
+                            <h4 className="font-medium text-gray-800 text-sm mb-1">
+                              {vendor.name}
+                            </h4>
+                            <p className="text-xs text-gray-500 mb-2">{vendor.city}</p>
+                            <p className="text-xs text-app-purple font-medium mb-2">
+                              {vendor.specialty}
+                            </p>
+                            <div className="flex items-center gap-1">
+                              <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                              <span className="text-xs text-gray-600">{vendor.rating}</span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })}
+
+              {/* No results message */}
+              {sections.length === 0 && (
+                <div className="text-center py-16 mx-4">
+                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8">
+                    <div className="text-gray-400 text-6xl mb-4">🔍</div>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucun résultat trouvé</h3>
+                    <p className="text-gray-500 text-sm mb-4">
+                      Aucune catégorie, vendeur ou produit ne correspond à "{searchTerm}"
+                    </p>
+                    <button
+                      onClick={() => setSearchTerm("")}
+                      className="bg-gradient-to-r from-app-purple to-app-sky text-white px-6 py-3 rounded-2xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                    >
+                      ✨ Effacer la recherche
+                    </button>
+                  </div>
                 </div>
-              </Link>
-            ))}
-          </div>
-        ) : searchTerm || currentLocation ? (
-          <div className="text-center py-8 px-4">
-            <div className="text-gray-400 text-3xl mb-2">👩‍⚕️</div>
-            <p className="text-gray-500 text-sm">Aucun vendeur trouvé</p>
-            <p className="text-gray-400 text-xs">
-              Essayez de modifier vos critères de recherche
-            </p>
-          </div>
-        ) : null}
-      </div>
+              )}
+            </div>
+          );
+        }
+
+        // Default view when not searching
+        return (
+          <>
+            {/* Categories Section */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between px-4 mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">Catégories</h3>
+                <Link
+                  to="/all-categories"
+                  className="flex items-center gap-1 text-app-purple text-sm font-medium hover:text-app-purple/80 transition-colors"
+                >
+                  Voir tout
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <div className="flex gap-4 overflow-x-auto px-4 pb-2">
+                <button
+                  onClick={() => setSelectedCategory("all")}
+                  className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all ${
+                    selectedCategory === "all"
+                      ? "bg-app-purple text-white"
+                      : "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  <span className="text-lg mb-1">🏪</span>
+                  <span className="text-xs font-medium">Tous</span>
+                </button>
+                {categories.map((category) => (
+                  <Link
+                    key={category.id}
+                    to={`/category-products?category=${category.id}`}
+                    className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all bg-gradient-to-br ${category.gradient} text-white hover:shadow-lg hover:scale-105`}
+                  >
+                    <span className="text-lg mb-1">{category.icon}</span>
+                    <span className="text-xs font-medium">{category.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Vendors Section */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between px-4 mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Vendeurs {currentLocation && `(${filteredVendors.length})`}
+                </h3>
+                <Link
+                  to="/all-vendors"
+                  className="flex items-center gap-1 text-app-purple text-sm font-medium hover:text-app-purple/80 transition-colors"
+                >
+                  Voir tout
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              {filteredVendors.length > 0 ? (
+                <div className="flex gap-4 overflow-x-auto px-4 pb-2">
+                  {filteredVendors.map((vendor) => (
+                    <Link
+                      key={vendor.id}
+                      to={`/vendor-products?vendor=${vendor.name}&city=${vendor.city}`}
+                      className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow w-48"
+                    >
+                      <div
+                        className={`w-full h-20 bg-gradient-to-br ${vendor.gradient} rounded-xl mb-3 flex items-center justify-center overflow-hidden relative`}
+                      >
+                        <img
+                          src={vendor.avatar}
+                          alt={vendor.name}
+                          className="w-16 h-16 rounded-full object-cover border-4 border-white/50 shadow-lg"
+                          loading="lazy"
+                        />
+                      </div>
+                      <h4 className="font-medium text-gray-800 text-sm mb-1">
+                        {vendor.name}
+                      </h4>
+                      <p className="text-xs text-gray-500 mb-2">{vendor.city}</p>
+                      <p className="text-xs text-app-purple font-medium mb-2">
+                        {vendor.specialty}
+                      </p>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                        <span className="text-xs text-gray-600">{vendor.rating}</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : currentLocation ? (
+                <div className="text-center py-8 px-4">
+                  <div className="text-gray-400 text-3xl mb-2">👩‍⚕️</div>
+                  <p className="text-gray-500 text-sm">Aucun vendeur trouvé dans cette ville</p>
+                  <p className="text-gray-400 text-xs">
+                    Essayez de sélectionner "Toutes les villes"
+                  </p>
+                </div>
+              ) : null}
+            </div>
+          </>
+        );
+      })()}
 
       {/* Products by Vendor Section */}
       <div className="pb-24">
