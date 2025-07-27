@@ -644,8 +644,14 @@ export default function Index() {
                             className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 w-48"
                           >
                             {/* Product Image */}
-                            <div className="w-full h-32 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3 flex items-center justify-center text-3xl">
-                              {product.image}
+                            <div className="w-full h-32 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3 flex items-center justify-center overflow-hidden relative">
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                className="w-full h-full object-cover rounded-xl"
+                                loading="lazy"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
                             </div>
 
                             {/* Product Info */}
