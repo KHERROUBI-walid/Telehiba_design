@@ -63,8 +63,13 @@ export default function CartSidebar() {
                   >
                     <div className="flex items-start gap-3">
                       {/* Product Image */}
-                      <div className="w-16 h-16 bg-gradient-to-br from-app-purple to-app-sky rounded-lg flex items-center justify-center text-2xl">
-                        {item.product.image}
+                      <div className="w-16 h-16 bg-gradient-to-br from-app-purple to-app-sky rounded-lg flex items-center justify-center overflow-hidden">
+                        <img
+                          src={item.product.image}
+                          alt={item.product.name}
+                          className="w-full h-full object-cover rounded-lg"
+                          loading="lazy"
+                        />
                       </div>
 
                       {/* Product Details */}
