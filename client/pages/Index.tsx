@@ -610,8 +610,13 @@ export default function Index() {
                   {/* Vendor Header */}
                   <div className="px-4 mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-xl">
-                        {group.vendor.avatar}
+                      <div className="w-12 h-12 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center overflow-hidden">
+                        <img
+                          src={group.vendor.avatar}
+                          alt={group.vendor.name}
+                          className="w-10 h-10 rounded-full object-cover"
+                          loading="lazy"
+                        />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-800 text-base">
