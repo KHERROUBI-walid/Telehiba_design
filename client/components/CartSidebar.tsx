@@ -83,8 +83,13 @@ export default function CartSidebar() {
 
                         {/* Vendor Info */}
                         <div className="flex items-center gap-1 mb-2">
-                          <div className="w-4 h-4 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-xs">
-                            {item.product.vendor.avatar}
+                          <div className="w-4 h-4 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center overflow-hidden">
+                            <img
+                              src={item.product.vendor.avatar}
+                              alt={item.product.vendor.name}
+                              className="w-full h-full object-cover rounded-full"
+                              loading="lazy"
+                            />
                           </div>
                           <span className="text-xs text-gray-600">
                             {item.product.vendor.name}
