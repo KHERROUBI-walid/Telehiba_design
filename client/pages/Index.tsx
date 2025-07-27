@@ -346,49 +346,55 @@ export default function Index() {
       </header>
 
       {/* Search Bar and Location */}
-      <div className="p-4 space-y-3 bg-white">
+      <div className="relative p-6 bg-gradient-to-b from-white/80 to-white backdrop-blur-sm">
         {/* Location Selector */}
-        <div className="flex justify-center">
-          <select
-            value={currentLocation}
-            onChange={(e) => setCurrentLocation(e.target.value)}
-            className="bg-app-dark-blue text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 border-none outline-none cursor-pointer appearance-none"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-              backgroundPosition: "right 8px center",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "16px",
-              paddingRight: "32px",
-            }}
-          >
-            <option value="">🌍 Toutes les villes</option>
-            <option value="New York, USA">📍 New York, USA</option>
-            <option value="Manhattan, NY">📍 Manhattan, NY</option>
-            <option value="Brooklyn, NY">📍 Brooklyn, NY</option>
-            <option value="Paris, France">📍 Paris, France</option>
-            <option value="Montreal, Canada">📍 Montreal, Canada</option>
-            <option value="Lyon, France">📍 Lyon, France</option>
-          </select>
+        <div className="flex justify-center mb-4">
+          <div className="relative group">
+            <select
+              value={currentLocation}
+              onChange={(e) => setCurrentLocation(e.target.value)}
+              className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-6 py-3 rounded-2xl text-sm border-none outline-none cursor-pointer appearance-none shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:scale-105 backdrop-blur-sm border border-white/20"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                backgroundPosition: "right 12px center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "16px",
+                paddingRight: "40px",
+              }}
+            >
+              <option value="">🌍 Toutes les villes</option>
+              <option value="New York, USA">📍 New York, USA</option>
+              <option value="Manhattan, NY">📍 Manhattan, NY</option>
+              <option value="Brooklyn, NY">📍 Brooklyn, NY</option>
+              <option value="Paris, France">📍 Paris, France</option>
+              <option value="Montreal, Canada">📍 Montreal, Canada</option>
+              <option value="Lyon, France">📍 Lyon, France</option>
+            </select>
+            <div className="absolute inset-0 bg-gradient-to-r from-app-purple/20 to-app-sky/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+          </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           {/* Search Bar */}
-          <div className="relative">
-            <div className="flex items-center bg-gray-50 rounded-full px-4 py-3 shadow-lg">
-              <Search className="w-5 h-5 text-gray-400 mr-3" />
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-app-purple/20 via-app-sky/20 to-app-pink/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
+            <div className="relative flex items-center bg-white/90 backdrop-blur-xl rounded-3xl px-6 py-4 shadow-2xl border border-white/50 group-hover:shadow-3xl transition-all duration-500">
+              <div className="w-10 h-10 bg-gradient-to-br from-app-purple to-app-sky rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                <Search className="w-5 h-5 text-white" />
+              </div>
               <input
                 type="text"
                 placeholder="Rechercher catégories, vendeurs, produits..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1 outline-none text-sm placeholder-gray-400 bg-transparent"
+                className="flex-1 outline-none text-base placeholder-gray-500 bg-transparent font-medium"
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="text-gray-400 hover:text-gray-600 mr-2"
+                  className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-red-100 hover:text-red-500 transition-all duration-300 ml-2 group/clear"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4 group-hover/clear:rotate-90 transition-transform duration-300" />
                 </button>
               )}
             </div>
@@ -396,12 +402,12 @@ export default function Index() {
 
           {/* Clear search button */}
           {searchTerm && (
-            <div className="flex justify-center">
+            <div className="flex justify-center animate-in slide-in-from-top-5 duration-300">
               <button
                 onClick={() => setSearchTerm("")}
-                className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
+                className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-2xl hover:from-red-100 hover:to-red-200 hover:text-red-600 transition-all duration-300 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                Effacer la recherche
+                ✨ Effacer la recherche
               </button>
             </div>
           )}
