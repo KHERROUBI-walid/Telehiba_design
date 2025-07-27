@@ -298,7 +298,7 @@ export default function Index() {
             </button>
 
             {showMenu && (
-              <div className="absolute right-0 top-12 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/50 w-52 py-3 z-50 animate-in slide-in-from-top-5 duration-300">
+              <div className="fixed right-4 top-20 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/50 w-52 py-3 z-[9999] animate-in slide-in-from-top-5 duration-300">
                 <Link
                   to="/contact"
                   className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-app-purple/10 hover:to-app-sky/10 transition-all duration-300 group"
