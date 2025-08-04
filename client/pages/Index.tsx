@@ -519,14 +519,7 @@ export default function Index() {
         if (searchTerm) {
           const sections = [];
 
-          // Add sections based on which ones have results
-          if (filteredCategories.length > 0) {
-            sections.push({
-              type: "categories",
-              count: filteredCategories.length,
-              priority: 1,
-            });
-          }
+          // Categories section removed - only show vendors and products
 
           if (filteredVendors.length > 0) {
             sections.push({
