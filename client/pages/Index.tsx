@@ -798,7 +798,7 @@ export default function Index() {
                         return (
                           <div
                             key={product.id}
-                            className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-lg border border-gray-100 w-48"
+                            className="flex-shrink-0 bg-white rounded-3xl p-5 shadow-xl border border-gray-200 w-52 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2"
                           >
                             {/* Product Image */}
                             <div className="w-full h-32 bg-gradient-to-br from-app-purple to-app-sky rounded-xl mb-3 flex items-center justify-center overflow-hidden relative">
