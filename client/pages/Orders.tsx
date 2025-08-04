@@ -316,9 +316,12 @@ export default function Orders() {
                         </button>
                       )}
 
-                      <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-                        Détails
-                      </button>
+                      <Link
+                        to={`/order-details/${order.id}`}
+                        className="px-6 py-3 border-2 border-app-purple text-app-purple rounded-2xl text-sm font-semibold hover:bg-app-purple hover:text-white transition-all duration-300 text-center"
+                      >
+                        🔍 Détails
+                      </Link>
                     </div>
                   </div>
                 </div>
