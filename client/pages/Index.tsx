@@ -634,46 +634,6 @@ export default function Index() {
         // Default view when not searching
         return (
           <>
-            {/* Categories Section */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between px-4 mb-4">
-                <h3 className="text-lg font-semibold text-gray-800">
-                  Catégories
-                </h3>
-                <Link
-                  to="/all-categories"
-                  className="flex items-center gap-1 text-app-purple text-sm font-medium hover:text-app-purple/80 transition-colors"
-                >
-                  Voir tout
-                  <ChevronRight className="w-4 h-4" />
-                </Link>
-              </div>
-
-              <div className="flex gap-4 overflow-x-auto px-4 pb-2">
-                <button
-                  onClick={() => setSelectedCategory("all")}
-                  className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all ${
-                    selectedCategory === "all"
-                      ? "bg-app-purple text-white"
-                      : "bg-gray-100 text-gray-600"
-                  }`}
-                >
-                  <span className="text-lg mb-1">🏪</span>
-                  <span className="text-xs font-medium">Tous</span>
-                </button>
-                {categories.map((category) => (
-                  <Link
-                    key={category.id}
-                    to={`/category-products?category=${category.id}`}
-                    className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all bg-gradient-to-br ${category.gradient} text-white hover:shadow-lg hover:scale-105`}
-                  >
-                    <span className="text-lg mb-1">{category.icon}</span>
-                    <span className="text-xs font-medium">{category.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
             {/* Vendors Section */}
             <div className="mb-6">
               <div className="flex items-center justify-between px-4 mb-4">
