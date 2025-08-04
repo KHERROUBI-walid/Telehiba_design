@@ -15,6 +15,7 @@ import AllCategories from "./pages/AllCategories";
 import AllVendors from "./pages/AllVendors";
 import AllProducts from "./pages/AllProducts";
 import Orders from "./pages/Orders";
+import OrderDetails from "./pages/OrderDetails";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import ChangePassword from "./pages/ChangePassword";
