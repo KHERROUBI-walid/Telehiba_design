@@ -749,29 +749,37 @@ export default function Index() {
                   className="bg-white rounded-3xl shadow-lg border border-gray-100 mb-8 overflow-hidden hover:shadow-xl transition-shadow duration-300"
                 >
                   {/* Vendor Header */}
-                  <div className="px-4 mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center overflow-hidden">
-                        <img
-                          src={group.vendor.avatar}
-                          alt={group.vendor.name}
-                          className="w-10 h-10 rounded-full object-cover"
-                          loading="lazy"
-                        />
+                  <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-6 py-5 border-b border-gray-200">
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <div className="w-16 h-16 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center overflow-hidden shadow-lg border-4 border-white">
+                          <img
+                            src={group.vendor.avatar}
+                            alt={group.vendor.name}
+                            className="w-full h-full rounded-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-800 text-base">
+                      <div className="flex-1">
+                        <h4 className="font-bold text-gray-800 text-lg mb-1">
                           {group.vendor.name}
                         </h4>
-                        <p className="text-sm text-gray-500">
-                          {group.vendor.city}
+                        <p className="text-sm text-gray-600 flex items-center gap-2">
+                          📍 {group.vendor.city}
                         </p>
                       </div>
-                      <div className="ml-auto">
-                        <span className="text-sm text-app-purple font-medium">
-                          {group.products.length} produit
-                          {group.products.length > 1 ? "s" : ""}
-                        </span>
+                      <div className="text-right">
+                        <div className="bg-gradient-to-r from-app-purple to-app-sky text-white px-4 py-2 rounded-full shadow-lg">
+                          <span className="text-sm font-bold">
+                            {group.products.length} produit
+                            {group.products.length > 1 ? "s" : ""}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">Disponibles</p>
                       </div>
                     </div>
                   </div>
