@@ -189,14 +189,17 @@ export default function Orders() {
       </header>
 
       {/* Orders List */}
-      <div className="p-4 pb-24">
+      <div className="relative p-6 pb-24">
         {orders.length === 0 ? (
-          <div className="text-center text-gray-500 mt-8">
-            <Package className="w-12 h-12 mx-auto mb-4 opacity-30" />
-            <p>Aucune commande trouvée</p>
+          <div className="text-center py-16">
+            <div className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100">
+              <Package className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucune commande</h3>
+              <p className="text-gray-500">Vous n'avez pas encore passé de commande</p>
+            </div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {orders.map((order) => {
               const statusInfo = statusConfig[order.status];
               const StatusIcon = statusInfo.icon;
@@ -204,8 +207,10 @@ export default function Orders() {
               return (
                 <div
                   key={order.id}
-                  className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100"
+                  className="bg-white/90 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/50 hover:shadow-3xl transition-all duration-300 hover:scale-[1.02] relative overflow-hidden"
                 >
+                  {/* Decorative gradient overlay */}
+                  <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-app-purple via-app-sky to-app-pink"></div>
                   {/* Order Header */}
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
