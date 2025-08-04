@@ -35,7 +35,12 @@ interface Order {
   vendorAddress: string;
   items: OrderItem[];
   total: number;
-  status: "waiting" | "paid_by_donator" | "preparing" | "ready_for_pickup" | "delivered";
+  status:
+    | "waiting"
+    | "paid_by_donator"
+    | "preparing"
+    | "ready_for_pickup"
+    | "delivered";
   orderDate: string;
   donatorName?: string;
   pickupCode: string;
@@ -61,7 +66,8 @@ export default function OrderDetails() {
         name: "Fresh Organic Tomatoes",
         price: 4.99,
         quantity: 2,
-        image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=100&h=100&fit=crop&crop=center",
+        image:
+          "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=100&h=100&fit=crop&crop=center",
         unit: "Kg",
       },
       {
@@ -69,7 +75,8 @@ export default function OrderDetails() {
         name: "Red Apples",
         price: 3.5,
         quantity: 1,
-        image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop&crop=center",
+        image:
+          "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop&crop=center",
         unit: "Kg",
       },
     ],
@@ -153,17 +160,25 @@ export default function OrderDetails() {
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-app-purple/10 to-app-sky/10 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-1/4 -left-10 w-32 h-32 bg-gradient-to-br from-app-pink/10 to-app-purple/10 rounded-full animate-bounce" style={{animationDuration: '4s'}}></div>
+        <div
+          className="absolute bottom-1/4 -left-10 w-32 h-32 bg-gradient-to-br from-app-pink/10 to-app-purple/10 rounded-full animate-bounce"
+          style={{ animationDuration: "4s" }}
+        ></div>
       </div>
 
       {/* Header */}
       <header className="relative flex items-center justify-between p-6 bg-gradient-to-r from-app-purple via-app-sky to-app-pink shadow-2xl">
         <div className="flex items-center gap-4">
-          <Link to="/orders" className="text-white hover:scale-110 transition-transform duration-300">
+          <Link
+            to="/orders"
+            className="text-white hover:scale-110 transition-transform duration-300"
+          >
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-white drop-shadow-lg">Détails Commande</h1>
+            <h1 className="text-2xl font-bold text-white drop-shadow-lg">
+              Détails Commande
+            </h1>
             <p className="text-sm text-white/90">#{order.id}</p>
           </div>
         </div>
@@ -171,21 +186,28 @@ export default function OrderDetails() {
 
       <div className="relative p-6 pb-24">
         {/* Status Card */}
-        <div className={`${statusInfo.bgColor} rounded-3xl p-6 mb-6 shadow-xl border-2 border-white`}>
+        <div
+          className={`${statusInfo.bgColor} rounded-3xl p-6 mb-6 shadow-xl border-2 border-white`}
+        >
           <div className="flex items-center gap-4 mb-4">
-            <div className={`w-16 h-16 ${statusInfo.bgColor} rounded-2xl flex items-center justify-center border-2 border-white shadow-lg`}>
+            <div
+              className={`w-16 h-16 ${statusInfo.bgColor} rounded-2xl flex items-center justify-center border-2 border-white shadow-lg`}
+            >
               <StatusIcon className={`w-8 h-8 ${statusInfo.color}`} />
             </div>
             <div>
-              <h2 className={`text-2xl font-bold ${statusInfo.color}`}>{statusInfo.title}</h2>
+              <h2 className={`text-2xl font-bold ${statusInfo.color}`}>
+                {statusInfo.title}
+              </h2>
               <p className="text-gray-600 text-lg">{statusInfo.subtitle}</p>
             </div>
           </div>
-          
+
           {order.donatorName && (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4">
               <p className="text-center text-pink-700 font-semibold">
-                💝 Payé avec amour par <span className="font-bold">{order.donatorName}</span>
+                💝 Payé avec amour par{" "}
+                <span className="font-bold">{order.donatorName}</span>
               </p>
             </div>
           )}
@@ -194,22 +216,30 @@ export default function OrderDetails() {
         {/* Pickup Instructions - Only show if ready for pickup */}
         {order.status === "ready_for_pickup" && !orderReceived && (
           <div className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-3xl p-6 mb-6 text-white shadow-2xl">
-            <h3 className="text-2xl font-bold mb-4 text-center">🎯 Instructions de récupération</h3>
-            
+            <h3 className="text-2xl font-bold mb-4 text-center">
+              🎯 Instructions de récupération
+            </h3>
+
             {/* QR Code Section */}
             <div className="bg-white rounded-2xl p-6 mb-6">
               <div className="text-center">
                 <div className="w-32 h-32 bg-gray-100 rounded-2xl mx-auto mb-4 flex items-center justify-center border-4 border-gray-200">
                   <QrCode className="w-20 h-20 text-gray-400" />
                 </div>
-                <p className="text-gray-800 font-semibold mb-2">Présentez ce QR code au vendeur</p>
-                <p className="text-gray-600 text-sm">Ou utilisez le code ci-dessous</p>
+                <p className="text-gray-800 font-semibold mb-2">
+                  Présentez ce QR code au vendeur
+                </p>
+                <p className="text-gray-600 text-sm">
+                  Ou utilisez le code ci-dessous
+                </p>
               </div>
             </div>
 
             {/* Pickup Code */}
             <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-4">
-              <p className="text-center text-white/80 mb-2">Code de récupération</p>
+              <p className="text-center text-white/80 mb-2">
+                Code de récupération
+              </p>
               <div className="flex items-center justify-center gap-3">
                 <span className="text-3xl font-mono font-bold text-white bg-black/20 px-4 py-2 rounded-xl">
                   {order.pickupCode}
@@ -230,20 +260,36 @@ export default function OrderDetails() {
             {/* Steps */}
             <div className="space-y-3">
               <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-2xl p-3">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-purple-500 font-bold">1</div>
-                <p className="text-white font-medium">Rendez-vous chez le vendeur</p>
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-purple-500 font-bold">
+                  1
+                </div>
+                <p className="text-white font-medium">
+                  Rendez-vous chez le vendeur
+                </p>
               </div>
               <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-2xl p-3">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-purple-500 font-bold">2</div>
-                <p className="text-white font-medium">Présentez le QR code ou le code {order.pickupCode}</p>
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-purple-500 font-bold">
+                  2
+                </div>
+                <p className="text-white font-medium">
+                  Présentez le QR code ou le code {order.pickupCode}
+                </p>
               </div>
               <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-2xl p-3">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-purple-500 font-bold">3</div>
-                <p className="text-white font-medium">Récupérez votre commande</p>
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-purple-500 font-bold">
+                  3
+                </div>
+                <p className="text-white font-medium">
+                  Récupérez votre commande
+                </p>
               </div>
               <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-2xl p-3">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-purple-500 font-bold">4</div>
-                <p className="text-white font-medium">Confirmez la réception ci-dessous</p>
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-purple-500 font-bold">
+                  4
+                </div>
+                <p className="text-white font-medium">
+                  Confirmez la réception ci-dessous
+                </p>
               </div>
             </div>
           </div>
@@ -255,18 +301,20 @@ export default function OrderDetails() {
             <MapPin className="w-6 h-6 text-app-purple" />
             Informations du vendeur
           </h3>
-          
+
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-gradient-to-br from-app-purple to-app-sky rounded-2xl flex items-center justify-center">
                 <span className="text-2xl">👩‍⚕️</span>
               </div>
               <div>
-                <h4 className="font-bold text-gray-800 text-lg">{order.vendorName}</h4>
+                <h4 className="font-bold text-gray-800 text-lg">
+                  {order.vendorName}
+                </h4>
                 <p className="text-gray-600">{order.vendorCity}</p>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 gap-3">
               <div className="flex items-center gap-3 bg-gray-50 rounded-2xl p-3">
                 <MapPin className="w-5 h-5 text-gray-600" />
@@ -286,13 +334,16 @@ export default function OrderDetails() {
             <Package className="w-6 h-6 text-app-purple" />
             Articles commandés
           </h3>
-          
+
           <div className="space-y-4">
             {order.items.map((item) => (
-              <div key={item.id} className="flex items-center gap-4 bg-gray-50 rounded-2xl p-4">
+              <div
+                key={item.id}
+                className="flex items-center gap-4 bg-gray-50 rounded-2xl p-4"
+              >
                 <div className="w-16 h-16 rounded-2xl overflow-hidden">
-                  <img 
-                    src={item.image} 
+                  <img
+                    src={item.image}
                     alt={item.name}
                     className="w-full h-full object-cover"
                   />
@@ -308,11 +359,13 @@ export default function OrderDetails() {
                 </span>
               </div>
             ))}
-            
+
             <div className="border-t border-gray-200 pt-4">
               <div className="flex items-center justify-between">
                 <span className="text-xl font-bold text-gray-800">Total</span>
-                <span className="text-2xl font-bold text-app-purple">${order.total.toFixed(2)}</span>
+                <span className="text-2xl font-bold text-app-purple">
+                  ${order.total.toFixed(2)}
+                </span>
               </div>
             </div>
           </div>
@@ -331,8 +384,12 @@ export default function OrderDetails() {
         {orderReceived && (
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-3xl p-6 text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-green-700 mb-2">Commande récupérée !</h3>
-            <p className="text-green-600 mb-4">Merci d'avoir confirmé la réception de votre commande.</p>
+            <h3 className="text-2xl font-bold text-green-700 mb-2">
+              Commande récupérée !
+            </h3>
+            <p className="text-green-600 mb-4">
+              Merci d'avoir confirmé la réception de votre commande.
+            </p>
             <div className="flex items-center justify-center gap-2 text-green-600">
               <Star className="w-5 h-5 fill-current" />
               <span>N'hésitez pas à laisser un avis sur le vendeur</span>

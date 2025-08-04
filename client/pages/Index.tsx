@@ -779,14 +779,22 @@ export default function Index() {
                             {group.products.length > 1 ? "s" : ""}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">Disponibles</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Disponibles
+                        </p>
                       </div>
                     </div>
                   </div>
 
                   {/* Products Carousel */}
                   <div className="bg-gradient-to-br from-gray-50 to-white p-6">
-                    <div className="flex gap-6 overflow-x-auto pb-4" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+                    <div
+                      className="flex gap-6 overflow-x-auto pb-4"
+                      style={{
+                        scrollbarWidth: "none",
+                        msOverflowStyle: "none",
+                      }}
+                    >
                       <style jsx>{`
                         div::-webkit-scrollbar {
                           display: none;

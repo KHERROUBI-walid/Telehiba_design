@@ -160,19 +160,28 @@ export default function Orders() {
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-app-purple/10 to-app-sky/10 rounded-full animate-pulse"></div>
-        <div className="absolute top-1/3 -left-10 w-32 h-32 bg-gradient-to-br from-app-pink/10 to-app-purple/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
+        <div
+          className="absolute top-1/3 -left-10 w-32 h-32 bg-gradient-to-br from-app-pink/10 to-app-purple/10 rounded-full animate-bounce"
+          style={{ animationDuration: "3s" }}
+        ></div>
       </div>
 
       {/* Header */}
       <header className="relative flex items-center justify-between p-6 bg-gradient-to-r from-app-purple via-app-sky to-app-pink shadow-2xl">
         <div className="flex items-center gap-4">
-          <Link to="/" className="text-white hover:scale-110 transition-transform duration-300">
+          <Link
+            to="/"
+            className="text-white hover:scale-110 transition-transform duration-300"
+          >
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-white drop-shadow-lg">Mes Commandes</h1>
+            <h1 className="text-2xl font-bold text-white drop-shadow-lg">
+              Mes Commandes
+            </h1>
             <p className="text-sm text-white/90 flex items-center gap-2">
-              📦 {orders.length} commande{orders.length > 1 ? 's' : ''} • 🎯 Suivi en temps réel
+              📦 {orders.length} commande{orders.length > 1 ? "s" : ""} • 🎯
+              Suivi en temps réel
             </p>
           </div>
         </div>
@@ -194,8 +203,12 @@ export default function Orders() {
           <div className="text-center py-16">
             <div className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100">
               <Package className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucune commande</h3>
-              <p className="text-gray-500">Vous n'avez pas encore passé de commande</p>
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                Aucune commande
+              </h3>
+              <p className="text-gray-500">
+                Vous n'avez pas encore passé de commande
+              </p>
             </div>
           </div>
         ) : (
