@@ -746,7 +746,7 @@ export default function Index() {
               {vendorGroups.map((group, index) => (
                 <div
                   key={index}
-                  className="border-b border-gray-100 pb-6 last:border-b-0"
+                  className="bg-white rounded-3xl shadow-lg border border-gray-100 mb-8 overflow-hidden hover:shadow-xl transition-shadow duration-300"
                 >
                   {/* Vendor Header */}
                   <div className="px-4 mb-4">
