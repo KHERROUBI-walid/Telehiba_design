@@ -156,25 +156,35 @@ export default function Orders() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-app-purple/10 to-app-sky/10 rounded-full animate-pulse"></div>
+        <div className="absolute top-1/3 -left-10 w-32 h-32 bg-gradient-to-br from-app-pink/10 to-app-purple/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
+      </div>
+
       {/* Header */}
-      <header className="flex items-center justify-between p-4 bg-gradient-to-r from-app-purple to-app-sky">
-        <div className="flex items-center gap-3">
-          <Link to="/" className="text-white">
+      <header className="relative flex items-center justify-between p-6 bg-gradient-to-r from-app-purple via-app-sky to-app-pink shadow-2xl">
+        <div className="flex items-center gap-4">
+          <Link to="/" className="text-white hover:scale-110 transition-transform duration-300">
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div>
-            <h1 className="text-lg font-bold text-white">Mes Commandes</h1>
-            <p className="text-sm text-white/80">{orders.length} commandes</p>
+            <h1 className="text-2xl font-bold text-white drop-shadow-lg">Mes Commandes</h1>
+            <p className="text-sm text-white/90 flex items-center gap-2">
+              📦 {orders.length} commande{orders.length > 1 ? 's' : ''} • 🎯 Suivi en temps réel
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Link to="/notifications">
-            <Bell className="w-6 h-6 text-white hover:text-white/80 transition-colors" />
+          <Link to="/notifications" className="relative group">
+            <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/30 group-hover:bg-white/30 transition-all duration-300 group-hover:scale-110">
+              <Bell className="w-6 h-6 text-white" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse flex items-center justify-center">
+                <span className="text-xs text-white font-bold">3</span>
+              </div>
+            </div>
           </Link>
-          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-            <User className="w-5 h-5 text-white" />
-          </div>
         </div>
       </header>
 
