@@ -439,7 +439,7 @@ export default function Index() {
             <select
               value={currentLocation}
               onChange={(e) => setCurrentLocation(e.target.value)}
-              className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-6 py-3 rounded-2xl text-sm border-none outline-none cursor-pointer appearance-none shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:scale-105 backdrop-blur-sm border border-white/20"
+              className="bg-white text-black px-6 py-3 rounded-2xl text-sm border-2 border-gray-300 outline-none cursor-pointer appearance-none shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:scale-105 font-semibold hover:border-app-purple"
               style={{
                 backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                 backgroundPosition: "right 12px center",
