@@ -543,47 +543,7 @@ export default function Index() {
           return (
             <div className="space-y-6">
               {sections.map((section, index) => {
-                if (section.type === "categories") {
-                  return (
-                    <div
-                      key="categories"
-                      className="mb-6 animate-in slide-in-from-top-5 duration-300"
-                      style={{ animationDelay: `${index * 100}ms` }}
-                    >
-                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-4 rounded-r-2xl mx-4 mb-4">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                            🎯 Catégories trouvées ({filteredCategories.length})
-                          </h3>
-                          <Link
-                            to="/all-categories"
-                            className="flex items-center gap-1 text-green-600 text-sm font-medium hover:text-green-700 transition-colors"
-                          >
-                            Voir tout
-                            <ChevronRight className="w-4 h-4" />
-                          </Link>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-4 overflow-x-auto px-4 pb-2">
-                        {filteredCategories.map((category) => (
-                          <Link
-                            key={category.id}
-                            to={`/category-products?category=${category.id}`}
-                            className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-2xl transition-all bg-gradient-to-br ${category.gradient} text-white hover:shadow-lg hover:scale-105 animate-pulse`}
-                          >
-                            <span className="text-lg mb-1">
-                              {category.icon}
-                            </span>
-                            <span className="text-xs font-medium">
-                              {category.name}
-                            </span>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                } else if (section.type === "vendors") {
+                if (section.type === "vendors") {
                   return (
                     <div
                       key="vendors"
