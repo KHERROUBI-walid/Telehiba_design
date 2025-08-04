@@ -785,8 +785,13 @@ export default function Index() {
                   </div>
 
                   {/* Products Carousel */}
-                  <div className="overflow-x-auto">
-                    <div className="flex gap-4 px-4 pb-2">
+                  <div className="bg-gradient-to-br from-gray-50 to-white p-6">
+                    <div className="flex gap-6 overflow-x-auto pb-4" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
+                      <style jsx>{`
+                        div::-webkit-scrollbar {
+                          display: none;
+                        }
+                      `}</style>
                       {group.products.map((product) => {
                         const quantity = getItemQuantity(product.id);
 
