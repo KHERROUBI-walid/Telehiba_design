@@ -212,20 +212,20 @@ export default function Orders() {
                   {/* Decorative gradient overlay */}
                   <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-app-purple via-app-sky to-app-pink"></div>
                   {/* Order Header */}
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-start justify-between mb-6">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-gray-800">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-xl font-bold text-gray-800">
                           Commande #{order.id}
                         </span>
                         <div
-                          className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${statusInfo.color} ${statusInfo.bgColor}`}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-semibold ${statusInfo.color} ${statusInfo.bgColor} shadow-lg`}
                         >
                           {getStatusIcon(order.status)}
                           <span>{statusInfo.label}</span>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-base text-gray-600 font-medium">
                         {statusInfo.description}
                       </p>
                     </div>
