@@ -63,13 +63,17 @@ export default function Profile() {
   };
 
   const userProfile: UserProfile = {
-    name: "Marie Dubois",
-    email: "marie.dubois@email.com",
-    phone: "+1 (555) 123-4567",
-    location: "New York, USA",
+    name: user?.name || "Utilisateur",
+    email: user?.email || "email@example.com",
+    phone: user?.phone || "+33 X XX XX XX XX",
+    location: user?.city || "Ville non renseignée",
     joinDate: "2024-01-01",
-    avatar: "👩‍💼",
-    bio: "Utilisatrice active de TeleHiba, j'aime aider la communauté et recevoir de l'aide quand j'en ai besoin.",
+    avatar: user?.avatar || "👤",
+    bio: user?.role === 'family'
+      ? "Membre de la communauté TeleHiba, j'aime pouvoir accéder à des produits de qualité grâce à la solidarité."
+      : user?.role === 'vendor'
+      ? "Vendeur partenaire de TeleHiba, je contribue à l'économie solidaire en proposant mes produits."
+      : "Donateur TeleHiba, j'aide les familles dans le besoin en finançant leurs commandes.",
   };
 
   const userStats: UserStats = {
