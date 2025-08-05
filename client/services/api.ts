@@ -221,6 +221,15 @@ class ApiService {
       };
     }
 
+    if (endpoint === '/auth/logout' && method === 'POST') {
+      // Mock logout - just return success
+      return {
+        success: true,
+        data: {} as T,
+        message: 'Logged out successfully'
+      };
+    }
+
     if (endpoint === '/users/profile' && method === 'GET') {
       // Return mock user based on stored token
       const storedUser = localStorage.getItem('user');
