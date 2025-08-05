@@ -92,6 +92,14 @@ export default function DonatorDashboard() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showStripePayment, setShowStripePayment] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<PendingPayment | null>(null);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  const {
+    notifications,
+    unreadCount,
+    markAsRead,
+    markAllAsRead
+  } = useNotifications();
 
   // Mock data for families
   const [families] = useState<Family[]>([
