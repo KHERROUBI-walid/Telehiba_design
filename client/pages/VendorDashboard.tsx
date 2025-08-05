@@ -359,6 +359,18 @@ export default function VendorDashboard() {
         </div>
       </div>
 
+      {/* Search Bar */}
+      <div className="relative z-10 px-6 mb-6">
+        <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30">
+          <Input
+            placeholder="Rechercher produits, catégories..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-white/50 border-white/30 text-gray-800 placeholder:text-gray-600"
+          />
+        </div>
+      </div>
+
       {/* Content */}
       <div className="relative z-10 px-6 pb-24">
         {activeTab === "products" ? (
