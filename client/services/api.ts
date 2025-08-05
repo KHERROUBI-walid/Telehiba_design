@@ -80,6 +80,37 @@ const mockUsers = [
 class ApiService {
   private apiAvailable: boolean = true;
 
+  constructor() {
+    // Check API availability on startup
+    this.checkApiAvailability();
+  }
+
+  private async checkApiAvailability(): Promise<void> {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+
+      const response = await fetch(`${API_BASE_URL}/health`, {
+        method: 'GET',
+        signal: controller.signal,
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        this.apiAvailable = true;
+        console.log('✅ Backend API is available');
+      } else {
+        this.apiAvailable = false;
+        console.warn('⚠️ Backend API responded but with error status');
+      }
+    } catch (error) {
+      this.apiAvailable = false;
+      console.warn('🚧 Backend API not available, will use mock data');
+    }
+  }
+
   private getAuthToken(): string | null {
     return localStorage.getItem('auth_token');
   }
