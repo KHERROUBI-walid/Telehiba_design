@@ -70,8 +70,9 @@ export default function BottomNavigation({
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40" role="navigation" aria-label="Navigation principale">
-      <div className="flex items-center justify-around py-3">
-        {navigationItems.map((item, index) => (
+      <div className="flex items-center justify-around py-3 relative">
+        {/* Left side navigation items */}
+        {navigationItems.slice(0, Math.ceil(navigationItems.length / 2)).map((item, index) => (
           <Link
             key={item.to}
             to={item.to}
@@ -90,17 +91,17 @@ export default function BottomNavigation({
           </Link>
         ))}
 
-        {/* Cart button only for families */}
+        {/* Cart button in center for families */}
         {isAuthenticated && user?.role === "family" && (
           <button
             onClick={onCartClick}
-            className="bg-app-yellow w-12 h-12 rounded-full flex items-center justify-center -mt-2 shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-app-yellow/50 transition-colors relative"
+            className="bg-app-yellow w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-app-yellow/50 transition-colors relative mx-2"
             aria-label={`Panier (${cartItemCount} article${cartItemCount > 1 ? 's' : ''})`}
           >
-            <ShoppingCart className="w-6 h-6 text-white" aria-hidden="true" />
+            <ShoppingCart className="w-7 h-7 text-white" aria-hidden="true" />
             {cartItemCount > 0 && (
               <span
-                className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+                className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold"
                 aria-hidden="true"
               >
                 {cartItemCount}
@@ -108,6 +109,26 @@ export default function BottomNavigation({
             )}
           </button>
         )}
+
+        {/* Right side navigation items */}
+        {navigationItems.slice(Math.ceil(navigationItems.length / 2)).map((item, index) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className={`flex flex-col items-center gap-1 px-4 transition-colors focus:outline-none focus:ring-2 focus:ring-app-purple/50 rounded-lg ${
+              isActive(item.to)
+                ? "text-app-purple"
+                : "text-gray-400 hover:text-gray-600"
+            }`}
+            aria-label={item.label}
+            aria-current={isActive(item.to) ? "page" : undefined}
+          >
+            <item.icon className="w-6 h-6" aria-hidden="true" />
+            <span className={`text-xs ${isActive(item.to) ? "font-medium" : ""}`}>
+              {item.label}
+            </span>
+          </Link>
+        ))}
       </div>
     </nav>
   );
