@@ -347,7 +347,10 @@ export default function Profile() {
           })}
 
           {/* Logout Button */}
-          <button className="w-full flex items-center gap-3 p-4 bg-red-50 rounded-2xl border border-red-100 hover:bg-red-100 transition-colors mt-4">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 p-4 bg-red-50 rounded-2xl border border-red-100 hover:bg-red-100 transition-colors mt-4"
+          >
             <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-500">
               <LogOut className="w-5 h-5" />
             </div>
