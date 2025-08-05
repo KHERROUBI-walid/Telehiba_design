@@ -35,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <span className="text-xs text-gray-600">{product.rating}</span>
       </div>
       
-      <p className="text-app-purple font-bold text-lg mb-3">
+      <p className="text-app-purple font-bold text-base sm:text-lg mb-2 sm:mb-3">
         €{product.price.toFixed(2)}
         <span className="text-xs text-gray-500 font-normal">/{product.unit}</span>
       </p>
