@@ -79,7 +79,7 @@ export default function VendorDashboard() {
   ]);
 
   const [categories, setCategories] = useState<Category[]>([
-    { id: 1, name: "Légumes", description: "Légumes frais et biologiques", isActive: true },
+    { id: 1, name: "L��gumes", description: "Légumes frais et biologiques", isActive: true },
     { id: 2, name: "Fruits", description: "Fruits de saison", isActive: true },
     { id: 3, name: "Boulangerie", description: "Pain et viennoiseries", isActive: true },
     { id: 4, name: "Épicerie", description: "Produits d'épicerie fine", isActive: false }
@@ -388,7 +388,7 @@ export default function VendorDashboard() {
 
             {/* Products List */}
             <div className="space-y-4">
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <div key={product.id} className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
                   <div className="flex items-start gap-4">
                     <img
