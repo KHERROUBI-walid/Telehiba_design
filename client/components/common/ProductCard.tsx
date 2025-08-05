@@ -18,7 +18,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   className = ""
 }) => {
   return (
-    <div className={`min-w-[200px] bg-gray-50 rounded-2xl p-4 hover:shadow-lg transition-all duration-300 hover:scale-105 ${className}`}>
+    <div className={`min-w-[160px] sm:min-w-[200px] bg-gray-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 hover:shadow-lg transition-all duration-300 hover:scale-105 ${className}`}>
       <img
         src={product.image}
         alt={`${product.name} - ${product.description}`}
