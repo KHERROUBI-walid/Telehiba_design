@@ -99,6 +99,20 @@ export default function VendorDashboard() {
     description: ""
   });
 
+  const [editProductForm, setEditProductForm] = useState({
+    name: "",
+    price: "",
+    category: "",
+    description: "",
+    unit: "kg",
+    image: ""
+  });
+
+  const [editCategoryForm, setEditCategoryForm] = useState({
+    name: "",
+    description: ""
+  });
+
   const handleAddProduct = async () => {
     if (!newProduct.name || !newProduct.price || !newProduct.category) {
       toast({
