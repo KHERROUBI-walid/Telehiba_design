@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
+import { apiService } from "../services/api";
 
 export type UserRole = "family" | "vendor" | "donator";
 
@@ -26,8 +27,9 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   signup: (email: string, password: string, name: string, role: UserRole) => Promise<boolean>;
-  logout: () => void;
-  updateUser: (userData: Partial<User>) => void;
+  logout: () => Promise<void>;
+  updateUser: (userData: Partial<User>) => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -48,56 +50,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Mock users for development
-  const mockUsers: User[] = [
-    {
-      id: 1,
-      email: "family@test.com",
-      name: "Sophie Martin",
-      role: "family",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b5b85644?w=100&h=100&fit=crop&crop=center",
-      phone: "+33 6 12 34 56 78",
-      address: "15 rue de la Paix",
-      city: "Paris"
-    },
-    {
-      id: 2,
-      email: "vendor@test.com",
-      name: "Ahmed Benali",
-      role: "vendor",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=center",
-      businessName: "Épicerie du Soleil",
-      specialty: "Produits frais et épicerie",
-      rating: 4.8,
-      phone: "+33 6 87 65 43 21",
-      city: "Marseille"
-    },
-    {
-      id: 3,
-      email: "donator@test.com",
-      name: "Marie Dubois",
-      role: "donator",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=center",
-      totalDonations: 450.50,
-      donationsCount: 23,
-      phone: "+33 6 11 22 33 44",
-      city: "Lyon"
-    }
-  ];
-
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Mock authentication
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const foundUser = mockUsers.find(u => u.email === email);
-      if (foundUser) {
-        setUser(foundUser);
-        localStorage.setItem("user", JSON.stringify(foundUser));
-        return true;
-      }
-      return false;
+      const authResponse = await apiService.login({ email, password });
+      setUser(authResponse.user);
+      localStorage.setItem("user", JSON.stringify(authResponse.user));
+      return true;
     } catch (error) {
       console.error("Login error:", error);
       return false;
@@ -109,25 +68,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signup = async (email: string, password: string, name: string, role: UserRole): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Mock signup
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Check if user already exists
-      const existingUser = mockUsers.find(u => u.email === email);
-      if (existingUser) {
-        return false; // User already exists
-      }
-
-      const newUser: User = {
-        id: Date.now(),
-        email,
-        name,
-        role,
-        avatar: `https://images.unsplash.com/photo-${role === 'family' ? '1494790108755-2616b5b85644' : role === 'vendor' ? '1472099645785-5658abf4ff4e' : '1438761681033-6461ffad8d80'}?w=100&h=100&fit=crop&crop=center`
-      };
-
-      setUser(newUser);
-      localStorage.setItem("user", JSON.stringify(newUser));
+      const authResponse = await apiService.register({ email, password, name, role });
+      setUser(authResponse.user);
+      localStorage.setItem("user", JSON.stringify(authResponse.user));
       return true;
     } catch (error) {
       console.error("Signup error:", error);
@@ -137,30 +80,73 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
+  const logout = async () => {
+    setIsLoading(true);
+    try {
+      await apiService.logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setUser(null);
+      localStorage.removeItem("user");
+      setIsLoading(false);
+    }
   };
 
-  const updateUser = (userData: Partial<User>) => {
-    if (user) {
-      const updatedUser = { ...user, ...userData };
+  const updateUser = async (userData: Partial<User>) => {
+    if (!user) return;
+
+    setIsLoading(true);
+    try {
+      const updatedUser = await apiService.updateProfile(userData);
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error("Update user error:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Check for stored user on initialization
-  React.useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Error parsing stored user:", error);
-        localStorage.removeItem("user");
-      }
+  const refreshUser = async () => {
+    if (!localStorage.getItem('auth_token')) return;
+
+    setIsLoading(true);
+    try {
+      const currentUser = await apiService.getCurrentUser();
+      setUser(currentUser);
+      localStorage.setItem("user", JSON.stringify(currentUser));
+    } catch (error) {
+      console.error("Refresh user error:", error);
+      // If token is invalid, clear authentication
+      setUser(null);
+      localStorage.removeItem("user");
+      localStorage.removeItem("auth_token");
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  // Check for stored token and user on initialization
+  React.useEffect(() => {
+    const initializeAuth = async () => {
+      const storedUser = localStorage.getItem("user");
+      const storedToken = localStorage.getItem("auth_token");
+
+      if (storedToken && storedUser) {
+        try {
+          // Verify token is still valid by fetching current user
+          await refreshUser();
+        } catch (error) {
+          // Token is invalid, clear stored data
+          localStorage.removeItem("user");
+          localStorage.removeItem("auth_token");
+        }
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   const value: AuthContextType = {
@@ -171,6 +157,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signup,
     logout,
     updateUser,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
