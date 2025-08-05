@@ -51,6 +51,9 @@ const App = () => (
               <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
               <Route path="/signup" element={<PublicOnlyRoute><SignUp /></PublicOnlyRoute>} />
 
+              {/* Shopping page - families only */}
+              <Route path="/shopping" element={<FamilyRoute><Shopping /></FamilyRoute>} />
+
               {/* General marketplace routes - accessible to all authenticated users */}
               <Route path="/vendor-products" element={<ProtectedRoute><VendorProducts /></ProtectedRoute>} />
               <Route path="/category-products" element={<ProtectedRoute><CategoryProducts /></ProtectedRoute>} />
