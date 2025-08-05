@@ -46,13 +46,22 @@ export default function Login() {
     }
 
     const success = await login(email, password);
-    
+
     if (success) {
-      toast({
-        title: "Connexion réussie",
-        description: "Bienvenue ! Vous êtes maintenant connecté."
-      });
-      navigate("/");
+      // Wait a moment for the auth context to update with user data
+      setTimeout(() => {
+        const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+        if (currentUser.role) {
+          const redirectPath = getRedirectPath(currentUser.role);
+          toast({
+            title: "Connexion réussie",
+            description: `Bienvenue ! Redirection vers votre espace ${currentUser.role}.`
+          });
+          navigate(redirectPath, { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
+      }, 100);
     } else {
       toast({
         variant: "destructive",
