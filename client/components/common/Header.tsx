@@ -22,9 +22,13 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const { user, isAuthenticated, logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    if (onLogout) onLogout();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      if (onLogout) onLogout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   return (
