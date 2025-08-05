@@ -325,7 +325,10 @@ export default function Orders() {
                     {/* Action Buttons */}
                     <div className="flex gap-2 mt-3">
                       {order.status === "waiting" && (
-                        <button className="flex-1 bg-app-purple text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-opacity-90 transition-colors">
+                        <button
+                          onClick={() => handleShareOrder(order)}
+                          className="flex-1 bg-app-purple text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-opacity-90 transition-colors"
+                        >
                           Partager la commande
                         </button>
                       )}
