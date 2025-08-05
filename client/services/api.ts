@@ -442,6 +442,106 @@ class ApiService {
       };
     }
 
+    // Mock donator endpoints
+    if (endpoint.startsWith('/families/search') && method === 'GET') {
+      const mockFamilies = [
+        {
+          id: "FAM001",
+          name: "Famille Martin",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b85644?w=100&h=100&fit=crop&crop=center",
+          city: "Paris",
+          memberCount: 4,
+          monthlyNeed: 450,
+          currentNeed: 120,
+          story: "Famille de 4 personnes, parents au chômage suite à la pandémie.",
+          isSponsored: false,
+          urgencyLevel: "high",
+          totalReceived: 340,
+          children: 2,
+          verified: true
+        },
+        {
+          id: "FAM002",
+          name: "Famille Dubois",
+          avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=center",
+          city: "Lyon",
+          memberCount: 3,
+          monthlyNeed: 350,
+          currentNeed: 89,
+          story: "Mère célibataire avec 2 enfants, travaille à temps partiel.",
+          isSponsored: true,
+          urgencyLevel: "medium",
+          totalReceived: 890,
+          children: 2,
+          verified: true
+        }
+      ];
+
+      return {
+        success: true,
+        data: mockFamilies as T
+      };
+    }
+
+    if (endpoint.startsWith('/families/') && endpoint.endsWith('/sponsor') && method === 'POST') {
+      return {
+        success: true,
+        data: { message: 'Family sponsored successfully' } as T
+      };
+    }
+
+    if (endpoint.startsWith('/donations/pending') && method === 'GET') {
+      const mockPendingPayments = [
+        {
+          id: "PAY001",
+          familyId: "FAM001",
+          familyName: "Famille Martin",
+          familyCity: "Paris",
+          vendorName: "Épicerie Bio Paris",
+          amount: 69.30,
+          urgency: "high",
+          requestDate: "2024-01-15"
+        }
+      ];
+
+      return {
+        success: true,
+        data: mockPendingPayments as T
+      };
+    }
+
+    if (endpoint === '/donations/pay' && method === 'POST') {
+      return {
+        success: true,
+        data: { paymentId: `pay_${Date.now()}`, status: 'succeeded' } as T
+      };
+    }
+
+    if (endpoint === '/donators/stats' && method === 'GET') {
+      return {
+        success: true,
+        data: {
+          totalDonated: 2450,
+          familiesHelped: 23,
+          activeSponsorships: 3,
+          impactScore: 85
+        } as T
+      };
+    }
+
+    if (endpoint === '/cities/stats' && method === 'GET') {
+      const mockCityStats = [
+        { city: "Paris", familiesCount: 45, totalNeeded: 12500, avgMonthlyNeed: 278 },
+        { city: "Lyon", familiesCount: 32, totalNeeded: 8900, avgMonthlyNeed: 278 },
+        { city: "Marseille", familiesCount: 28, totalNeeded: 7800, avgMonthlyNeed: 279 }
+      ];
+
+      return {
+        success: true,
+        data: mockCityStats as T
+      };
+    }
+
     // Mock vendor products endpoint
     if (endpoint.startsWith('/vendors/') && endpoint.endsWith('/products') && method === 'GET') {
       // Return products for specific vendor
