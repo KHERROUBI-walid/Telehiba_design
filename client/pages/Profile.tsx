@@ -77,6 +77,30 @@ export default function Profile() {
     }
   };
 
+  const handleEditContact = (field: 'email' | 'phone') => {
+    setEditModal({ isOpen: true, field });
+  };
+
+  const handleContactUpdate = async (newValue: string) => {
+    // Update local user state
+    if (editModal.field === 'email') {
+      setCurrentUser(prev => prev ? { ...prev, email: newValue } : prev);
+    } else if (editModal.field === 'phone') {
+      setCurrentUser(prev => prev ? { ...prev, phone: newValue } : prev);
+    }
+
+    // Refresh user data from auth context
+    try {
+      await refreshUser();
+    } catch (error) {
+      console.error('Error refreshing user data:', error);
+    }
+  };
+
+  const closeEditModal = () => {
+    setEditModal({ isOpen: false, field: null });
+  };
+
   const userProfile: UserProfile = {
     name: user?.name || "Utilisateur",
     email: user?.email || "email@example.com",
