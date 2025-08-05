@@ -53,11 +53,11 @@ export default function Profile() {
     isOpen: false,
     field: null
   });
-  const [currentUser, setCurrentUser] = useState(user);
   const { getTotalItems, openCart } = useCart();
   const { user, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [currentUser, setCurrentUser] = useState(user);
 
   const handleLogout = async () => {
     try {
