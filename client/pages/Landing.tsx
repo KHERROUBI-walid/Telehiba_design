@@ -4,6 +4,7 @@ import { Heart, ShoppingCart, Store, Gift, Users, ArrowRight, Star, Check } from
 import { Button } from "@/components/ui/button";
 import { statisticsData } from "../data/mockData";
 import PageContainer from "../components/common/PageContainer";
+import { useAuth } from "../context/AuthContext";
 
 interface UserType {
   type: "family" | "vendor" | "donator";
