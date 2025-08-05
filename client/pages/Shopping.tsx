@@ -103,18 +103,23 @@ export default function Shopping() {
   const productsByVendor = (() => {
     const grouped: Record<number, { vendor: any; products: any[] }> = {};
 
-    products.forEach((product) => {
-      const vendorId = product.vendor.id!;
-      if (!grouped[vendorId]) {
-        const vendor = vendors.find(v => v.id === vendorId);
-        if (vendor) {
-          grouped[vendorId] = { vendor, products: [] };
+    // Ensure products is an array before forEach
+    if (Array.isArray(products)) {
+      products.forEach((product) => {
+        const vendorId = product.vendor?.id;
+        if (vendorId) {
+          if (!grouped[vendorId]) {
+            const vendor = vendors.find(v => v.id === vendorId);
+            if (vendor) {
+              grouped[vendorId] = { vendor, products: [] };
+            }
+          }
+          if (grouped[vendorId]) {
+            grouped[vendorId].products.push(product);
+          }
         }
-      }
-      if (grouped[vendorId]) {
-        grouped[vendorId].products.push(product);
-      }
-    });
+      });
+    }
 
     return Object.values(grouped);
   })();
