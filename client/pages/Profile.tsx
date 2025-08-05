@@ -398,7 +398,10 @@ export default function Profile() {
               <p className="text-sm font-medium text-gray-800">Email</p>
               <p className="text-sm text-gray-600">{userProfile.email}</p>
             </div>
-            <button className="text-app-purple hover:bg-app-purple/10 rounded-full p-1 transition-colors">
+            <button
+              onClick={() => handleEditContact('email')}
+              className="text-app-purple hover:bg-app-purple/10 rounded-full p-1 transition-colors"
+            >
               <Edit3 className="w-4 h-4" />
             </button>
           </div>
@@ -411,7 +414,10 @@ export default function Profile() {
               <p className="text-sm font-medium text-gray-800">Téléphone</p>
               <p className="text-sm text-gray-600">{userProfile.phone}</p>
             </div>
-            <button className="text-app-purple hover:bg-app-purple/10 rounded-full p-1 transition-colors">
+            <button
+              onClick={() => handleEditContact('phone')}
+              className="text-app-purple hover:bg-app-purple/10 rounded-full p-1 transition-colors"
+            >
               <Edit3 className="w-4 h-4" />
             </button>
           </div>
