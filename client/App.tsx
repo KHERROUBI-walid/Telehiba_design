@@ -91,7 +91,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             <CartSidebar />
-            <ApiStatus />
+            {/* <ApiStatus /> - Temporarily disabled to prevent fetch errors */}
           </BrowserRouter>
         </TooltipProvider>
       </CartProvider>
