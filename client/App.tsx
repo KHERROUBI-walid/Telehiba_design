@@ -45,6 +45,7 @@ const App = () => (
     <AuthProvider>
       <CartProvider>
         <TooltipProvider>
+          <DevBanner isVisible={isDevelopmentMode} />
           <Toaster />
           <Sonner />
           <BrowserRouter>
