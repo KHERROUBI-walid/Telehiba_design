@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import BottomNavigation from "../components/BottomNavigation";
 import StripePayment from "../components/common/StripePayment";
+import DonatorNotifications from "../components/common/DonatorNotifications";
+import useNotifications from "../hooks/useNotifications";
 
 interface Family {
   id: string;
