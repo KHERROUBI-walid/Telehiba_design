@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { apiService } from "../services/api";
+import { useAuth } from "./AuthContext";
 
 export interface Product {
   id: number;
@@ -26,16 +28,18 @@ export interface CartItem {
 interface CartContextType {
   cart: CartItem[];
   isCartOpen: boolean;
-  addToCart: (product: Product) => void;
-  removeFromCart: (productId: number) => void;
-  clearItemFromCart: (productId: number) => void;
-  clearCart: () => void;
+  isLoading: boolean;
+  addToCart: (product: Product) => Promise<void>;
+  removeFromCart: (productId: number) => Promise<void>;
+  clearItemFromCart: (productId: number) => Promise<void>;
+  clearCart: () => Promise<void>;
   getItemQuantity: (productId: number) => number;
   getTotalItems: () => number;
   getTotalPrice: () => number;
   openCart: () => void;
   closeCart: () => void;
   toggleCart: () => void;
+  refreshCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -55,41 +59,128 @@ interface CartProviderProps {
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { isAuthenticated, user } = useAuth();
 
-  const addToCart = (product: Product) => {
-    setCart((prev) => {
-      const existingItem = prev.find((item) => item.product.id === product.id);
-      if (existingItem) {
-        return prev.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        );
-      }
-      return [...prev, { product, quantity: 1 }];
-    });
+  const refreshCart = async () => {
+    if (!isAuthenticated || user?.role !== 'family') {
+      setCart([]);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const cartData = await apiService.getCart();
+      setCart(cartData.items || []);
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+      setCart([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const removeFromCart = (productId: number) => {
-    setCart((prev) => {
-      const existingItem = prev.find((item) => item.product.id === productId);
+  const addToCart = async (product: Product) => {
+    if (!isAuthenticated || user?.role !== 'family') {
+      console.warn("Only families can add items to cart");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await apiService.addToCart(product.id, 1);
+
+      // Update local cart state optimistically
+      setCart((prev) => {
+        const existingItem = prev.find((item) => item.product.id === product.id);
+        if (existingItem) {
+          return prev.map((item) =>
+            item.product.id === product.id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item,
+          );
+        }
+        return [...prev, { product, quantity: 1 }];
+      });
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      // Refresh cart to sync with server state
+      await refreshCart();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const removeFromCart = async (productId: number) => {
+    if (!isAuthenticated || user?.role !== 'family') {
+      console.warn("Only families can modify cart");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const existingItem = cart.find((item) => item.product.id === productId);
+
       if (existingItem && existingItem.quantity > 1) {
-        return prev.map((item) =>
-          item.product.id === productId
-            ? { ...item, quantity: item.quantity - 1 }
-            : item,
+        // Update quantity
+        await apiService.updateCartItem(productId, existingItem.quantity - 1);
+        setCart((prev) =>
+          prev.map((item) =>
+            item.product.id === productId
+              ? { ...item, quantity: item.quantity - 1 }
+              : item,
+          )
         );
+      } else {
+        // Remove item completely
+        await apiService.removeFromCart(productId);
+        setCart((prev) => prev.filter((item) => item.product.id !== productId));
       }
-      return prev.filter((item) => item.product.id !== productId);
-    });
+    } catch (error) {
+      console.error("Error removing from cart:", error);
+      // Refresh cart to sync with server state
+      await refreshCart();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const clearItemFromCart = (productId: number) => {
-    setCart((prev) => prev.filter((item) => item.product.id !== productId));
+  const clearItemFromCart = async (productId: number) => {
+    if (!isAuthenticated || user?.role !== 'family') {
+      console.warn("Only families can modify cart");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await apiService.removeFromCart(productId);
+      setCart((prev) => prev.filter((item) => item.product.id !== productId));
+    } catch (error) {
+      console.error("Error clearing item from cart:", error);
+      // Refresh cart to sync with server state
+      await refreshCart();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const clearCart = () => {
-    setCart([]);
+  const clearCart = async () => {
+    if (!isAuthenticated || user?.role !== 'family') {
+      console.warn("Only families can modify cart");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await apiService.clearCart();
+      setCart([]);
+    } catch (error) {
+      console.error("Error clearing cart:", error);
+      // Refresh cart to sync with server state
+      await refreshCart();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getItemQuantity = (productId: number) => {
@@ -112,9 +203,19 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const closeCart = () => setIsCartOpen(false);
   const toggleCart = () => setIsCartOpen(!isCartOpen);
 
+  // Load cart when user authentication changes
+  useEffect(() => {
+    if (isAuthenticated && user?.role === 'family') {
+      refreshCart();
+    } else {
+      setCart([]);
+    }
+  }, [isAuthenticated, user?.role]);
+
   const value: CartContextType = {
     cart,
     isCartOpen,
+    isLoading,
     addToCart,
     removeFromCart,
     clearItemFromCart,
@@ -125,6 +226,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     openCart,
     closeCart,
     toggleCart,
+    refreshCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
