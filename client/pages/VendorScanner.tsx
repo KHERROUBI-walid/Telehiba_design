@@ -223,8 +223,12 @@ export default function VendorScanner() {
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-white drop-shadow-lg">Scanner QR</h1>
-            <p className="text-white/80 text-sm mt-1">Vérification retrait commande</p>
+            <h1 className="text-2xl font-bold text-white drop-shadow-lg">
+              {mode === "verify" ? "Vérifier le client" : "Scanner QR"}
+            </h1>
+            <p className="text-white/80 text-sm mt-1">
+              {mode === "verify" ? "Validation identité client" : "Vérification retrait commande"}
+            </p>
           </div>
           <div className="w-6"></div>
         </div>
