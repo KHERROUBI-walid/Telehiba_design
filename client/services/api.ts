@@ -325,13 +325,13 @@ class ApiService {
       };
     }
 
-    if (endpoint === '/vendors' && method === 'GET') {
+    if (endpoint.startsWith('/vendors') && method === 'GET') {
       const mockVendors = [
         {
           id: 1,
           name: "Dr. Sarah Johnson",
           avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face",
-          city: "New York, USA",
+          city: "Paris",
           specialty: "Fruits & Vegetables",
           rating: 4.8,
           gradient: "from-app-purple to-app-sky",
@@ -340,16 +340,58 @@ class ApiService {
           id: 2,
           name: "Ahmed Benali",
           avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
-          city: "Marseille",
+          city: "Lyon",
           specialty: "Épicerie & Produits frais",
           rating: 4.9,
           gradient: "from-app-pink to-app-purple",
+        },
+        {
+          id: 3,
+          name: "Marie Dubois",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b68a7ad2?w=80&h=80&fit=crop&crop=face",
+          city: "Marseille",
+          specialty: "Boulangerie & Pâtisserie",
+          rating: 4.7,
+          gradient: "from-app-sky to-app-yellow",
+        },
+        {
+          id: 4,
+          name: "Pierre Martin",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
+          city: "Toulouse",
+          specialty: "Poissonnerie",
+          rating: 4.6,
+          gradient: "from-app-yellow to-app-purple",
         }
       ];
 
+      // Parse URL parameters for search filtering
+      const url = new URL(endpoint, 'http://localhost');
+      const searchParam = url.searchParams.get('search');
+      const cityParam = url.searchParams.get('city');
+
+      let filteredVendors = mockVendors;
+
+      // Apply search filter
+      if (searchParam) {
+        const searchLower = searchParam.toLowerCase();
+        filteredVendors = filteredVendors.filter(vendor =>
+          vendor.name.toLowerCase().includes(searchLower) ||
+          vendor.specialty.toLowerCase().includes(searchLower) ||
+          vendor.city.toLowerCase().includes(searchLower)
+        );
+      }
+
+      // Apply city filter
+      if (cityParam) {
+        filteredVendors = filteredVendors.filter(vendor =>
+          vendor.city.toLowerCase().includes(cityParam.toLowerCase())
+        );
+      }
+
       return {
         success: true,
-        data: mockVendors as T
+        data: filteredVendors as T
       };
     }
 
