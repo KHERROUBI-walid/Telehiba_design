@@ -32,6 +32,54 @@ export default function Shopping() {
 
   const { user, isAuthenticated } = useAuth();
 
+  // Fetch initial data
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const [productsData, vendorsData, citiesData] = await Promise.all([
+          apiService.getProducts(),
+          apiService.getVendors(),
+          apiService.getCities()
+        ]);
+
+        setProducts(productsData);
+        setVendors(vendorsData);
+        setCities(citiesData);
+      } catch (error) {
+        console.error("Error fetching initial data:", error);
+        setError("Erreur lors du chargement des données. Veuillez réessayer.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
+  // Fetch filtered products when search criteria change
+  useEffect(() => {
+    if (!isLoading) {
+      const fetchFilteredProducts = async () => {
+        try {
+          const filters: any = {};
+          if (selectedCategory !== "all") filters.category = selectedCategory;
+          if (searchTerm) filters.search = searchTerm;
+          if (currentLocation) filters.city = currentLocation;
+
+          const filteredProducts = await apiService.getProducts(filters);
+          setProducts(filteredProducts);
+        } catch (error) {
+          console.error("Error fetching filtered products:", error);
+        }
+      };
+
+      fetchFilteredProducts();
+    }
+  }, [selectedCategory, searchTerm, currentLocation, isLoading]);
+
   // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
