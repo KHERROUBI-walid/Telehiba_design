@@ -261,12 +261,45 @@ class ApiService {
           specialty: "Fruits & Vegetables",
           rating: 4.8,
           gradient: "from-app-purple to-app-sky",
+        },
+        {
+          id: 2,
+          name: "Ahmed Benali",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
+          city: "Marseille",
+          specialty: "Épicerie & Produits frais",
+          rating: 4.9,
+          gradient: "from-app-pink to-app-purple",
         }
       ];
 
       return {
         success: true,
         data: mockVendors as T
+      };
+    }
+
+    // Mock vendor products endpoint
+    if (endpoint.startsWith('/vendors/') && endpoint.endsWith('/products') && method === 'GET') {
+      // Return products for specific vendor
+      const mockVendorProducts = [
+        {
+          id: 1,
+          name: "Fresh Organic Tomatoes",
+          price: 4.99,
+          image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=300&h=300&fit=crop&crop=center",
+          category: "Légumes",
+          description: "Tomates biologiques fraîches",
+          inStock: true,
+          unit: "kg",
+          rating: 4.8,
+          sales: 45
+        }
+      ];
+
+      return {
+        success: true,
+        data: mockVendorProducts as T
       };
     }
 
