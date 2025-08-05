@@ -34,6 +34,7 @@ export default function VendorOrders() {
   const { toast } = useToast();
   const [selectedOrder, setSelectedOrder] = useState<VendorOrder | null>(null);
   const [filter, setFilter] = useState<"all" | "paid_by_donator" | "preparing" | "ready_for_pickup">("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Mock orders data
   const [orders, setOrders] = useState<VendorOrder[]>([
