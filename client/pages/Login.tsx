@@ -10,9 +10,28 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { login, isLoading } = useAuth();
+  const { login, isLoading, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+
+  // Get the redirect path from location state or default redirects based on role
+  const getRedirectPath = (userRole: UserRole): string => {
+    // Check if there's a specific page the user was trying to access
+    const from = location.state?.from?.pathname;
+    if (from && from !== '/login') {
+      return from;
+    }
+
+    // Default redirects based on user role
+    const roleRedirects: Record<UserRole, string> = {
+      family: "/",
+      vendor: "/vendor-dashboard",
+      donator: "/donator-dashboard"
+    };
+
+    return roleRedirects[userRole];
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
