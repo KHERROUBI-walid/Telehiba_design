@@ -88,6 +88,7 @@ export default function DonatorDashboard() {
   const [urgencyFilter, setUrgencyFilter] = useState<"all" | "low" | "medium" | "high">("all");
   const [showSponsorModal, setShowSponsorModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showStripePayment, setShowStripePayment] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<PendingPayment | null>(null);
 
   // Mock data for families
