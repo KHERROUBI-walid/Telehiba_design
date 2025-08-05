@@ -642,7 +642,7 @@ export default function DonatorDashboard() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-app-purple">���{city.totalNeeded.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-app-purple">€{city.totalNeeded.toLocaleString()}</p>
                     <p className="text-xs text-gray-500">Besoin total</p>
                   </div>
                 </div>
@@ -832,7 +832,7 @@ export default function DonatorDashboard() {
                 onClick={confirmSponsorship}
                 className="flex-1 bg-app-purple text-white hover:bg-app-purple/90"
               >
-                <UserHeart className="w-4 h-4 mr-2" />
+                <Heart className="w-4 h-4 mr-2" />
                 Confirmer le parrainage
               </Button>
               <Button
