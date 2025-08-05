@@ -9,6 +9,7 @@ import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import CartSidebar from "./components/CartSidebar";
 import DevBanner from "./components/common/DevBanner";
+import ApiStatus from "./components/common/ApiStatus";
 import ProtectedRoute, { VendorRoute, DonatorRoute, FamilyRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Shopping from "./pages/Shopping";
