@@ -10,7 +10,7 @@ import { AuthProvider } from "./context/AuthContext";
 import CartSidebar from "./components/CartSidebar";
 import ProtectedRoute, { VendorRoute, DonatorRoute, FamilyRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import Shopping from "./pages/Shopping";
 import Landing from "./pages/Landing";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
