@@ -365,6 +365,22 @@ export default function Orders() {
         onCartClick={openCart}
         cartItemCount={getTotalItems()}
       />
+
+      {/* Share Order Modal */}
+      {shareModal.order && (
+        <ShareOrderModal
+          isOpen={shareModal.isOpen}
+          onClose={closeShareModal}
+          order={{
+            id: shareModal.order.id.toString(),
+            total: shareModal.order.total,
+            status: shareModal.order.status,
+            family: {
+              name: "Votre famille"
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
