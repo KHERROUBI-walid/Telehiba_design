@@ -863,6 +863,15 @@ export default function DonatorDashboard() {
         />
       )}
 
+      {/* Notifications Modal */}
+      <DonatorNotifications
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
+        notifications={notifications}
+        onMarkAsRead={markAsRead}
+        onMarkAllAsRead={markAllAsRead}
+      />
+
       <BottomNavigation />
     </div>
   );
