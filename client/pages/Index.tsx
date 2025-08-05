@@ -314,7 +314,10 @@ export default function Index() {
               TeleHiba
             </h1>
             <p className="text-xs text-white/80">
-              Votre marketplace de confiance
+              {isAuthenticated && user ?
+                `Bonjour ${user.name} (${user.role === 'family' ? 'Famille' : user.role === 'vendor' ? 'Vendeur' : 'Donateur'})` :
+                "Votre marketplace de confiance"
+              }
             </p>
           </div>
         </div>
