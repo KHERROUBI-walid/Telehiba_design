@@ -247,7 +247,7 @@ export default function VendorDashboard() {
   };
 
   // Effect to populate edit forms when editing product/category is set
-  useState(() => {
+  useEffect(() => {
     if (editingProduct) {
       setEditProductForm({
         name: editingProduct.name,
@@ -258,16 +258,16 @@ export default function VendorDashboard() {
         image: editingProduct.image
       });
     }
-  });
+  }, [editingProduct]);
 
-  useState(() => {
+  useEffect(() => {
     if (editingCategory) {
       setEditCategoryForm({
         name: editingCategory.name,
         description: editingCategory.description
       });
     }
-  });
+  }, [editingCategory]);
 
   const toggleProductStock = (productId: number) => {
     setProducts(products.map(p => 
