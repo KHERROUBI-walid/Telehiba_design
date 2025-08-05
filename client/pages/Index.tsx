@@ -15,9 +15,12 @@ import {
   MessageCircle,
   AlertTriangle,
   Info,
+  LogIn,
+  LogOut,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
 import { useCart, Product } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 interface Category {
   id: string;
@@ -49,6 +52,7 @@ export default function Index() {
     getTotalItems,
     openCart,
   } = useCart();
+  const { user, isAuthenticated, logout } = useAuth();
 
   // Close menu when clicking outside
   useEffect(() => {
