@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import BottomNavigation from "../components/BottomNavigation";
+import StripePayment from "../components/common/StripePayment";
 
 interface Family {
   id: string;
