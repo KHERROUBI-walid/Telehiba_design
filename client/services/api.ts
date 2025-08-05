@@ -775,19 +775,7 @@ class ApiService {
     return response.data;
   }
 
-  async updateProfile(profileData: {
-    name?: string;
-    email?: string;
-    phone?: string;
-    city?: string;
-    bio?: string;
-  }): Promise<any> {
-    const response = await this.makeRequest<any>('/users/profile', {
-      method: 'PUT',
-      body: JSON.stringify(profileData),
-    });
-    return response.data;
-  }
+
 
   // Utility endpoints
   async getCities(): Promise<string[]> {
