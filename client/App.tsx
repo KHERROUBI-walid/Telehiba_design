@@ -12,6 +12,7 @@ import ProtectedRoute, { VendorRoute, DonatorRoute, FamilyRoute, PublicOnlyRoute
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Landing from "./pages/Landing";
+import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import VendorProducts from "./pages/VendorProducts";
