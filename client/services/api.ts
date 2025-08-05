@@ -127,32 +127,22 @@ class ApiService {
       try {
         data = await response.json();
       } catch (jsonError) {
-        throw new Error('Invalid JSON response - backend might not be available');
+        throw new Error('Invalid JSON response');
       }
 
       if (!response.ok) {
         throw new Error(data.message || `HTTP ${response.status}: ${response.statusText}`);
       }
 
+      // API is working, mark as available
+      this.apiAvailable = true;
       return data;
     } catch (error) {
-      console.error(`API Error [${endpoint}]:`, error);
+      console.warn(`🚧 API request failed [${endpoint}], using mock data:`, error.message);
 
-      // Check for various network/backend unavailable scenarios
-      const isNetworkError =
-        (error instanceof TypeError && error.message.includes('Failed to fetch')) ||
-        (error instanceof TypeError && error.message.includes('fetch')) ||
-        error.message.includes('backend might not be available') ||
-        error.message.includes('ECONNREFUSED') ||
-        error.message.includes('Network Error');
-
-      if (isNetworkError) {
-        console.warn('🚧 Backend API not available, switching to mock mode');
-        this.apiAvailable = false;
-        return this.getMockResponse<T>(endpoint, options);
-      }
-
-      throw error;
+      // Any error means switch to mock mode
+      this.apiAvailable = false;
+      return this.getMockResponse<T>(endpoint, options);
     }
   }
 
