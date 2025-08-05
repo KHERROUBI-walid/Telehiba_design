@@ -180,9 +180,17 @@ export default function Profile() {
           <div className="flex items-start gap-4">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-20 h-20 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-3xl">
-                {userProfile.avatar}
-              </div>
+              {user?.avatar && user.avatar.startsWith('http') ? (
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className="w-20 h-20 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-20 h-20 bg-gradient-to-br from-app-purple to-app-sky rounded-full flex items-center justify-center text-3xl">
+                  {userProfile.avatar}
+                </div>
+              )}
               <button className="absolute -bottom-1 -right-1 bg-white rounded-full p-1.5 shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors">
                 <Camera className="w-4 h-4 text-gray-600" />
               </button>
