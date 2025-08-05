@@ -94,11 +94,15 @@ export default function BottomNavigation({
         {isAuthenticated && user?.role === "family" && (
           <button
             onClick={onCartClick}
-            className="bg-app-yellow w-12 h-12 rounded-full flex items-center justify-center -mt-2 shadow-lg hover:bg-opacity-90 transition-colors relative"
+            className="bg-app-yellow w-12 h-12 rounded-full flex items-center justify-center -mt-2 shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-app-yellow/50 transition-colors relative"
+            aria-label={`Panier (${cartItemCount} article${cartItemCount > 1 ? 's' : ''})`}
           >
-            <ShoppingCart className="w-6 h-6 text-white" />
+            <ShoppingCart className="w-6 h-6 text-white" aria-hidden="true" />
             {cartItemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+              <span
+                className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+                aria-hidden="true"
+              >
                 {cartItemCount}
               </span>
             )}
