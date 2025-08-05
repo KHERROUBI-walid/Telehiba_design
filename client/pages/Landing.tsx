@@ -23,6 +23,22 @@ interface StatItem {
 }
 
 export default function Landing() {
+  const { isAuthenticated, user } = useAuth();
+
+  const getProfileLink = () => {
+    if (!isAuthenticated || !user) return "/login";
+
+    switch (user.role) {
+      case "vendor":
+        return "/vendor-dashboard";
+      case "donator":
+        return "/donator-dashboard";
+      case "family":
+      default:
+        return "/profile";
+    }
+  };
+
   const userTypes: UserType[] = [
     {
       type: "family",
