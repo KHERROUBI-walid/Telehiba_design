@@ -825,79 +825,20 @@ export default function DonatorDashboard() {
         </div>
       )}
 
-      {/* Payment Modal with Stripe Integration */}
-      {showPaymentModal && selectedPayment && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Paiement sécurisé</h3>
-            
-            <div className="bg-gray-50 rounded-xl p-4 mb-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-medium">Commande pour {selectedPayment.familyName}</span>
-                <span className="font-bold text-app-purple">€{selectedPayment.amount.toFixed(2)}</span>
-              </div>
-              <p className="text-sm text-gray-600">Chez {selectedPayment.vendorName}</p>
-            </div>
-
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Numéro de carte
-                </label>
-                <Input
-                  placeholder="1234 5678 9012 3456"
-                  className="font-mono"
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Expiration
-                  </label>
-                  <Input placeholder="MM/AA" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    CVC
-                  </label>
-                  <Input placeholder="123" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nom sur la carte
-                </label>
-                <Input placeholder="Nom complet" />
-              </div>
-            </div>
-
-            <div className="bg-green-50 rounded-xl p-3 mb-4">
-              <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-green-800 font-medium">Paiement sécurisé par Stripe</span>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <Button
-                onClick={processPayment}
-                className="flex-1 bg-green-500 text-white hover:bg-green-600"
-              >
-                <CreditCard className="w-4 h-4 mr-2" />
-                Payer €{selectedPayment.amount.toFixed(2)}
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setShowPaymentModal(false)}
-                className="flex-1"
-              >
-                Annuler
-              </Button>
-            </div>
-          </div>
-        </div>
+      {/* Stripe Payment Modal */}
+      {selectedPayment && (
+        <StripePayment
+          isOpen={showStripePayment}
+          onClose={() => setShowStripePayment(false)}
+          paymentDetails={{
+            amount: selectedPayment.amount,
+            currency: 'EUR',
+            description: `Donation pour commande ${selectedPayment.id}`,
+            familyName: selectedPayment.familyName,
+            vendorName: selectedPayment.vendorName
+          }}
+          onSuccess={handleStripePaymentSuccess}
+        />
       )}
 
       <BottomNavigation />
