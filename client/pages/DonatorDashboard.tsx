@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
   ArrowLeft, Heart, CreditCard, Users, TrendingUp, Gift, Eye, Calendar, Search, 
-  MapPin, Star, Filter, UserHeart, Globe, Target, Award, DollarSign, 
+  MapPin, Star, Filter, Globe, Target, Award, DollarSign, 
   Clock, CheckCircle, AlertCircle, Zap, Crown, Shield
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
