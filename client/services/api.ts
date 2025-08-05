@@ -582,8 +582,19 @@ class ApiService {
   }
 
   // Vendor endpoints
-  async getVendors(): Promise<any[]> {
-    const response = await this.makeRequest<any[]>('/vendors');
+  async getVendors(filters?: {
+    search?: string;
+    city?: string;
+  }): Promise<any[]> {
+    const params = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+    }
+
+    const endpoint = `/vendors${params.toString() ? `?${params.toString()}` : ''}`;
+    const response = await this.makeRequest<any[]>(endpoint);
     return response.data;
   }
 
