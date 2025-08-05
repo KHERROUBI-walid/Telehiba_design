@@ -26,7 +26,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         loading="lazy"
       />
       
-      <h3 className="font-semibold text-gray-800 mb-1 text-sm leading-tight">
+      <h3 className="font-semibold text-gray-800 mb-1 text-xs sm:text-sm leading-tight line-clamp-2">
         {product.name}
       </h3>
       
