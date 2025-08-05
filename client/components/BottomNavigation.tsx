@@ -2,6 +2,12 @@ import { Link, useLocation } from "react-router-dom";
 import { Home, List, ShoppingCart, MessageCircle, User, LogIn, Store, Gift, Package } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
+interface NavigationItem {
+  to: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}
+
 interface BottomNavigationProps {
   isVisible?: boolean;
   onCartClick?: () => void;
