@@ -101,16 +101,17 @@ export default function Profile() {
     setEditModal({ isOpen: false, field: null });
   };
 
+  const activeUser = currentUser || user;
   const userProfile: UserProfile = {
-    name: user?.name || "Utilisateur",
-    email: user?.email || "email@example.com",
-    phone: user?.phone || "+33 X XX XX XX XX",
-    location: user?.city || "Ville non renseignée",
+    name: activeUser?.name || "Utilisateur",
+    email: activeUser?.email || "email@example.com",
+    phone: activeUser?.phone || "+33 X XX XX XX XX",
+    location: activeUser?.city || "Ville non renseignée",
     joinDate: "2024-01-01",
-    avatar: user?.avatar || "👤",
-    bio: user?.role === 'family'
+    avatar: activeUser?.avatar || "👤",
+    bio: activeUser?.role === 'family'
       ? "Membre de la communauté TeleHiba, j'aime pouvoir accéder à des produits de qualité grâce à la solidarité."
-      : user?.role === 'vendor'
+      : activeUser?.role === 'vendor'
       ? "Vendeur partenaire de TeleHiba, je contribue à l'économie solidaire en proposant mes produits."
       : "Donateur TeleHiba, j'aide les familles dans le besoin en finançant leurs commandes.",
   };
