@@ -242,30 +242,18 @@ export default function DonatorDashboard() {
 
   const handlePayOrder = (payment: PendingPayment) => {
     setSelectedPayment(payment);
-    setShowPaymentModal(true);
+    setShowStripePayment(true);
   };
 
-  const processPayment = async () => {
-    if (!selectedPayment) return;
-
-    // Simulate Stripe payment process
-    try {
-      // In real implementation, this would integrate with Stripe API
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+  const handleStripePaymentSuccess = (paymentResult: any) => {
+    if (selectedPayment) {
       toast({
         title: "Paiement réussi!",
-        description: `Vous avez payé €${selectedPayment.amount} pour ${selectedPayment.familyName}`,
+        description: `€${selectedPayment.amount.toFixed(2)} payés avec succès pour ${selectedPayment.familyName}`,
       });
-      
-      setShowPaymentModal(false);
+
+      // Here you would typically update the backend and remove the payment from pending list
       setSelectedPayment(null);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Erreur de paiement",
-        description: "Le paiement n'a pas pu être traité",
-      });
     }
   };
 
