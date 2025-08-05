@@ -74,6 +74,10 @@ const statusConfig = {
 
 export default function Orders() {
   const { getTotalItems, openCart } = useCart();
+  const [shareModal, setShareModal] = useState<{ isOpen: boolean; order: Order | null }>({
+    isOpen: false,
+    order: null
+  });
 
   // Mock orders data
   const orders: Order[] = [
