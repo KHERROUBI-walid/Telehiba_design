@@ -36,6 +36,7 @@ export default function VendorDashboard() {
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Mock data for vendor's products
   const [products, setProducts] = useState<Product[]>([
