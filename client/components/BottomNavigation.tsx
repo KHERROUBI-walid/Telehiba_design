@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, List, ShoppingCart, MessageCircle, User } from "lucide-react";
+import { Home, List, ShoppingCart, MessageCircle, User, LogIn, Store, Gift, Package } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 interface BottomNavigationProps {
   isVisible?: boolean;
@@ -13,6 +14,7 @@ export default function BottomNavigation({
   cartItemCount = 0,
 }: BottomNavigationProps) {
   const location = useLocation();
+  const { user, isAuthenticated } = useAuth();
 
   if (!isVisible) return null;
 
