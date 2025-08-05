@@ -36,6 +36,7 @@ export default function VendorScanner() {
   const [scanResult, setScanResult] = useState<"success" | "error" | null>(null);
 
   const orderId = searchParams.get("orderId");
+  const mode = searchParams.get("mode") || "scan"; // "scan" or "verify"
 
   // Mock orders database
   const mockOrders: Record<string, OrderDetails> = {
