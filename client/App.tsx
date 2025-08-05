@@ -91,6 +91,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             <CartSidebar />
+            <ApiStatus />
           </BrowserRouter>
         </TooltipProvider>
       </CartProvider>
