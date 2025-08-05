@@ -79,6 +79,14 @@ export default function Orders() {
     order: null
   });
 
+  const handleShareOrder = (order: Order) => {
+    setShareModal({ isOpen: true, order });
+  };
+
+  const closeShareModal = () => {
+    setShareModal({ isOpen: false, order: null });
+  };
+
   // Mock orders data
   const orders: Order[] = [
     {
