@@ -16,6 +16,7 @@ import VendorProducts from "./pages/VendorProducts";
 import VendorDashboard from "./pages/VendorDashboard";
 import VendorOrders from "./pages/VendorOrders";
 import VendorScanner from "./pages/VendorScanner";
+import DonatorDashboard from "./pages/DonatorDashboard";
 import CategoryProducts from "./pages/CategoryProducts";
 import AllCategories from "./pages/AllCategories";
 import AllVendors from "./pages/AllVendors";
