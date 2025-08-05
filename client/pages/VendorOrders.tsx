@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Package, Clock, CheckCircle, Eye, QrCode, Phone, MessageCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import BottomNavigation from "../components/BottomNavigation";
 
