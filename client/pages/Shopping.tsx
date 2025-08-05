@@ -92,27 +92,11 @@ export default function Shopping() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Filter products based on search, category, and location
-  const filteredProducts = (() => {
-    return products.filter((product) => {
-      const matchesSearch =
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "all" || product.category === selectedCategory;
-      const matchesLocation =
-        !currentLocation ||
-        product.vendor.city.toLowerCase().includes(currentLocation.toLowerCase());
-
-      return matchesSearch && matchesCategory && matchesLocation;
-    });
-  })();
-
   // Group products by vendor
   const productsByVendor = (() => {
-    const grouped: Record<number, { vendor: typeof vendors[0]; products: typeof products }> = {};
-    
-    filteredProducts.forEach((product) => {
+    const grouped: Record<number, { vendor: any; products: any[] }> = {};
+
+    products.forEach((product) => {
       const vendorId = product.vendor.id!;
       if (!grouped[vendorId]) {
         const vendor = vendors.find(v => v.id === vendorId);
@@ -124,7 +108,7 @@ export default function Shopping() {
         grouped[vendorId].products.push(product);
       }
     });
-    
+
     return Object.values(grouped);
   })();
 
