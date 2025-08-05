@@ -2,9 +2,27 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Heart, ShoppingCart, Store, Gift, Users, ArrowRight, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { statisticsData } from "../data/mockData";
+import PageContainer from "../components/common/PageContainer";
+
+interface UserType {
+  type: "family" | "vendor" | "donator";
+  title: string;
+  subtitle: string;
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
+  features: string[];
+  ctaText: string;
+  route: string;
+}
+
+interface StatItem {
+  number: string;
+  label: string;
+}
 
 export default function Landing() {
-  const userTypes = [
+  const userTypes: UserType[] = [
     {
       type: "family",
       title: "Je suis une Famille",
@@ -52,22 +70,44 @@ export default function Landing() {
     }
   ];
 
-  const stats = [
+  const stats: StatItem[] = [
     { number: "500+", label: "Familles aidées" },
     { number: "50+", label: "Vendeurs partenaires" },
     { number: "1000+", label: "Donations effectuées" },
     { number: "€25k+", label: "Montant total donné" }
   ];
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-app-pink via-app-purple to-app-blue relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute top-1/4 -right-20 w-64 h-64 bg-gradient-to-br from-white/10 to-app-pink/20 rounded-full animate-pulse"></div>
-      <div className="absolute bottom-1/3 -left-20 w-48 h-48 bg-gradient-to-br from-app-blue/20 to-white/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-app-purple/10 to-app-pink/10 rounded-full animate-spin" style={{animationDuration: '8s'}}></div>
+  const howItWorksSteps = [
+    {
+      number: "1",
+      title: "Les familles passent commande",
+      description: "Sélection de produits essentiels chez des vendeurs locaux",
+      color: "from-green-400 to-blue-500"
+    },
+    {
+      number: "2", 
+      title: "Les donateurs paient",
+      description: "Des personnes généreuses financent les commandes",
+      color: "from-purple-400 to-pink-500"
+    },
+    {
+      number: "3",
+      title: "Les vendeurs préparent",
+      description: "Préparation soignée des commandes par les vendeurs",
+      color: "from-orange-400 to-red-500"
+    },
+    {
+      number: "4",
+      title: "Retrait sécurisé",
+      description: "Code QR pour un retrait simple et sécurisé",
+      color: "from-green-500 to-green-600"
+    }
+  ];
 
+  return (
+    <PageContainer>
       {/* Header */}
-      <div className="relative z-10 pt-12 pb-8">
+      <header className="relative z-10 pt-12 pb-8">
         <div className="px-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -83,16 +123,16 @@ export default function Landing() {
             </div>
             <Link
               to="/login"
-              className="bg-white/20 backdrop-blur-xl border border-white/30 text-white px-4 py-2 rounded-xl hover:bg-white/30 transition-all duration-300"
+              className="bg-white/20 backdrop-blur-xl border border-white/30 text-white px-4 py-2 rounded-xl hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-300"
             >
               Se connecter
             </Link>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Hero Section */}
-      <div className="relative z-10 px-6 mb-12">
+      <section className="relative z-10 px-6 mb-12">
         <div className="text-center text-white mb-8">
           <h2 className="text-4xl font-bold mb-4 drop-shadow-lg">
             Une Marketplace<br />
@@ -103,7 +143,7 @@ export default function Landing() {
             et des donateurs généreux pour créer une communauté d'entraide.
           </p>
           
-          <div className="flex items-center justify-center gap-2 mb-8">
+          <div className="flex items-center justify-center gap-2 mb-8" aria-hidden="true">
             <Heart className="w-6 h-6 text-red-400" />
             <Users className="w-6 h-6 text-blue-400" />
             <Star className="w-6 h-6 text-yellow-400" />
@@ -119,118 +159,90 @@ export default function Landing() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* How it works */}
-      <div className="relative z-10 px-6 mb-12">
+      <section className="relative z-10 px-6 mb-12">
         <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/20">
-          <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
             Comment ça marche ?
-          </h3>
+          </h2>
           
           <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                1
+            {howItWorksSteps.map((step, index) => (
+              <div key={index} className="flex items-center gap-4">
+                <div className={`w-8 h-8 bg-gradient-to-r ${step.color} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
+                  {step.number}
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-800">{step.title}</h3>
+                  <p className="text-sm text-gray-600">{step.description}</p>
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="font-semibold text-gray-800">Les familles passent commande</p>
-                <p className="text-sm text-gray-600">Sélection de produits essentiels chez des vendeurs locaux</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                2
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold text-gray-800">Les donateurs paient</p>
-                <p className="text-sm text-gray-600">Des personnes généreuses financent les commandes</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                3
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold text-gray-800">Les vendeurs préparent</p>
-                <p className="text-sm text-gray-600">Préparation soignée des commandes par les vendeurs</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                4
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold text-gray-800">Retrait sécurisé</p>
-                <p className="text-sm text-gray-600">Code QR pour un retrait simple et sécurisé</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* User Types */}
-      <div className="relative z-10 px-6 pb-8">
-        <h3 className="text-2xl font-bold text-white text-center mb-8">
+      <section className="relative z-10 px-6 pb-8">
+        <h2 className="text-2xl font-bold text-white text-center mb-8">
           Choisissez votre profil
-        </h3>
+        </h2>
         
         <div className="space-y-6">
           {userTypes.map((userType, index) => {
             const IconComponent = userType.icon;
             return (
-              <div key={index} className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/20">
+              <article key={index} className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/20">
                 <div className="flex items-center gap-4 mb-4">
                   <div className={`w-16 h-16 bg-gradient-to-r ${userType.color} rounded-2xl flex items-center justify-center text-white shadow-lg`}>
                     <IconComponent className="w-8 h-8" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-xl font-bold text-gray-800">{userType.title}</h4>
+                    <h3 className="text-xl font-bold text-gray-800">{userType.title}</h3>
                     <p className="text-sm text-gray-600">{userType.subtitle}</p>
                   </div>
                 </div>
                 
-                <div className="space-y-2 mb-6">
+                <ul className="space-y-2 mb-6">
                   {userType.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-center gap-3">
-                      <Check className="w-4 h-4 text-green-600" />
-                      <p className="text-sm text-gray-700">{feature}</p>
-                    </div>
+                    <li key={featureIndex} className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-green-600 flex-shrink-0" aria-hidden="true" />
+                      <span className="text-sm text-gray-700">{feature}</span>
+                    </li>
                   ))}
-                </div>
+                </ul>
                 
                 <Link
                   to={`${userType.route}?role=${userType.type}`}
-                  className={`block w-full`}
+                  className="block w-full"
                 >
-                  <Button className={`w-full bg-gradient-to-r ${userType.color} hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-white font-semibold h-12`}>
+                  <Button className={`w-full bg-gradient-to-r ${userType.color} hover:shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50 transition-all duration-300 text-white font-semibold h-12`}>
                     {userType.ctaText}
-                    <ArrowRight className="w-5 h-5 ml-2" />
+                    <ArrowRight className="w-5 h-5 ml-2" aria-hidden="true" />
                   </Button>
                 </Link>
-              </div>
+              </article>
             );
           })}
         </div>
-      </div>
+      </section>
 
       {/* Footer */}
-      <div className="relative z-10 px-6 pb-8">
+      <footer className="relative z-10 px-6 pb-8">
         <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-6 text-center border border-white/30">
           <p className="text-white/90 text-sm mb-4">
             Déjà membre de notre communauté ?
           </p>
           <Link
             to="/login"
-            className="inline-block bg-white text-app-purple px-6 py-3 rounded-xl font-semibold hover:bg-white/90 transition-colors"
+            className="inline-block bg-white text-app-purple px-6 py-3 rounded-xl font-semibold hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors"
           >
             Se connecter
           </Link>
         </div>
-      </div>
-    </div>
+      </footer>
+    </PageContainer>
   );
 }
