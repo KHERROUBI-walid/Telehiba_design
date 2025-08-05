@@ -40,7 +40,46 @@ interface AuthResponse {
   };
 }
 
+// Mock data for development when API is not available
+const mockUsers = [
+  {
+    id: 1,
+    email: "family@test.com",
+    name: "Sophie Martin",
+    role: "family" as UserRole,
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b5b85644?w=100&h=100&fit=crop&crop=center",
+    phone: "+33 6 12 34 56 78",
+    address: "15 rue de la Paix",
+    city: "Paris"
+  },
+  {
+    id: 2,
+    email: "vendor@test.com",
+    name: "Ahmed Benali",
+    role: "vendor" as UserRole,
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=center",
+    businessName: "Épicerie du Soleil",
+    specialty: "Produits frais et épicerie",
+    rating: 4.8,
+    phone: "+33 6 87 65 43 21",
+    city: "Marseille"
+  },
+  {
+    id: 3,
+    email: "donator@test.com",
+    name: "Marie Dubois",
+    role: "donator" as UserRole,
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=center",
+    totalDonations: 450.50,
+    donationsCount: 23,
+    phone: "+33 6 11 22 33 44",
+    city: "Lyon"
+  }
+];
+
 class ApiService {
+  private apiAvailable: boolean = true;
+
   private getAuthToken(): string | null {
     return localStorage.getItem('auth_token');
   }
