@@ -578,6 +578,103 @@ export default function VendorDashboard() {
         </div>
       )}
 
+      {/* Edit Product Modal */}
+      {editingProduct && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Modifier le produit</h3>
+            <div className="space-y-4">
+              <Input
+                placeholder="Nom du produit"
+                value={editProductForm.name}
+                onChange={(e) => setEditProductForm({ ...editProductForm, name: e.target.value })}
+              />
+              <Input
+                placeholder="Prix (€)"
+                type="number"
+                value={editProductForm.price}
+                onChange={(e) => setEditProductForm({ ...editProductForm, price: e.target.value })}
+              />
+              <select
+                value={editProductForm.category}
+                onChange={(e) => setEditProductForm({ ...editProductForm, category: e.target.value })}
+                className="w-full p-3 border border-gray-200 rounded-lg"
+              >
+                <option value="">Sélectionner une catégorie</option>
+                {categories.filter(c => c.isActive).map(category => (
+                  <option key={category.id} value={category.name}>{category.name}</option>
+                ))}
+              </select>
+              <Input
+                placeholder="Description"
+                value={editProductForm.description}
+                onChange={(e) => setEditProductForm({ ...editProductForm, description: e.target.value })}
+              />
+              <select
+                value={editProductForm.unit}
+                onChange={(e) => setEditProductForm({ ...editProductForm, unit: e.target.value })}
+                className="w-full p-3 border border-gray-200 rounded-lg"
+              >
+                <option value="kg">Kilogramme (kg)</option>
+                <option value="g">Gramme (g)</option>
+                <option value="L">Litre (L)</option>
+                <option value="unité">Unité</option>
+              </select>
+              <Input
+                placeholder="URL de l'image"
+                value={editProductForm.image}
+                onChange={(e) => setEditProductForm({ ...editProductForm, image: e.target.value })}
+              />
+            </div>
+            <div className="flex gap-3 mt-6">
+              <Button onClick={handleEditProduct} className="flex-1">
+                Modifier
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setEditingProduct(null)}
+                className="flex-1"
+              >
+                Annuler
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Category Modal */}
+      {editingCategory && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Modifier la catégorie</h3>
+            <div className="space-y-4">
+              <Input
+                placeholder="Nom de la catégorie"
+                value={editCategoryForm.name}
+                onChange={(e) => setEditCategoryForm({ ...editCategoryForm, name: e.target.value })}
+              />
+              <Input
+                placeholder="Description"
+                value={editCategoryForm.description}
+                onChange={(e) => setEditCategoryForm({ ...editCategoryForm, description: e.target.value })}
+              />
+            </div>
+            <div className="flex gap-3 mt-6">
+              <Button onClick={handleEditCategory} className="flex-1">
+                Modifier
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setEditingCategory(null)}
+                className="flex-1"
+              >
+                Annuler
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <BottomNavigation />
     </div>
   );
