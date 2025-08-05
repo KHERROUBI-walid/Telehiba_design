@@ -195,7 +195,7 @@ const CitySelector: React.FC<CitySelectorProps> = ({
             className="flex items-center gap-1 px-3 py-1.5 bg-gray-500 text-white rounded-xl text-xs sm:text-sm font-medium hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500/50"
           >
             <X className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="hidden xs:inline">Effacer</span>
+            <span>Effacer</span>
           </button>
         )}
       </div>
