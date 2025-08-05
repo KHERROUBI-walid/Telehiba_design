@@ -75,13 +75,15 @@ export default function BottomNavigation({
           <Link
             key={item.to}
             to={item.to}
-            className={`flex flex-col items-center gap-1 px-4 transition-colors ${
+            className={`flex flex-col items-center gap-1 px-4 transition-colors focus:outline-none focus:ring-2 focus:ring-app-purple/50 rounded-lg ${
               isActive(item.to)
                 ? "text-app-purple"
                 : "text-gray-400 hover:text-gray-600"
             }`}
+            aria-label={item.label}
+            aria-current={isActive(item.to) ? "page" : undefined}
           >
-            <item.icon className="w-6 h-6" />
+            <item.icon className="w-6 h-6" aria-hidden="true" />
             <span className={`text-xs ${isActive(item.to) ? "font-medium" : ""}`}>
               {item.label}
             </span>
