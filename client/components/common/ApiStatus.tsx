@@ -5,6 +5,12 @@ const ApiStatus: React.FC = () => {
   const [showStatus, setShowStatus] = useState(false);
 
   useEffect(() => {
+    // Only show in development mode
+    const isDev = import.meta.env.VITE_APP_ENV === 'development';
+    setShowStatus(isDev);
+
+    if (!isDev) return;
+
     const checkConnection = async () => {
       try {
         const controller = new AbortController();
@@ -21,16 +27,26 @@ const ApiStatus: React.FC = () => {
         clearTimeout(timeoutId);
         setIsConnected(response.ok);
       } catch (error) {
-        // Any error means API is not available
+        // Any error means API is not available (including timeouts)
         setIsConnected(false);
       }
     };
 
     // Initial check after a delay to let the app load
-    const initialTimeout = setTimeout(checkConnection, 2000);
+    const initialTimeout = setTimeout(() => {
+      checkConnection().catch(() => {
+        // Silently handle any errors in the initial check
+        setIsConnected(false);
+      });
+    }, 5000);
 
     // Check every 60 seconds (less frequent to avoid spam)
-    const interval = setInterval(checkConnection, 60000);
+    const interval = setInterval(() => {
+      checkConnection().catch(() => {
+        // Silently handle any errors in periodic checks
+        setIsConnected(false);
+      });
+    }, 60000);
 
     return () => {
       clearTimeout(initialTimeout);
