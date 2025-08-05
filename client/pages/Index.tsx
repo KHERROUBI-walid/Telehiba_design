@@ -54,6 +54,10 @@ export default function Index() {
   } = useCart();
   const { user, isAuthenticated, logout } = useAuth();
 
+  // Filter content based on user role
+  const shouldShowCart = !isAuthenticated || user?.role === "family";
+  const shouldShowProducts = !isAuthenticated || user?.role === "family";
+
   // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
