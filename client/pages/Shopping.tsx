@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { categories, vendors, products } from "../data/mockData";
+import { apiService } from "../services/api";
+import { categories } from "../data/mockData";
 import PageContainer from "../components/common/PageContainer";
 import Header from "../components/common/Header";
 import SearchBar from "../components/common/SearchBar";
@@ -14,8 +15,13 @@ export default function Shopping() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentLocation, setCurrentLocation] = useState<string>("");
   const [showMenu, setShowMenu] = useState(false);
+  const [products, setProducts] = useState<any[]>([]);
+  const [vendors, setVendors] = useState<any[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  
+
   const {
     addToCart,
     removeFromCart,
@@ -23,7 +29,7 @@ export default function Shopping() {
     getTotalItems,
     openCart,
   } = useCart();
-  
+
   const { user, isAuthenticated } = useAuth();
 
   // Close menu when clicking outside
