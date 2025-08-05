@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { apiService } from "../../services/api";
 
 const ApiStatus: React.FC = () => {
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
+  const [showStatus, setShowStatus] = useState(false);
 
   useEffect(() => {
     const checkConnection = async () => {
