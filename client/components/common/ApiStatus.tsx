@@ -54,8 +54,8 @@ const ApiStatus: React.FC = () => {
     };
   }, []);
 
-  if (isConnected === null) {
-    return null; // Loading state
+  if (!showStatus || isConnected === null) {
+    return null; // Don't show if not development mode or still loading
   }
 
   return (
