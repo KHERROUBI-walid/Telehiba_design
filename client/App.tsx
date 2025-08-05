@@ -42,25 +42,39 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
+              {/* Public routes - accessible to everyone */}
               <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/vendor-products" element={<VendorProducts />} />
-              <Route path="/vendor-dashboard" element={<VendorDashboard />} />
-              <Route path="/vendor-orders" element={<VendorOrders />} />
-              <Route path="/vendor-scanner" element={<VendorScanner />} />
-              <Route path="/donator-dashboard" element={<DonatorDashboard />} />
-              <Route path="/category-products" element={<CategoryProducts />} />
-              <Route path="/all-categories" element={<AllCategories />} />
-              <Route path="/all-vendors" element={<AllVendors />} />
-              <Route path="/all-products" element={<AllProducts />} />
-              <Route path="/orders" element={<Orders />} />
-              <Route path="/order-details/:orderId" element={<OrderDetails />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/edit-profile" element={<EditProfile />} />
-              <Route path="/change-password" element={<ChangePassword />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/notifications" element={<Notifications />} />
+
+              {/* Public only routes - redirect if authenticated */}
+              <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
+              <Route path="/signup" element={<PublicOnlyRoute><SignUp /></PublicOnlyRoute>} />
+
+              {/* General marketplace routes - accessible to all authenticated users */}
+              <Route path="/vendor-products" element={<ProtectedRoute><VendorProducts /></ProtectedRoute>} />
+              <Route path="/category-products" element={<ProtectedRoute><CategoryProducts /></ProtectedRoute>} />
+              <Route path="/all-categories" element={<ProtectedRoute><AllCategories /></ProtectedRoute>} />
+              <Route path="/all-vendors" element={<ProtectedRoute><AllVendors /></ProtectedRoute>} />
+              <Route path="/all-products" element={<ProtectedRoute><AllProducts /></ProtectedRoute>} />
+
+              {/* Family-specific routes */}
+              <Route path="/orders" element={<FamilyRoute><Orders /></FamilyRoute>} />
+              <Route path="/order-details/:orderId" element={<FamilyRoute><OrderDetails /></FamilyRoute>} />
+
+              {/* Vendor-specific routes */}
+              <Route path="/vendor-dashboard" element={<VendorRoute><VendorDashboard /></VendorRoute>} />
+              <Route path="/vendor-orders" element={<VendorRoute><VendorOrders /></VendorRoute>} />
+              <Route path="/vendor-scanner" element={<VendorRoute><VendorScanner /></VendorRoute>} />
+
+              {/* Donator-specific routes */}
+              <Route path="/donator-dashboard" element={<DonatorRoute><DonatorDashboard /></DonatorRoute>} />
+
+              {/* User account routes - require authentication */}
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/edit-profile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+              <Route path="/change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
+              <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+              <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
