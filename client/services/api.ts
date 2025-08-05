@@ -225,6 +225,23 @@ class ApiService {
           description: "Fresh organic tomatoes grown locally",
           inStock: true,
           unit: "Kg",
+        },
+        {
+          id: 2,
+          name: "Golden Apples",
+          price: 3.50,
+          image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&h=300&fit=crop&crop=center",
+          category: "fruits",
+          vendor: {
+            id: 1,
+            name: "Dr. Sarah Johnson",
+            avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=40&h=40&fit=crop&crop=face",
+            city: "New York, USA",
+          },
+          rating: 4.6,
+          description: "Sweet and crispy golden apples",
+          inStock: true,
+          unit: "Kg",
         }
       ];
 
