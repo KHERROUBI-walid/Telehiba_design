@@ -30,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {product.name}
       </h3>
       
-      <div className="flex items-center gap-1 mb-2" aria-label={`Note: ${product.rating} sur 5 étoiles`}>
+      <div className="flex items-center gap-1 mb-1 sm:mb-2" aria-label={`Note: ${product.rating} sur 5 étoiles`}>
         <Star className="w-3 h-3 text-yellow-400 fill-current" aria-hidden="true" />
         <span className="text-xs text-gray-600">{product.rating}</span>
       </div>
