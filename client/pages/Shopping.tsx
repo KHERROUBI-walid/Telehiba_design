@@ -136,16 +136,16 @@ export default function Shopping() {
       />
 
       {/* Promotional Banner */}
-      <section className="mx-4 mt-6 mb-6 relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-r from-app-purple via-app-sky to-app-pink rounded-3xl opacity-90"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent rounded-3xl"></div>
-        <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/20 rounded-full animate-pulse"></div>
-        <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/10 rounded-full animate-bounce [animation-duration:3s]"></div>
-        <div className="relative p-6 text-center">
-          <h2 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">
+      <section className="mx-3 sm:mx-4 mt-4 sm:mt-6 mb-4 sm:mb-6 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-r from-app-purple via-app-sky to-app-pink rounded-2xl sm:rounded-3xl opacity-90"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent rounded-2xl sm:rounded-3xl"></div>
+        <div className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 w-16 h-16 sm:w-24 sm:h-24 bg-white/20 rounded-full animate-pulse"></div>
+        <div className="absolute -bottom-3 sm:-bottom-6 -left-3 sm:-left-6 w-12 h-12 sm:w-20 sm:h-20 bg-white/10 rounded-full animate-bounce [animation-duration:3s]"></div>
+        <div className="relative p-4 sm:p-6 text-center">
+          <h2 className="text-lg sm:text-2xl font-bold text-white mb-2 drop-shadow-lg">
             🎉 Bienvenue sur TeleHiba!
           </h2>
-          <p className="text-white/90 text-sm leading-relaxed">
+          <p className="text-white/90 text-xs sm:text-sm leading-relaxed">
             Découvrez des produits de qualité chez nos vendeurs partenaires.
             Profitez de l'aide solidaire pour vos achats essentiels!
           </p>
@@ -156,66 +156,46 @@ export default function Shopping() {
       <SearchBar
         value={searchTerm}
         onChange={setSearchTerm}
-        className="px-4 mb-6"
+        className="px-3 sm:px-4 mb-4 sm:mb-6"
       />
 
       {/* City Selection */}
-      {cities.length > 0 && (
-        <div className="mx-4 mb-6">
-          <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-white/50">
-            <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-              <span className="text-app-purple">📍</span>
-              Choisir votre ville
-            </h2>
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-              {cities.map((city) => (
-                <button
-                  key={city}
-                  onClick={() => setCurrentLocation(city === currentLocation ? "" : city)}
-                  className={`px-4 py-2 rounded-xl font-medium whitespace-nowrap transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-app-purple/50 ${
-                    currentLocation === city
-                      ? "bg-black text-white shadow-lg"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                  aria-pressed={currentLocation === city}
-                >
-                  {city}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <div className="mx-3 sm:mx-4 mb-4 sm:mb-6">
+        <CitySelector
+          selectedCity={currentLocation}
+          onCitySelect={setCurrentLocation}
+        />
+      </div>
 
       {/* Products by Vendor Section */}
-      <section className="px-4 mb-6">
-        <div className="bg-white/90 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/50">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+      <section className="px-3 sm:px-4 mb-6">
+        <div className="bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl border border-white/50">
+          <h1 className="text-lg sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">
             Choisir ton vendeur, tes produits
           </h1>
 
           {error ? (
-            <div className="text-center py-8 px-4">
-              <div className="text-red-400 text-4xl mb-2" aria-hidden="true">⚠️</div>
-              <p className="text-red-600 text-sm mb-1">Erreur de chargement</p>
+            <div className="text-center py-6 sm:py-8 px-3 sm:px-4">
+              <div className="text-red-400 text-3xl sm:text-4xl mb-2" aria-hidden="true">⚠️</div>
+              <p className="text-red-600 text-xs sm:text-sm mb-1">Erreur de chargement</p>
               <p className="text-red-500 text-xs">{error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="mt-4 bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition-colors"
+                className="mt-4 bg-red-500 text-white px-3 sm:px-4 py-2 rounded-xl hover:bg-red-600 transition-colors text-xs sm:text-sm"
               >
                 Réessayer
               </button>
             </div>
           ) : isLoading ? (
-            <div className="text-center py-8 px-4">
-              <div className="text-gray-400 text-4xl mb-2" aria-hidden="true">⏳</div>
-              <p className="text-gray-500 text-sm mb-1">Chargement des produits...</p>
-              <div className="animate-spin w-6 h-6 border-2 border-app-purple border-t-transparent rounded-full mx-auto mt-4"></div>
+            <div className="text-center py-6 sm:py-8 px-3 sm:px-4">
+              <div className="text-gray-400 text-3xl sm:text-4xl mb-2" aria-hidden="true">⏳</div>
+              <p className="text-gray-500 text-xs sm:text-sm mb-1">Chargement des produits...</p>
+              <div className="animate-spin w-5 h-5 sm:w-6 sm:h-6 border-2 border-app-purple border-t-transparent rounded-full mx-auto mt-4"></div>
             </div>
           ) : productsByVendor.length === 0 ? (
-            <div className="text-center py-8 px-4">
-              <div className="text-gray-400 text-4xl mb-2" aria-hidden="true">📦</div>
-              <p className="text-gray-500 text-sm mb-1">Aucun produit trouvé</p>
+            <div className="text-center py-6 sm:py-8 px-3 sm:px-4">
+              <div className="text-gray-400 text-3xl sm:text-4xl mb-2" aria-hidden="true">📦</div>
+              <p className="text-gray-500 text-xs sm:text-sm mb-1">Aucun produit trouvé</p>
               <p className="text-gray-400 text-xs">
                 {searchTerm || currentLocation
                   ? "Essayez de modifier vos critères de recherche"
@@ -223,7 +203,7 @@ export default function Shopping() {
               </p>
             </div>
           ) : (
-            <div className="space-y-8" role="main" aria-label="Produits par vendeur">
+            <div className="space-y-4 sm:space-y-8" role="main" aria-label="Produits par vendeur">
               {productsByVendor.map(({ vendor, products }) => (
                 <VendorProductSection
                   key={vendor.id}
