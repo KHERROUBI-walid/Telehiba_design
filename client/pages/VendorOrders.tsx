@@ -142,7 +142,14 @@ export default function VendorOrders() {
     }
   };
 
-  const filteredOrders = filter === "all" ? orders : orders.filter(order => order.status === filter);
+  const filteredOrders = orders
+    .filter(order => filter === "all" || order.status === filter)
+    .filter(order =>
+      searchQuery === "" ||
+      order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.donatorName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.id.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const updateOrderStatus = (orderId: string, newStatus: VendorOrder['status']) => {
     setOrders(orders.map(order => 
