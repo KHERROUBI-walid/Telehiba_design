@@ -53,13 +53,22 @@ export default function Profile() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Déconnecté",
-      description: "Vous avez été déconnecté avec succès"
-    });
-    navigate("/", { replace: true });
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast({
+        title: "Déconnecté",
+        description: "Vous avez été déconnecté avec succès"
+      });
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la déconnexion"
+      });
+    }
   };
 
   const userProfile: UserProfile = {
