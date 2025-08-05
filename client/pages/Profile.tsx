@@ -49,8 +49,13 @@ interface UserStats {
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [showNotifications, setShowNotifications] = useState(true);
+  const [editModal, setEditModal] = useState<{ isOpen: boolean; field: 'email' | 'phone' | null }>({
+    isOpen: false,
+    field: null
+  });
+  const [currentUser, setCurrentUser] = useState(user);
   const { getTotalItems, openCart } = useCart();
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
