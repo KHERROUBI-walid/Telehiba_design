@@ -175,8 +175,7 @@ const CitySelector: React.FC<CitySelectorProps> = ({
           className="flex items-center gap-1.5 px-3 py-1.5 bg-app-purple text-white rounded-xl text-xs sm:text-sm font-medium hover:bg-app-purple/90 transition-colors focus:outline-none focus:ring-2 focus:ring-app-purple/50"
         >
           <Search className="w-3 h-3 sm:w-4 sm:h-4" />
-          <span className="hidden xs:inline">Saisir</span>
-          <span className="xs:hidden">+</span>
+          <span>Saisir</span>
         </button>
 
         <button
@@ -185,10 +184,9 @@ const CitySelector: React.FC<CitySelectorProps> = ({
           className="flex items-center gap-1.5 px-3 py-1.5 bg-green-500 text-white rounded-xl text-xs sm:text-sm font-medium hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-green-500/50"
         >
           <Navigation className={`w-3 h-3 sm:w-4 sm:h-4 ${isGettingLocation ? 'animate-spin' : ''}`} />
-          <span className="hidden xs:inline">
+          <span>
             {isGettingLocation ? "Localisation..." : "GPS"}
           </span>
-          <span className="xs:hidden">📍</span>
         </button>
 
         {selectedCity && (
