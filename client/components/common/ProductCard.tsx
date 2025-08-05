@@ -43,11 +43,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
       {quantity === 0 ? (
         <button
           onClick={() => onAddToCart(product)}
-          className="w-full bg-app-purple text-white py-2 rounded-xl hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-app-purple/50 transition-colors text-sm font-medium"
+          className="w-full bg-app-purple text-white py-1.5 sm:py-2 rounded-lg sm:rounded-xl hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-app-purple/50 transition-colors text-xs sm:text-sm font-medium"
           aria-label={`Ajouter ${product.name} au panier`}
         >
-          <Plus className="w-4 h-4 inline mr-1" aria-hidden="true" />
-          Ajouter
+          <Plus className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" aria-hidden="true" />
+          <span className="hidden xs:inline">Ajouter</span>
+          <span className="xs:hidden">+</span>
         </button>
       ) : (
         <div className="flex items-center justify-between" role="group" aria-label={`Quantité de ${product.name}: ${quantity}`}>
