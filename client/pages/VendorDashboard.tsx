@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Plus, Edit, Trash2, Star, Eye, EyeOff, Package, Tag } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { apiService } from "../services/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -43,7 +44,7 @@ export default function VendorDashboard() {
       name: "Tomates Bio",
       price: 4.99,
       image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=300&h=300&fit=crop&crop=center",
-      category: "Légumes",
+      category: "L��gumes",
       description: "Tomates biologiques fraîches, cultivées localement",
       inStock: true,
       unit: "kg",
