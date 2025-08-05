@@ -253,10 +253,10 @@ export default function Landing() {
             Déjà membre de notre communauté ?
           </p>
           <Link
-            to="/login"
+            to={getProfileLink()}
             className="inline-block bg-white text-app-purple px-6 py-3 rounded-xl font-semibold hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors"
           >
-            Se connecter
+            {isAuthenticated ? "Mon espace" : "Se connecter"}
           </Link>
         </div>
       </footer>
