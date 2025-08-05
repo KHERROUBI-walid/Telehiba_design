@@ -428,7 +428,7 @@ export default function VendorScanner() {
                 onClick={confirmDelivery}
                 className="w-full bg-green-500 hover:bg-green-600 text-white h-12 text-lg font-semibold"
               >
-                ✅ Confirmer la remise
+                {mode === "verify" ? "✅ Valider l'identité" : "✅ Confirmer la remise"}
               </Button>
               <Button
                 onClick={resetScanner}
