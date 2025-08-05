@@ -99,7 +99,7 @@ export default function VendorDashboard() {
     description: ""
   });
 
-  const handleAddProduct = () => {
+  const handleAddProduct = async () => {
     if (!newProduct.name || !newProduct.price || !newProduct.category) {
       toast({
         variant: "destructive",
@@ -109,27 +109,33 @@ export default function VendorDashboard() {
       return;
     }
 
-    const product: Product = {
-      id: Date.now(),
-      name: newProduct.name,
-      price: parseFloat(newProduct.price),
-      category: newProduct.category,
-      description: newProduct.description,
-      unit: newProduct.unit,
-      image: newProduct.image || "https://images.unsplash.com/photo-1546547615-6d2b3c5f8a74?w=300&h=300&fit=crop&crop=center",
-      inStock: true,
-      rating: 0,
-      sales: 0
-    };
+    try {
+      const productData = {
+        name: newProduct.name,
+        price: parseFloat(newProduct.price),
+        category: newProduct.category,
+        description: newProduct.description,
+        unit: newProduct.unit,
+        image: newProduct.image || "https://images.unsplash.com/photo-1546547615-6d2b3c5f8a74?w=300&h=300&fit=crop&crop=center",
+      };
 
-    setProducts([...products, product]);
-    setNewProduct({ name: "", price: "", category: "", description: "", unit: "kg", image: "" });
-    setShowAddProductModal(false);
-    
-    toast({
-      title: "Produit ajouté",
-      description: "Le produit a été ajouté avec succès"
-    });
+      const createdProduct = await apiService.createProduct(productData);
+      setProducts([...products, createdProduct]);
+      setNewProduct({ name: "", price: "", category: "", description: "", unit: "kg", image: "" });
+      setShowAddProductModal(false);
+
+      toast({
+        title: "Produit ajouté",
+        description: "Le produit a été ajouté avec succès"
+      });
+    } catch (error) {
+      console.error("Error creating product:", error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Impossible d'ajouter le produit"
+      });
+    }
   };
 
   const handleAddCategory = () => {
