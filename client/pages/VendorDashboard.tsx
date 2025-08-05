@@ -468,7 +468,7 @@ export default function VendorDashboard() {
 
             {/* Categories List */}
             <div className="space-y-4">
-              {categories.map((category) => (
+              {filteredCategories.map((category) => (
                 <div key={category.id} className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
