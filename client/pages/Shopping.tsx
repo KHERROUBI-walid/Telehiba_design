@@ -76,9 +76,10 @@ export default function Shopping() {
           if (currentLocation) filters.city = currentLocation;
 
           const filteredProducts = await apiService.getProducts(filters);
-          setProducts(filteredProducts);
+          setProducts(Array.isArray(filteredProducts) ? filteredProducts : []);
         } catch (error) {
           console.error("Error fetching filtered products:", error);
+          setProducts([]); // Ensure it's always an array
         }
       };
 
