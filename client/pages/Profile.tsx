@@ -508,6 +508,15 @@ export default function Profile() {
         onCartClick={openCart}
         cartItemCount={getTotalItems()}
       />
+
+      {/* Edit Contact Modal */}
+      <EditContactModal
+        isOpen={editModal.isOpen}
+        onClose={closeEditModal}
+        field={editModal.field!}
+        currentValue={editModal.field === 'email' ? userProfile.email : userProfile.phone}
+        onUpdate={handleContactUpdate}
+      />
     </div>
   );
 }
