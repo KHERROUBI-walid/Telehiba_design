@@ -22,7 +22,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <img
         src={product.image}
         alt={`${product.name} - ${product.description}`}
-        className="w-full h-32 object-cover rounded-xl mb-3"
+        className="w-full h-24 sm:h-32 object-cover rounded-lg sm:rounded-xl mb-2 sm:mb-3"
         loading="lazy"
       />
       
