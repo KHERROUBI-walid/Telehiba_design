@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import Landing from "./Landing";
-import Index from "./Index";
+import Shopping from "./Shopping";
 
 export default function HomePage() {
   const { isAuthenticated, user } = useAuth();
@@ -11,6 +11,13 @@ export default function HomePage() {
     return <Landing />;
   }
 
-  // For authenticated users, show Index (families can shop, others can see products but not shop)
-  return <Index />;
+  // Only families should access the shopping page
+  // Vendors and donators will be redirected to their respective dashboards
+  if (user?.role === "family") {
+    return <Shopping />;
+  }
+
+  // For other authenticated users (vendors, donators), show the landing page
+  // as it explains the platform (they have their own dashboards)
+  return <Landing />;
 }
