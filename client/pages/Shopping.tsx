@@ -45,12 +45,18 @@ export default function Shopping() {
           apiService.getCities()
         ]);
 
-        setProducts(productsData);
-        setVendors(vendorsData);
-        setCities(citiesData);
+        // Ensure data is always arrays
+        setProducts(Array.isArray(productsData) ? productsData : []);
+        setVendors(Array.isArray(vendorsData) ? vendorsData : []);
+        setCities(Array.isArray(citiesData) ? citiesData : []);
       } catch (error) {
         console.error("Error fetching initial data:", error);
         setError("Erreur lors du chargement des données. Veuillez réessayer.");
+
+        // Set empty arrays on error
+        setProducts([]);
+        setVendors([]);
+        setCities([]);
       } finally {
         setIsLoading(false);
       }
