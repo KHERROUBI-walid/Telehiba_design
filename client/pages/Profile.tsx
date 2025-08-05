@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Bell,
@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface UserProfile {
   name: string;
