@@ -15,6 +15,7 @@ interface UserTypeOption {
 }
 
 export default function SignUp() {
+  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -27,6 +28,14 @@ export default function SignUp() {
   const { signup, isLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Pre-select role from URL parameter
+  useEffect(() => {
+    const roleParam = searchParams.get('role') as UserRole;
+    if (roleParam && ['family', 'vendor', 'donator'].includes(roleParam)) {
+      setSelectedRole(roleParam);
+    }
+  }, [searchParams]);
 
   const userTypes: UserTypeOption[] = [
     {
