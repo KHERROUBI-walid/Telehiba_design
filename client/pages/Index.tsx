@@ -333,6 +333,45 @@ export default function Index() {
 
             {showMenu && (
               <div className="fixed right-4 top-20 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/50 w-52 py-3 z-[9999] animate-in slide-in-from-top-5 duration-300">
+                {/* Authentication Section */}
+                {isAuthenticated ? (
+                  <>
+                    <div className="px-4 py-2 border-b border-gray-200">
+                      <p className="text-sm text-gray-500">Connecté en tant que</p>
+                      <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
+                      <p className="text-xs text-app-purple capitalize">{user?.role}</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setShowMenu(false);
+                      }}
+                      className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-300 group w-full text-left"
+                    >
+                      <div className="w-8 h-8 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <LogOut className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="font-medium">Se déconnecter</span>
+                    </button>
+                    <div className="h-2 border-b border-gray-200"></div>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-app-purple/10 hover:to-app-sky/10 transition-all duration-300 group"
+                      onClick={() => setShowMenu(false)}
+                    >
+                      <div className="w-8 h-8 bg-gradient-to-br from-app-purple to-app-sky rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <LogIn className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="font-medium">Se connecter</span>
+                    </Link>
+                    <div className="h-2 border-b border-gray-200"></div>
+                  </>
+                )}
+
+                {/* Menu Options */}
                 <Link
                   to="/contact"
                   className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-app-purple/10 hover:to-app-sky/10 transition-all duration-300 group"
