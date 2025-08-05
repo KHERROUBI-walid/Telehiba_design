@@ -99,9 +99,14 @@ class ApiService {
   }
 
   private async makeRequest<T>(
-    endpoint: string, 
+    endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
+    // If forced to use mock data or API is not available, use mock responses
+    if (USE_MOCK_DATA || !this.apiAvailable) {
+      return this.getMockResponse<T>(endpoint, options);
+    }
+
     const url = `${API_BASE_URL}${endpoint}`;
     const config: RequestInit = {
       headers: this.getAuthHeaders(),
@@ -119,8 +124,136 @@ class ApiService {
       return data;
     } catch (error) {
       console.error(`API Error [${endpoint}]:`, error);
+
+      // If this is a network error, switch to mock mode
+      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        console.warn('Backend API not available, switching to mock mode');
+        this.apiAvailable = false;
+        return this.getMockResponse<T>(endpoint, options);
+      }
+
       throw error;
     }
+  }
+
+  private async getMockResponse<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const method = options.method || 'GET';
+    const body = options.body ? JSON.parse(options.body as string) : null;
+
+    // Mock authentication endpoints
+    if (endpoint === '/auth/login' && method === 'POST') {
+      const { email } = body;
+      const user = mockUsers.find(u => u.email === email);
+
+      if (user) {
+        const token = `mock_token_${Date.now()}`;
+        return {
+          success: true,
+          data: { token, user } as T
+        };
+      } else {
+        throw new Error('Invalid credentials');
+      }
+    }
+
+    if (endpoint === '/auth/register' && method === 'POST') {
+      const { email, name, role } = body;
+      const newUser = {
+        id: Date.now(),
+        email,
+        name,
+        role,
+        avatar: `https://images.unsplash.com/photo-${role === 'family' ? '1494790108755-2616b5b85644' : role === 'vendor' ? '1472099645785-5658abf4ff4e' : '1438761681033-6461ffad8d80'}?w=100&h=100&fit=crop&crop=center`
+      };
+
+      const token = `mock_token_${Date.now()}`;
+      return {
+        success: true,
+        data: { token, user: newUser } as T
+      };
+    }
+
+    if (endpoint === '/users/profile' && method === 'GET') {
+      // Return mock user based on stored token
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        return {
+          success: true,
+          data: JSON.parse(storedUser) as T
+        };
+      }
+    }
+
+    // Mock product endpoints
+    if (endpoint === '/products' && method === 'GET') {
+      const mockProducts = [
+        {
+          id: 1,
+          name: "Fresh Organic Tomatoes",
+          price: 4.99,
+          image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=300&h=300&fit=crop&crop=center",
+          category: "vegetables",
+          vendor: {
+            id: 1,
+            name: "Dr. Sarah Johnson",
+            avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=40&h=40&fit=crop&crop=face",
+            city: "New York, USA",
+          },
+          rating: 4.8,
+          description: "Fresh organic tomatoes grown locally",
+          inStock: true,
+          unit: "Kg",
+        }
+      ];
+
+      return {
+        success: true,
+        data: mockProducts as T
+      };
+    }
+
+    if (endpoint === '/vendors' && method === 'GET') {
+      const mockVendors = [
+        {
+          id: 1,
+          name: "Dr. Sarah Johnson",
+          avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face",
+          city: "New York, USA",
+          specialty: "Fruits & Vegetables",
+          rating: 4.8,
+          gradient: "from-app-purple to-app-sky",
+        }
+      ];
+
+      return {
+        success: true,
+        data: mockVendors as T
+      };
+    }
+
+    if (endpoint === '/cities' && method === 'GET') {
+      return {
+        success: true,
+        data: ["Paris", "Lyon", "Marseille", "Toulouse", "Nice"] as T
+      };
+    }
+
+    if (endpoint === '/cart' && method === 'GET') {
+      return {
+        success: true,
+        data: { items: [] } as T
+      };
+    }
+
+    // Default mock response
+    return {
+      success: true,
+      data: {} as T,
+      message: 'Mock response'
+    };
   }
 
   // Authentication endpoints
