@@ -609,7 +609,7 @@ export default function DonatorDashboard() {
                       onClick={() => handleSponsorFamily(family)}
                       className="flex-1 bg-app-purple text-white hover:bg-app-purple/90"
                     >
-                      <UserHeart className="w-4 h-4 mr-2" />
+                      <Heart className="w-4 h-4 mr-2" />
                       Parrainer cette famille
                     </Button>
                   )}
