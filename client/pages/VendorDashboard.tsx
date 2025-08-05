@@ -179,6 +179,96 @@ export default function VendorDashboard() {
     });
   };
 
+  const handleEditProduct = async () => {
+    if (!editingProduct || !editProductForm.name || !editProductForm.price || !editProductForm.category) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Tous les champs obligatoires doivent être remplis"
+      });
+      return;
+    }
+
+    try {
+      const updatedProduct = {
+        ...editingProduct,
+        name: editProductForm.name,
+        price: parseFloat(editProductForm.price),
+        category: editProductForm.category,
+        description: editProductForm.description,
+        unit: editProductForm.unit,
+        image: editProductForm.image
+      };
+
+      // Update in state
+      setProducts(products.map(p => p.id === editingProduct.id ? updatedProduct : p));
+
+      setEditingProduct(null);
+      setEditProductForm({ name: "", price: "", category: "", description: "", unit: "kg", image: "" });
+
+      toast({
+        title: "Produit modifié",
+        description: "Le produit a été modifié avec succès"
+      });
+    } catch (error) {
+      console.error("Error updating product:", error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la modification du produit"
+      });
+    }
+  };
+
+  const handleEditCategory = () => {
+    if (!editingCategory || !editCategoryForm.name) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Le nom de la catégorie est obligatoire"
+      });
+      return;
+    }
+
+    const updatedCategory = {
+      ...editingCategory,
+      name: editCategoryForm.name,
+      description: editCategoryForm.description
+    };
+
+    setCategories(categories.map(c => c.id === editingCategory.id ? updatedCategory : c));
+    setEditingCategory(null);
+    setEditCategoryForm({ name: "", description: "" });
+
+    toast({
+      title: "Catégorie modifiée",
+      description: "La catégorie a été modifiée avec succès"
+    });
+  };
+
+  // Effect to populate edit forms when editing product/category is set
+  React.useEffect(() => {
+    if (editingProduct) {
+      setEditProductForm({
+        name: editingProduct.name,
+        price: editingProduct.price.toString(),
+        category: editingProduct.category,
+        description: editingProduct.description,
+        unit: editingProduct.unit,
+        image: editingProduct.image
+      });
+    }
+  }, [editingProduct]);
+
+  React.useEffect(() => {
+    if (editingCategory) {
+      setEditCategoryForm({
+        name: editingCategory.name,
+        description: editingCategory.description
+      });
+    }
+  }, [editingCategory]);
+
   const toggleProductStock = (productId: number) => {
     setProducts(products.map(p => 
       p.id === productId ? { ...p, inStock: !p.inStock } : p
