@@ -36,6 +36,10 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// Check if we're in development mode with mock data
+const isDevelopmentMode = import.meta.env.VITE_APP_ENV === 'development' &&
+  (import.meta.env.VITE_USE_MOCK_DATA === 'true' || import.meta.env.VITE_API_BASE_URL?.includes('localhost'));
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
