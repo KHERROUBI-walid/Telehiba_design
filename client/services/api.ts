@@ -206,6 +206,53 @@ class ApiService {
       }
     }
 
+    // Profile update endpoints
+    if (endpoint === '/users/profile/email' && method === 'PUT') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        const requestBody = JSON.parse(options.body as string);
+        user.email = requestBody.email;
+        localStorage.setItem('user', JSON.stringify(user));
+        return {
+          success: true,
+          data: user as T,
+          message: 'Email mis à jour avec succès'
+        };
+      }
+    }
+
+    if (endpoint === '/users/profile/phone' && method === 'PUT') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        const requestBody = JSON.parse(options.body as string);
+        user.phone = requestBody.phone;
+        localStorage.setItem('user', JSON.stringify(user));
+        return {
+          success: true,
+          data: user as T,
+          message: 'Téléphone mis à jour avec succès'
+        };
+      }
+    }
+
+    if (endpoint === '/users/profile' && method === 'PUT') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        const requestBody = JSON.parse(options.body as string);
+        // Update user data with provided fields
+        Object.assign(user, requestBody);
+        localStorage.setItem('user', JSON.stringify(user));
+        return {
+          success: true,
+          data: user as T,
+          message: 'Profil mis à jour avec succès'
+        };
+      }
+    }
+
     // Mock product endpoints with search filtering
     if (endpoint.startsWith('/products') && method === 'GET') {
       const mockProducts = [
