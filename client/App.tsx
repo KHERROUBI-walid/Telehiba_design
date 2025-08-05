@@ -45,7 +45,7 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               {/* Public routes - accessible to everyone */}
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<HomePage />} />
 
               {/* Public only routes - redirect if authenticated */}
               <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
