@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Heart, ShoppingCart, Store, Gift } from "lucide-react";
 import { useAuth, UserRole } from "../context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -103,7 +103,7 @@ export default function SignUp() {
     
     if (success) {
       toast({
-        title: "Compte créé avec succès",
+        title: "Compte cr��é avec succès",
         description: "Bienvenue ! Votre compte a été créé."
       });
       navigate("/");
