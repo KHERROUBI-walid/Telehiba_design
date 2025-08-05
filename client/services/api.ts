@@ -81,14 +81,17 @@ class ApiService {
   private apiAvailable: boolean = true;
 
   constructor() {
-    // Check API availability on startup
+    // Start with API unavailable to use mock data by default
+    this.apiAvailable = false;
+
+    // Try to detect API availability
     this.checkApiAvailability();
   }
 
   private async checkApiAvailability(): Promise<void> {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
 
       const response = await fetch(`${API_BASE_URL}/health`, {
         method: 'GET',
@@ -102,12 +105,10 @@ class ApiService {
         this.apiAvailable = true;
         console.log('✅ Backend API is available');
       } else {
-        this.apiAvailable = false;
-        console.warn('⚠️ Backend API responded but with error status');
+        console.warn('⚠️ Backend API responded but with error status, using mock data');
       }
     } catch (error) {
-      this.apiAvailable = false;
-      console.warn('🚧 Backend API not available, will use mock data');
+      console.warn('🚧 Backend API not available, using mock data');
     }
   }
 
