@@ -139,10 +139,10 @@ export default function Landing() {
               </div>
             </div>
             <Link
-              to="/login"
+              to={getProfileLink()}
               className="bg-white/20 backdrop-blur-xl border border-white/30 text-white px-4 py-2 rounded-xl hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-300"
             >
-              Se connecter
+              {isAuthenticated ? "Mon espace" : "Se connecter"}
             </Link>
           </div>
         </div>
