@@ -7,23 +7,35 @@ const ApiStatus: React.FC = () => {
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        // Try to make a simple request to check connectivity
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+          controller.abort();
+        }, 3000);
+
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'}/health`, {
           method: 'GET',
-          signal: AbortSignal.timeout(2000)
+          signal: controller.signal,
+          headers: { 'Content-Type': 'application/json' }
         });
+
+        clearTimeout(timeoutId);
         setIsConnected(response.ok);
       } catch (error) {
+        // Any error means API is not available
         setIsConnected(false);
       }
     };
 
-    checkConnection();
-    
-    // Check every 30 seconds
-    const interval = setInterval(checkConnection, 30000);
-    
-    return () => clearInterval(interval);
+    // Initial check after a delay to let the app load
+    const initialTimeout = setTimeout(checkConnection, 2000);
+
+    // Check every 60 seconds (less frequent to avoid spam)
+    const interval = setInterval(checkConnection, 60000);
+
+    return () => {
+      clearTimeout(initialTimeout);
+      clearInterval(interval);
+    };
   }, []);
 
   if (isConnected === null) {
