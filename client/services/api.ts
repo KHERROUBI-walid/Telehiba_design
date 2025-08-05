@@ -303,6 +303,20 @@ class ApiService {
       };
     }
 
+    if (endpoint === '/categories' && method === 'GET') {
+      const mockCategories = [
+        { id: 1, name: "Légumes", description: "Légumes frais et biologiques", isActive: true },
+        { id: 2, name: "Fruits", description: "Fruits de saison", isActive: true },
+        { id: 3, name: "Boulangerie", description: "Pain et viennoiseries", isActive: true },
+        { id: 4, name: "Épicerie", description: "Produits d'épicerie fine", isActive: true }
+      ];
+
+      return {
+        success: true,
+        data: mockCategories as T
+      };
+    }
+
     if (endpoint === '/cities' && method === 'GET') {
       return {
         success: true,
