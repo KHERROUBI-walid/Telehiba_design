@@ -292,7 +292,19 @@ export default function DonatorDashboard() {
             <h1 className="text-2xl font-bold text-white drop-shadow-lg">Espace Donateur</h1>
             <p className="text-white/80 text-sm mt-1">Votre impact solidaire</p>
           </div>
-          <div className="w-6"></div>
+          <button
+            onClick={() => setShowNotifications(true)}
+            className="relative text-white hover:scale-110 transition-transform duration-300"
+          >
+            <Bell className="w-6 h-6" />
+            {unreadCount > 0 && (
+              <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                <span className="text-xs text-white font-bold">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              </div>
+            )}
+          </button>
         </div>
       </div>
 
