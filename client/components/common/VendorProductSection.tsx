@@ -58,8 +58,8 @@ const VendorProductSection: React.FC<VendorProductSectionProps> = ({
 
       {/* Products Carousel */}
       <div className="overflow-x-auto">
-        <div 
-          className="flex gap-6 pb-4 scrollbar-hide"
+        <div
+          className="flex gap-3 sm:gap-6 pb-4 scrollbar-hide"
           role="group"
           aria-label={`Produits de ${vendor.name}`}
         >
