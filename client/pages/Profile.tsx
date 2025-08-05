@@ -23,6 +23,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
+import EditContactModal from "../components/common/EditContactModal";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
