@@ -519,7 +519,7 @@ export default function DonatorDashboard() {
                         }}
                         className="border-app-purple text-app-purple hover:bg-app-purple hover:text-white"
                       >
-                        <UserHeart className="w-4 h-4 mr-2" />
+                        <Heart className="w-4 h-4 mr-2" />
                         Parrainer
                       </Button>
                     </div>
@@ -642,7 +642,7 @@ export default function DonatorDashboard() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-app-purple">€{city.totalNeeded.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-app-purple">���{city.totalNeeded.toLocaleString()}</p>
                     <p className="text-xs text-gray-500">Besoin total</p>
                   </div>
                 </div>
