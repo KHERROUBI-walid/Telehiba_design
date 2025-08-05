@@ -101,64 +101,144 @@ export default function Profile() {
     });
   };
 
-  const menuItems = [
-    {
-      icon: Package,
-      title: "Mes Commandes",
-      subtitle: `${userStats.totalOrders} commandes passées`,
-      link: "/orders",
-      color: "text-app-purple",
-    },
-    {
-      icon: Heart,
-      title: "Mes Donations",
-      subtitle: `${userStats.donationsReceived} donations reçues`,
-      link: "/donations",
-      color: "text-pink-500",
-    },
-    {
-      icon: CreditCard,
-      title: "Méthodes de Paiement",
-      subtitle: "Gérer vos cartes",
-      link: "/payment-methods",
-      color: "text-blue-500",
-    },
-    {
-      icon: Gift,
-      title: "Programme de Fidélité",
-      subtitle: "Vos points et récompenses",
-      link: "/loyalty",
-      color: "text-yellow-500",
-    },
-    {
-      icon: Bell,
-      title: "Notifications",
-      subtitle: "Gérer vos préférences",
-      action: () => setShowNotifications(!showNotifications),
-      color: "text-orange-500",
-    },
-    {
-      icon: Shield,
-      title: "Sécurité",
-      subtitle: "Mot de passe et sécurité",
-      link: "/security",
-      color: "text-red-500",
-    },
-    {
-      icon: Settings,
-      title: "Paramètres",
-      subtitle: "Préférences de l'application",
-      link: "/settings",
-      color: "text-gray-500",
-    },
-    {
-      icon: HelpCircle,
-      title: "Aide & Support",
-      subtitle: "FAQ et contact",
-      link: "/help",
-      color: "text-indigo-500",
-    },
-  ];
+  const getMenuItems = () => {
+    const commonItems = [
+      {
+        icon: Bell,
+        title: "Notifications",
+        subtitle: "Gérer vos préférences",
+        action: () => setShowNotifications(!showNotifications),
+        color: "text-orange-500",
+      },
+      {
+        icon: Shield,
+        title: "Sécurité",
+        subtitle: "Mot de passe et sécurité",
+        link: "/security",
+        color: "text-red-500",
+      },
+      {
+        icon: Settings,
+        title: "Paramètres",
+        subtitle: "Préférences de l'application",
+        link: "/settings",
+        color: "text-gray-500",
+      },
+      {
+        icon: HelpCircle,
+        title: "Aide & Support",
+        subtitle: "FAQ et contact",
+        link: "/help",
+        color: "text-indigo-500",
+      },
+    ];
+
+    switch (user?.role) {
+      case "family":
+        return [
+          {
+            icon: Package,
+            title: "Mes Commandes",
+            subtitle: `${userStats.totalOrders} commandes passées`,
+            link: "/orders",
+            color: "text-app-purple",
+          },
+          {
+            icon: Heart,
+            title: "Mes Donations",
+            subtitle: `${userStats.donationsReceived} donations reçues`,
+            link: "/donations",
+            color: "text-pink-500",
+          },
+          {
+            icon: CreditCard,
+            title: "Méthodes de Paiement",
+            subtitle: "Gérer vos cartes",
+            link: "/payment-methods",
+            color: "text-blue-500",
+          },
+          {
+            icon: Gift,
+            title: "Programme de Fidélité",
+            subtitle: "Vos points et récompenses",
+            link: "/loyalty",
+            color: "text-yellow-500",
+          },
+          ...commonItems,
+        ];
+
+      case "vendor":
+        return [
+          {
+            icon: Package,
+            title: "Mes Commandes",
+            subtitle: `${userStats.ordersReceived} commandes reçues`,
+            link: "/vendor-orders",
+            color: "text-app-purple",
+          },
+          {
+            icon: DollarSign,
+            title: "Mon Chiffre d'Affaires",
+            subtitle: `€${userStats.totalSaved} ce mois`,
+            link: "/vendor-earnings",
+            color: "text-green-500",
+          },
+          {
+            icon: Settings,
+            title: "Gestion Boutique",
+            subtitle: "Produits et catégories",
+            link: "/vendor-dashboard",
+            color: "text-blue-500",
+          },
+          {
+            icon: Star,
+            title: "Avis Clients",
+            subtitle: `Note moyenne: ${userStats.rating}/5`,
+            link: "/vendor-reviews",
+            color: "text-yellow-500",
+          },
+          ...commonItems.filter(item => item.title !== "Paramètres"), // Remove duplicate
+        ];
+
+      case "donator":
+        return [
+          {
+            icon: Gift,
+            title: "Mes Donations",
+            subtitle: `${userStats.donationsReceived} familles aidées`,
+            link: "/donator-dashboard",
+            color: "text-pink-500",
+          },
+          {
+            icon: Heart,
+            title: "Historique Donations",
+            subtitle: `€${userStats.totalSaved} donnés`,
+            link: "/donation-history",
+            color: "text-red-500",
+          },
+          {
+            icon: Package,
+            title: "Commandes Financées",
+            subtitle: `${userStats.totalOrders} commandes aidées`,
+            link: "/funded-orders",
+            color: "text-app-purple",
+          },
+          {
+            icon: Star,
+            title: "Impact Social",
+            subtitle: "Voir votre impact",
+            link: "/social-impact",
+            color: "text-green-500",
+          },
+          ...commonItems,
+        ];
+
+      default:
+        return commonItems;
+    }
+  };
+
+  const menuItems = getMenuItems();
 
   return (
     <div className="min-h-screen bg-white">
