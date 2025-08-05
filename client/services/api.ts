@@ -206,8 +206,8 @@ class ApiService {
       }
     }
 
-    // Mock product endpoints
-    if (endpoint === '/products' && method === 'GET') {
+    // Mock product endpoints with search filtering
+    if (endpoint.startsWith('/products') && method === 'GET') {
       const mockProducts = [
         {
           id: 1,
@@ -219,7 +219,7 @@ class ApiService {
             id: 1,
             name: "Dr. Sarah Johnson",
             avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=40&h=40&fit=crop&crop=face",
-            city: "New York, USA",
+            city: "Paris",
           },
           rating: 4.8,
           description: "Fresh organic tomatoes grown locally",
@@ -236,18 +236,92 @@ class ApiService {
             id: 1,
             name: "Dr. Sarah Johnson",
             avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=40&h=40&fit=crop&crop=face",
-            city: "New York, USA",
+            city: "Paris",
           },
           rating: 4.6,
           description: "Sweet and crispy golden apples",
           inStock: true,
           unit: "Kg",
+        },
+        {
+          id: 3,
+          name: "Fresh Bread",
+          price: 2.50,
+          image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=300&fit=crop&crop=center",
+          category: "bakery",
+          vendor: {
+            id: 2,
+            name: "Ahmed Benali",
+            avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+            city: "Lyon",
+          },
+          rating: 4.9,
+          description: "Freshly baked bread every morning",
+          inStock: true,
+          unit: "piece",
+        },
+        {
+          id: 4,
+          name: "Cheese Selection",
+          price: 8.99,
+          image: "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=300&h=300&fit=crop&crop=center",
+          category: "dairy",
+          vendor: {
+            id: 2,
+            name: "Ahmed Benali",
+            avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+            city: "Lyon",
+          },
+          rating: 4.7,
+          description: "Premium cheese selection from local farms",
+          inStock: true,
+          unit: "portion",
         }
       ];
 
+      // Parse URL parameters for filtering
+      const url = new URL(endpoint, 'http://localhost');
+      const searchParam = url.searchParams.get('search');
+      const categoryParam = url.searchParams.get('category');
+      const vendorParam = url.searchParams.get('vendor');
+      const cityParam = url.searchParams.get('city');
+
+      let filteredProducts = mockProducts;
+
+      // Apply search filter
+      if (searchParam) {
+        const searchLower = searchParam.toLowerCase();
+        filteredProducts = filteredProducts.filter(product =>
+          product.name.toLowerCase().includes(searchLower) ||
+          product.description.toLowerCase().includes(searchLower) ||
+          product.vendor.name.toLowerCase().includes(searchLower)
+        );
+      }
+
+      // Apply category filter
+      if (categoryParam && categoryParam !== 'all') {
+        filteredProducts = filteredProducts.filter(product =>
+          product.category === categoryParam
+        );
+      }
+
+      // Apply vendor filter
+      if (vendorParam) {
+        filteredProducts = filteredProducts.filter(product =>
+          product.vendor.id === parseInt(vendorParam)
+        );
+      }
+
+      // Apply city filter
+      if (cityParam) {
+        filteredProducts = filteredProducts.filter(product =>
+          product.vendor.city.toLowerCase().includes(cityParam.toLowerCase())
+        );
+      }
+
       return {
         success: true,
-        data: mockProducts as T
+        data: filteredProducts as T
       };
     }
 
