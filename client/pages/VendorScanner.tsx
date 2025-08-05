@@ -367,8 +367,12 @@ export default function VendorScanner() {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800">Code validé !</h2>
-              <p className="text-gray-600">Commande trouvée et vérifiée</p>
+              <h2 className="text-2xl font-bold text-gray-800">
+                {mode === "verify" ? "Client vérifié !" : "Code validé !"}
+              </h2>
+              <p className="text-gray-600">
+                {mode === "verify" ? "Identité client confirmée" : "Commande trouvée et vérifiée"}
+              </p>
             </div>
 
             {/* Customer Info */}
