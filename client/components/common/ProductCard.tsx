@@ -54,19 +54,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <div className="flex items-center justify-between" role="group" aria-label={`Quantité de ${product.name}: ${quantity}`}>
           <button
             onClick={() => onRemoveFromCart(product.id)}
-            className="w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400/50 transition-colors"
+            className="w-6 h-6 sm:w-7 sm:h-7 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400/50 transition-colors"
             aria-label={`Réduire la quantité de ${product.name}`}
           >
             <Minus className="w-3 h-3" aria-hidden="true" />
           </button>
-          
-          <span className="font-medium text-gray-800 text-sm" aria-live="polite">
+
+          <span className="font-medium text-gray-800 text-xs sm:text-sm" aria-live="polite">
             {quantity} {product.unit || ""}
           </span>
-          
+
           <button
             onClick={() => onAddToCart(product)}
-            className="w-7 h-7 bg-app-purple text-white rounded-full flex items-center justify-center hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-app-purple/50 transition-colors"
+            className="w-6 h-6 sm:w-7 sm:h-7 bg-app-purple text-white rounded-full flex items-center justify-center hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-app-purple/50 transition-colors"
             aria-label={`Augmenter la quantité de ${product.name}`}
           >
             <Plus className="w-3 h-3" aria-hidden="true" />
