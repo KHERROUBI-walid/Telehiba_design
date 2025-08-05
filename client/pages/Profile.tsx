@@ -49,6 +49,18 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [showNotifications, setShowNotifications] = useState(true);
   const { getTotalItems, openCart } = useCart();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Déconnecté",
+      description: "Vous avez été déconnecté avec succès"
+    });
+    navigate("/", { replace: true });
+  };
 
   const userProfile: UserProfile = {
     name: "Marie Dubois",
