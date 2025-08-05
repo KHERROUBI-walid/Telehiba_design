@@ -11,6 +11,7 @@ import CartSidebar from "./components/CartSidebar";
 import ProtectedRoute, { VendorRoute, DonatorRoute, FamilyRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import VendorProducts from "./pages/VendorProducts";
