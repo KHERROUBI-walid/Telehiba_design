@@ -711,6 +711,37 @@ class ApiService {
     return response.data;
   }
 
+  // Profile update endpoints
+  async updateEmail(email: string): Promise<any> {
+    const response = await this.makeRequest<any>('/users/profile/email', {
+      method: 'PUT',
+      body: JSON.stringify({ email }),
+    });
+    return response.data;
+  }
+
+  async updatePhone(phone: string): Promise<any> {
+    const response = await this.makeRequest<any>('/users/profile/phone', {
+      method: 'PUT',
+      body: JSON.stringify({ phone }),
+    });
+    return response.data;
+  }
+
+  async updateProfile(profileData: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    city?: string;
+    bio?: string;
+  }): Promise<any> {
+    const response = await this.makeRequest<any>('/users/profile', {
+      method: 'PUT',
+      body: JSON.stringify(profileData),
+    });
+    return response.data;
+  }
+
   // Utility endpoints
   async getCities(): Promise<string[]> {
     const response = await this.makeRequest<string[]>('/cities');
