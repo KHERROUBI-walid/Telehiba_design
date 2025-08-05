@@ -777,6 +777,65 @@ class ApiService {
 
 
 
+  // Donator endpoints
+  async searchFamilies(query: string, city?: string): Promise<any[]> {
+    const params = new URLSearchParams();
+    if (query) params.append('search', query);
+    if (city && city !== 'all') params.append('city', city);
+
+    const endpoint = `/families/search${params.toString() ? `?${params.toString()}` : ''}`;
+    const response = await this.makeRequest<any[]>(endpoint);
+    return response.data;
+  }
+
+  async sponsorFamily(familyId: string, sponsorshipData: any): Promise<any> {
+    const response = await this.makeRequest<any>(`/families/${familyId}/sponsor`, {
+      method: 'POST',
+      body: JSON.stringify(sponsorshipData),
+    });
+    return response.data;
+  }
+
+  async getPendingPayments(filters?: {
+    city?: string;
+    urgency?: string;
+    search?: string;
+  }): Promise<any[]> {
+    const params = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value && value !== 'all') params.append(key, value);
+      });
+    }
+
+    const endpoint = `/donations/pending${params.toString() ? `?${params.toString()}` : ''}`;
+    const response = await this.makeRequest<any[]>(endpoint);
+    return response.data;
+  }
+
+  async processPayment(paymentData: {
+    paymentId: string;
+    amount: number;
+    paymentMethodId: string;
+    familyId: string;
+  }): Promise<any> {
+    const response = await this.makeRequest<any>('/donations/pay', {
+      method: 'POST',
+      body: JSON.stringify(paymentData),
+    });
+    return response.data;
+  }
+
+  async getDonatorStats(): Promise<any> {
+    const response = await this.makeRequest<any>('/donators/stats');
+    return response.data;
+  }
+
+  async getCityStats(): Promise<any[]> {
+    const response = await this.makeRequest<any[]>('/cities/stats');
+    return response.data;
+  }
+
   // Utility endpoints
   async getCities(): Promise<string[]> {
     const response = await this.makeRequest<string[]>('/cities');
