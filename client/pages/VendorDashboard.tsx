@@ -113,6 +113,8 @@ export default function VendorDashboard() {
     description: ""
   });
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   const handleAddProduct = async () => {
     if (!newProduct.name || !newProduct.price || !newProduct.category) {
       toast({
