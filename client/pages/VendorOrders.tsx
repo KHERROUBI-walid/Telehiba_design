@@ -376,7 +376,7 @@ export default function VendorOrders() {
                       )}
                       {order.status === "ready_for_pickup" && (
                         <Button
-                          onClick={() => window.location.href = `/vendor-scanner?orderId=${order.id}&mode=verify`}
+                          onClick={() => navigate(`/vendor-scanner?orderId=${order.id}&mode=verify`)}
                           className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1"
                         >
                           Vérifier le client
