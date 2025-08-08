@@ -33,6 +33,7 @@ interface VendorOrder {
 export default function VendorOrders() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [selectedOrder, setSelectedOrder] = useState<VendorOrder | null>(null);
   const [filter, setFilter] = useState<"all" | "paid_by_donator" | "preparing" | "ready_for_pickup">("all");
   const [searchQuery, setSearchQuery] = useState("");
