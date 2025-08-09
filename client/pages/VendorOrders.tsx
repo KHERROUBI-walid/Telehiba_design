@@ -9,6 +9,7 @@ import {
   QrCode,
   Phone,
   MessageCircle,
+  Loader2,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -49,99 +50,8 @@ export default function VendorOrders() {
     "all" | "paid_by_donator" | "preparing" | "ready_for_pickup"
   >("all");
   const [searchQuery, setSearchQuery] = useState("");
-
-  // Mock orders data
-  const [orders, setOrders] = useState<VendorOrder[]>([
-    {
-      id: "ORD001",
-      customerName: "Sophie Martin",
-      customerPhone: "+33 6 12 34 56 78",
-      customerAvatar:
-        "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=100&h=100&fit=crop&crop=center",
-      donatorName: "Marie Dubois",
-      donatorAvatar:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=center",
-      items: [
-        {
-          id: 1,
-          name: "Tomates Bio",
-          price: 4.99,
-          quantity: 2,
-          image:
-            "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=100&h=100&fit=crop&crop=center",
-        },
-        {
-          id: 2,
-          name: "Pommes Golden",
-          price: 3.5,
-          quantity: 1,
-          image:
-            "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop&crop=center",
-        },
-      ],
-      total: 13.48,
-      status: "paid_by_donator",
-      orderDate: "2024-01-15T10:30:00Z",
-      pickupCode: "AB123",
-      notes: "Merci de bien emballer les tomates",
-    },
-    {
-      id: "ORD002",
-      customerName: "Lucas Petit",
-      customerPhone: "+33 6 98 76 54 32",
-      customerAvatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=center",
-      donatorName: "Pierre Durand",
-      donatorAvatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=center",
-      items: [
-        {
-          id: 3,
-          name: "Pain de Campagne",
-          price: 2.8,
-          quantity: 3,
-          image:
-            "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center",
-        },
-      ],
-      total: 8.4,
-      status: "preparing",
-      orderDate: "2024-01-15T09:15:00Z",
-      pickupCode: "CD456",
-    },
-    {
-      id: "ORD003",
-      customerName: "Emma Laurent",
-      customerPhone: "+33 6 55 44 33 22",
-      customerAvatar:
-        "https://images.unsplash.com/photo-1494790108755-2616b5b85644?w=100&h=100&fit=crop&crop=center",
-      donatorName: "Jean Martin",
-      donatorAvatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=center",
-      items: [
-        {
-          id: 1,
-          name: "Tomates Bio",
-          price: 4.99,
-          quantity: 1,
-          image:
-            "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=100&h=100&fit=crop&crop=center",
-        },
-        {
-          id: 2,
-          name: "Pommes Golden",
-          price: 3.5,
-          quantity: 2,
-          image:
-            "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop&crop=center",
-        },
-      ],
-      total: 11.99,
-      status: "ready_for_pickup",
-      orderDate: "2024-01-14T16:20:00Z",
-      pickupCode: "EF789",
-    },
-  ]);
+  const [orders, setOrders] = useState<VendorOrder[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const statusInfo = {
     paid_by_donator: {
@@ -167,6 +77,110 @@ export default function VendorOrders() {
     },
   };
 
+  // Load orders from API
+  useEffect(() => {
+    const loadOrders = async () => {
+      try {
+        setLoading(true);
+        const response = await apiService.getVendorOrders();
+        setOrders(response);
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: "Impossible de charger les commandes"
+        });
+        
+        // Fallback to mock data for demonstration
+        setOrders([
+          {
+            id: "ORD001",
+            customerName: "Sophie Martin",
+            customerPhone: "+33 6 12 34 56 78",
+            customerAvatar: "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=100&h=100&fit=crop&crop=center",
+            donatorName: "Marie Dubois",
+            donatorAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=center",
+            items: [
+              {
+                id: 1,
+                name: "Tomates Bio",
+                price: 4.99,
+                quantity: 2,
+                image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=100&h=100&fit=crop&crop=center",
+              },
+              {
+                id: 2,
+                name: "Pommes Golden",
+                price: 3.5,
+                quantity: 1,
+                image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop&crop=center",
+              },
+            ],
+            total: 13.48,
+            status: "paid_by_donator",
+            orderDate: "2024-01-15T10:30:00Z",
+            pickupCode: "AB123",
+            notes: "Merci de bien emballer les tomates",
+          },
+          {
+            id: "ORD002",
+            customerName: "Lucas Petit",
+            customerPhone: "+33 6 98 76 54 32",
+            customerAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=center",
+            donatorName: "Pierre Durand",
+            donatorAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=center",
+            items: [
+              {
+                id: 3,
+                name: "Pain de Campagne",
+                price: 2.8,
+                quantity: 3,
+                image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center",
+              },
+            ],
+            total: 8.4,
+            status: "preparing",
+            orderDate: "2024-01-15T09:15:00Z",
+            pickupCode: "CD456",
+          },
+          {
+            id: "ORD003",
+            customerName: "Emma Laurent",
+            customerPhone: "+33 6 55 44 33 22",
+            customerAvatar: "https://images.unsplash.com/photo-1494790108755-2616b5b85644?w=100&h=100&fit=crop&crop=center",
+            donatorName: "Jean Martin",
+            donatorAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=center",
+            items: [
+              {
+                id: 1,
+                name: "Tomates Bio",
+                price: 4.99,
+                quantity: 1,
+                image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=100&h=100&fit=crop&crop=center",
+              },
+              {
+                id: 2,
+                name: "Pommes Golden",
+                price: 3.5,
+                quantity: 2,
+                image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop&crop=center",
+              },
+            ],
+            total: 11.99,
+            status: "ready_for_pickup",
+            orderDate: "2024-01-14T16:20:00Z",
+            pickupCode: "EF789",
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadOrders();
+  }, [toast]);
+
   const filteredOrders = orders
     .filter((order) => filter === "all" || order.status === filter)
     .filter(
@@ -177,25 +191,35 @@ export default function VendorOrders() {
         order.id.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
-  const updateOrderStatus = (
+  const updateOrderStatus = async (
     orderId: string,
     newStatus: VendorOrder["status"],
   ) => {
-    setOrders(
-      orders.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order,
-      ),
-    );
+    try {
+      await apiService.updateOrderStatus(orderId, newStatus);
+      setOrders(
+        orders.map((order) =>
+          order.id === orderId ? { ...order, status: newStatus } : order,
+        ),
+      );
 
-    const statusLabels = {
-      preparing: "en préparation",
-      ready_for_pickup: "prête pour retrait",
-    };
+      const statusLabels = {
+        preparing: "en préparation",
+        ready_for_pickup: "prête pour retrait",
+      };
 
-    toast({
-      title: "Statut mis à jour",
-      description: `Commande ${orderId} marquée comme ${statusLabels[newStatus]}`,
-    });
+      toast({
+        title: "Statut mis à jour",
+        description: `Commande ${orderId} marquée comme ${statusLabels[newStatus]}`,
+      });
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Impossible de mettre à jour le statut de la commande"
+      });
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -209,6 +233,19 @@ export default function VendorOrders() {
       })
     );
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-app-pink via-app-purple to-app-blue relative overflow-hidden">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-white/20 text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-app-purple" />
+            <p className="text-gray-600">Chargement des commandes...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-app-pink via-app-purple to-app-blue relative overflow-hidden">
