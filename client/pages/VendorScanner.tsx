@@ -42,40 +42,39 @@ export default function VendorScanner() {
   // Load orders from API for verification
   const [availableOrders, setAvailableOrders] = useState<Record<string, OrderDetails>>({});
 
-  const simulateQRScan = () => {
+  const simulateQRScan = async () => {
     setIsScanning(true);
     setScanResult(null);
-    
-    // Simulate scanning delay
-    setTimeout(() => {
-      const codes = Object.keys(mockOrders);
-      const randomCode = codes[Math.floor(Math.random() * codes.length)];
-      const order = mockOrders[randomCode];
-      
-      if (order && order.status === "ready_for_pickup") {
-        setScannedOrder(order);
-        setScanResult("success");
-        toast({
-          title: "Code scanné avec succès",
-          description: `Commande de ${order.customerName} trouvée`
-        });
-      } else if (order && order.status !== "ready_for_pickup") {
+
+    try {
+      // Simulate scanning delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Get a random available order for simulation
+      const codes = Object.keys(availableOrders);
+      if (codes.length === 0) {
         setScanResult("error");
         toast({
           variant: "destructive",
-          title: "Commande non prête",
-          description: "Cette commande n'est pas encore prête pour le retrait"
+          title: "Aucune commande",
+          description: "Aucune commande disponible pour la vérification"
         });
-      } else {
-        setScanResult("error");
-        toast({
-          variant: "destructive",
-          title: "Code invalide",
-          description: "Ce code n'existe pas ou a déjà été utilisé"
-        });
+        return;
       }
+
+      const randomCode = codes[Math.floor(Math.random() * codes.length)];
+      await handleCodeVerification(randomCode);
+
+    } catch (error) {
+      setScanResult("error");
+      toast({
+        variant: "destructive",
+        title: "Erreur de scan",
+        description: "Impossible de scanner le code QR"
+      });
+    } finally {
       setIsScanning(false);
-    }, 2000);
+    }
   };
 
   const handleManualCodeSubmit = () => {
