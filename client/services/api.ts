@@ -165,6 +165,32 @@ class ApiService {
     return localStorage.getItem('auth_token');
   }
 
+  private clearAuthData(): void {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('refresh_token');
+    // Clear any sensitive data from sessionStorage as well
+    sessionStorage.clear();
+  }
+
+  private validateToken(token: string): boolean {
+    if (!token) return false;
+
+    try {
+      // Basic JWT structure validation
+      const parts = token.split('.');
+      if (parts.length !== 3) return false;
+
+      // Decode payload to check expiration
+      const payload = JSON.parse(atob(parts[1]));
+      const now = Math.floor(Date.now() / 1000);
+
+      return payload.exp > now;
+    } catch {
+      return false;
+    }
+  }
+
   private getAuthHeaders(): HeadersInit {
     const token = this.getAuthToken();
     const headers: HeadersInit = {
