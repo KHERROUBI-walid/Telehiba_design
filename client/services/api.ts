@@ -412,8 +412,11 @@ class ApiService {
       await this.makeRequest('/auth/logout', {
         method: 'POST',
       });
+    } catch (error) {
+      // Even if logout fails on server, clear local data
+      console.warn('Logout request failed:', error);
     } finally {
-      localStorage.removeItem('auth_token');
+      this.clearAuthData();
     }
   }
 
