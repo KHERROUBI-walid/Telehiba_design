@@ -170,12 +170,13 @@ class ApiService {
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
     };
-    
+
     if (token) {
       headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return headers;
   }
 
@@ -210,10 +211,13 @@ class ApiService {
         // Handle specific HTTP errors
         switch (response.status) {
           case 401:
-            // Unauthorized - clear auth tokens
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('user');
-            window.location.href = '/login';
+            // Unauthorized - clear auth tokens and redirect securely
+            this.clearAuthData();
+            // Use history API instead of direct location change for better security
+            if (window.location.pathname !== '/login') {
+              window.history.replaceState({}, '', '/login');
+              window.location.reload();
+            }
             throw new Error('Session expirée. Veuillez vous reconnecter.');
 
           case 403:
