@@ -17,7 +17,28 @@ const CitySelector: React.FC<CitySelectorProps> = ({
   const [inputValue, setInputValue] = useState("");
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [locationError, setLocationError] = useState("");
+  const [cities, setCities] = useState<string[]>([]);
+  const [loadingCities, setLoadingCities] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Load cities from API
+  useEffect(() => {
+    const loadCities = async () => {
+      try {
+        setLoadingCities(true);
+        const citiesData = await apiService.getCities();
+        setCities(citiesData);
+      } catch (error) {
+        console.error('Error loading cities:', error);
+        // Fallback to empty array - no hardcoded cities
+        setCities([]);
+      } finally {
+        setLoadingCities(false);
+      }
+    };
+
+    loadCities();
+  }, []);
 
   // City reverse geocoding (mock implementation)
   const getCityFromCoordinates = async (lat: number, lon: number): Promise<string> => {
