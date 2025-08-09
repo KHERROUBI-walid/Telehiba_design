@@ -78,6 +78,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return true;
     } catch (error) {
       console.error("Signup error:", error);
+      // Clear any existing auth data on signup failure
+      setUser(null);
+      localStorage.removeItem("user");
+      localStorage.removeItem("auth_token");
       return false;
     } finally {
       setIsLoading(false);
