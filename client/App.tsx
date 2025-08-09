@@ -49,9 +49,10 @@ const App = () => (
       <AuthProvider>
         <CartProvider>
           <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
+          <ConnectionBanner isConnected={isApiAvailable} isDemoMode={!isApiAvailable} />
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
               <Routes>
                 {/* Public routes - accessible to everyone */}
                 <Route path="/" element={<HomePage />} />
