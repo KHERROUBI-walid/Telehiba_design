@@ -38,6 +38,11 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// Check if we're in demo mode (API not available)
+const isApiAvailable = Boolean(import.meta.env.VITE_API_BASE_URL) &&
+  !(window.location.hostname !== 'localhost' &&
+    (import.meta.env.VITE_API_BASE_URL || '').includes('127.0.0.1'));
+
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
