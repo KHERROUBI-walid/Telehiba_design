@@ -1,8 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
-import { Vendor } from "../../data/mockData";
 import { Product } from "../../context/CartContext";
+
+interface Vendor {
+  id: number;
+  name: string;
+  avatar: string;
+  city: string;
+  specialty: string;
+  rating: number;
+  gradient: string;
+}
 import ProductCard from "./ProductCard";
 
 interface VendorProductSectionProps {
