@@ -39,80 +39,8 @@ export default function VendorScanner() {
   const orderId = searchParams.get("orderId");
   const mode = searchParams.get("mode") || "scan"; // "scan" or "verify"
 
-  // Mock orders database
-  const mockOrders: Record<string, OrderDetails> = {
-    "AB123": {
-      id: "ORD001",
-      customerName: "Sophie Martin",
-      customerPhone: "+33 6 12 34 56 78",
-      customerAvatar: "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=100&h=100&fit=crop&crop=center",
-      donatorName: "Marie Dubois",
-      items: [
-        {
-          id: 1,
-          name: "Tomates Bio",
-          price: 4.99,
-          quantity: 2,
-          image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=100&h=100&fit=crop&crop=center"
-        },
-        {
-          id: 2,
-          name: "Pommes Golden",
-          price: 3.50,
-          quantity: 1,
-          image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop&crop=center"
-        }
-      ],
-      total: 13.48,
-      pickupCode: "AB123",
-      status: "ready_for_pickup"
-    },
-    "CD456": {
-      id: "ORD002",
-      customerName: "Lucas Petit",
-      customerPhone: "+33 6 98 76 54 32",
-      customerAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=center",
-      donatorName: "Pierre Durand",
-      items: [
-        {
-          id: 3,
-          name: "Pain de Campagne",
-          price: 2.80,
-          quantity: 3,
-          image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center"
-        }
-      ],
-      total: 8.40,
-      pickupCode: "CD456",
-      status: "preparing"
-    },
-    "EF789": {
-      id: "ORD003",
-      customerName: "Emma Laurent",
-      customerPhone: "+33 6 55 44 33 22",
-      customerAvatar: "https://images.unsplash.com/photo-1494790108755-2616b5b85644?w=100&h=100&fit=crop&crop=center",
-      donatorName: "Jean Martin",
-      items: [
-        {
-          id: 1,
-          name: "Tomates Bio",
-          price: 4.99,
-          quantity: 1,
-          image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=100&h=100&fit=crop&crop=center"
-        },
-        {
-          id: 2,
-          name: "Pommes Golden",
-          price: 3.50,
-          quantity: 2,
-          image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop&crop=center"
-        }
-      ],
-      total: 11.99,
-      pickupCode: "EF789",
-      status: "ready_for_pickup"
-    }
-  };
+  // Load orders from API for verification
+  const [availableOrders, setAvailableOrders] = useState<Record<string, OrderDetails>>({});
 
   const simulateQRScan = () => {
     setIsScanning(true);
