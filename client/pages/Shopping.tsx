@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { apiService } from "../services/api";
-import { categories } from "../data/mockData";
 import PageContainer from "../components/common/PageContainer";
 import Header from "../components/common/Header";
 import SearchBar from "../components/common/SearchBar";
