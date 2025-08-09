@@ -1,6 +1,27 @@
 import { UserRole } from "../context/AuthContext";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+// Detect environment and set appropriate API URL
+const getApiBaseUrl = (): string => {
+  // Use environment variable if set
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+
+  // Detect if running in development or production
+  const isLocalhost = window.location.hostname === 'localhost' ||
+                     window.location.hostname === '127.0.0.1' ||
+                     window.location.hostname === '0.0.0.0';
+
+  if (isLocalhost) {
+    return 'http://127.0.0.1:8000/api';
+  }
+
+  // For production/cloud environments, use a placeholder or return empty to disable API
+  console.warn('API_BASE_URL not configured for production environment');
+  return ''; // This will disable API calls
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 interface ApiResponse<T> {
   data: T;
