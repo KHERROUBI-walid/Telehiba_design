@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import {
   ArrowLeft, Heart, CreditCard, Users, TrendingUp, Gift, Eye, Calendar, Search,
   MapPin, Star, Filter, Globe, Target, Award, DollarSign,
-  Clock, CheckCircle, AlertCircle, Zap, Crown, Shield, Bell
+  Clock, CheckCircle, AlertCircle, Zap, Crown, Shield, Bell, Loader2
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { apiService } from "../services/api";
 import BottomNavigation from "../components/BottomNavigation";
 import StripePayment from "../components/common/StripePayment";
 import DonatorNotifications from "../components/common/DonatorNotifications";
@@ -58,7 +59,7 @@ interface PendingPayment {
   familyAvatar: string;
   familyCity: string;
   vendorName: string;
-  items: Array<{
+  items?: Array<{
     id: number;
     name: string;
     price: number;
@@ -79,6 +80,13 @@ interface CityStats {
   avgMonthlyNeed: number;
 }
 
+interface DonatorStats {
+  totalDonated: number;
+  familiesHelped: number;
+  activeSponsorships: number;
+  impactScore: number;
+}
+
 export default function DonatorDashboard() {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -94,176 +102,189 @@ export default function DonatorDashboard() {
   const [selectedPayment, setSelectedPayment] = useState<PendingPayment | null>(null);
   const [showNotifications, setShowNotifications] = useState(false);
 
+  // Data states
+  const [families, setFamilies] = useState<Family[]>([]);
+  const [pendingPayments, setPendingPayments] = useState<PendingPayment[]>([]);
+  const [cityStats, setCityStats] = useState<CityStats[]>([]);
+  const [donationHistory, setDonationHistory] = useState<DonationRecord[]>([]);
+  const [donatorStats, setDonatorStats] = useState<DonatorStats>({
+    totalDonated: 0,
+    familiesHelped: 0,
+    activeSponsorships: 0,
+    impactScore: 0
+  });
+  const [loading, setLoading] = useState(false);
+
   const {
     notifications,
     unreadCount,
     markAsRead,
-    markAllAsRead
+    markAllAsRead,
+    addNotification
   } = useNotifications();
 
-  // Mock data for families
-  const [families] = useState<Family[]>([
-    {
-      id: "FAM001",
-      name: "Famille Martin",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b85644?w=100&h=100&fit=crop&crop=center",
-      city: "Paris",
-      memberCount: 4,
-      monthlyNeed: 450,
-      currentNeed: 120,
-      story: "Famille de 4 personnes, parents au chômage suite à la pandémie. Recherche aide pour alimentation et frais scolaires.",
-      isSponsored: false,
-      urgencyLevel: "high",
-      totalReceived: 340,
-      children: 2,
-      verified: true
-    },
-    {
-      id: "FAM002", 
-      name: "Famille Dubois",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=center",
-      city: "Lyon",
-      memberCount: 3,
-      monthlyNeed: 350,
-      currentNeed: 89,
-      story: "Mère célibataire avec 2 enfants, travaille à temps partiel. Besoin d'aide pour les courses alimentaires.",
-      isSponsored: true,
-      sponsorId: "DON123",
-      urgencyLevel: "medium",
-      lastDonation: "2024-01-10",
-      totalReceived: 890,
-      children: 2,
-      verified: true
-    },
-    {
-      id: "FAM003",
-      name: "Famille Ahmed",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=center",
-      city: "Marseille",
-      memberCount: 5,
-      monthlyNeed: 600,
-      currentNeed: 245,
-      story: "Grande famille, père malade, besoin urgent d'aide pour médicaments et alimentation.",
-      isSponsored: false,
-      urgencyLevel: "high",
-      totalReceived: 156,
-      children: 3,
-      verified: true
+  // Load data based on active tab
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        switch (activeTab) {
+          case "pending":
+            const payments = await apiService.getPendingPayments({
+              city: selectedCity !== "all" ? selectedCity : undefined,
+              urgency: urgencyFilter !== "all" ? urgencyFilter : undefined,
+              search: searchTerm || undefined
+            });
+            setPendingPayments(payments);
+            break;
+
+          case "families":
+            const familiesData = await apiService.searchFamilies(searchTerm, selectedCity);
+            setFamilies(familiesData);
+            break;
+
+          case "cities":
+            const cities = await apiService.getCityStats();
+            setCityStats(cities);
+            break;
+
+          case "history":
+            // Load donation history - this would need an API endpoint
+            setDonationHistory([]);
+            break;
+
+          case "stats":
+            const stats = await apiService.getDonatorStats();
+            setDonatorStats(stats);
+            break;
+        }
+      } catch (error) {
+        console.error(`Error loading ${activeTab} data:`, error);
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: `Impossible de charger les données de ${activeTab}`
+        });
+
+        // Fallback to mock data for demonstration
+        if (activeTab === "pending") {
+          setPendingPayments([
+            {
+              id: "PAY001",
+              familyId: "FAM001",
+              familyName: "Famille Martin",
+              familyAvatar: "https://images.unsplash.com/photo-1494790108755-2616b85644?w=100&h=100&fit=crop&crop=center",
+              familyCity: "Paris",
+              vendorName: "Épicerie Bio Paris",
+              amount: 69.30,
+              urgency: "high",
+              requestDate: "2024-01-15",
+              familyStory: "Famille de 4 personnes en difficulté financière temporaire."
+            }
+          ]);
+        } else if (activeTab === "families") {
+          setFamilies([
+            {
+              id: "FAM001",
+              name: "Famille Martin",
+              avatar: "https://images.unsplash.com/photo-1494790108755-2616b85644?w=100&h=100&fit=crop&crop=center",
+              city: "Paris",
+              memberCount: 4,
+              monthlyNeed: 450,
+              currentNeed: 120,
+              story: "Famille de 4 personnes, parents au chômage suite à la pandémie.",
+              isSponsored: false,
+              urgencyLevel: "high",
+              totalReceived: 340,
+              children: 2,
+              verified: true
+            }
+          ]);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [activeTab, selectedCity, urgencyFilter, searchTerm, toast]);
+
+  const handlePayment = async (payment: PendingPayment, paymentMethodId: string) => {
+    try {
+      const result = await apiService.processPayment({
+        paymentId: payment.id,
+        amount: payment.amount,
+        paymentMethodId,
+        familyId: payment.familyId
+      });
+
+      toast({
+        title: "Paiement réussi",
+        description: `Paiement de ${payment.amount}€ effectué pour ${payment.familyName}`
+      });
+
+      // Remove from pending payments
+      setPendingPayments(prev => prev.filter(p => p.id !== payment.id));
+      
+      // Add notification
+      addNotification({
+        id: `payment_${Date.now()}`,
+        type: "success",
+        title: "Paiement confirmé",
+        message: `Votre don de ${payment.amount}€ pour ${payment.familyName} a été traité avec succès.`,
+        timestamp: new Date(),
+        priority: "high"
+      });
+
+      setShowStripePayment(false);
+      setSelectedPayment(null);
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur de paiement",
+        description: "Le paiement n'a pas pu être traité"
+      });
     }
-  ]);
-
-  // Mock data for pending payments
-  const [pendingPayments] = useState<PendingPayment[]>([
-    {
-      id: "PAY001",
-      familyId: "FAM001",
-      familyName: "Famille Martin",
-      familyAvatar: "https://images.unsplash.com/photo-1494790108755-2616b85644?w=100&h=100&fit=crop&crop=center",
-      familyCity: "Paris",
-      vendorName: "Épicerie Bio Paris",
-      items: [
-        { id: 1, name: "Légumes bio", price: 25.50, quantity: 2, image: "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=100&h=100&fit=crop" },
-        { id: 2, name: "Fruits de saison", price: 18.30, quantity: 1, image: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=100&h=100&fit=crop" }
-      ],
-      amount: 69.30,
-      requestDate: "2024-01-15",
-      urgency: "high",
-      familyStory: "Famille en difficulté depuis la perte d'emploi du père. 2 enfants en bas âge.",
-      deadlineDate: "2024-01-18"
-    },
-    {
-      id: "PAY002", 
-      familyId: "FAM003",
-      familyName: "Famille Ahmed",
-      familyAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=center",
-      familyCity: "Marseille",
-      vendorName: "Pharmacie Centrale",
-      items: [
-        { id: 3, name: "Médicaments", price: 45.80, quantity: 1, image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=100&h=100&fit=crop" }
-      ],
-      amount: 45.80,
-      requestDate: "2024-01-14",
-      urgency: "high",
-      familyStory: "Père malade, besoin urgent de médicaments non remboursés.",
-      deadlineDate: "2024-01-16"
-    }
-  ]);
-
-  // Mock data for cities
-  const [cityStats] = useState<CityStats[]>([
-    { city: "Paris", familiesCount: 45, totalNeeded: 12500, avgMonthlyNeed: 278 },
-    { city: "Lyon", familiesCount: 32, totalNeeded: 8900, avgMonthlyNeed: 278 },
-    { city: "Marseille", familiesCount: 28, totalNeeded: 7800, avgMonthlyNeed: 279 },
-    { city: "Toulouse", familiesCount: 23, totalNeeded: 6200, avgMonthlyNeed: 270 },
-    { city: "Nice", familiesCount: 18, totalNeeded: 4900, avgMonthlyNeed: 272 }
-  ]);
-
-  // Mock data for donation history
-  const [donationHistory] = useState<DonationRecord[]>([
-    {
-      id: "DON001",
-      familyName: "Famille Martin",
-      familyAvatar: "https://images.unsplash.com/photo-1494790108755-2616b85644?w=100&h=100&fit=crop&crop=center",
-      vendorName: "Épicerie Bio",
-      items: [
-        { id: 1, name: "Légumes bio", price: 25.50, quantity: 2, image: "https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=100&h=100&fit=crop" }
-      ],
-      amount: 51.00,
-      date: "2024-01-10",
-      status: "delivered",
-      message: "Merci beaucoup pour votre générosité !",
-      impact: "Cette donation a permis de nourrir la famille pendant 3 jours"
-    }
-  ]);
-
-  // Filter functions
-  const filteredFamilies = families.filter(family => {
-    const matchesSearch = family.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         family.city.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCity = selectedCity === "all" || family.city === selectedCity;
-    return matchesSearch && matchesCity;
-  });
-
-  const filteredPendingPayments = pendingPayments.filter(payment => {
-    const matchesSearch = payment.familyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         payment.familyCity.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCity = selectedCity === "all" || payment.familyCity === selectedCity;
-    const matchesUrgency = urgencyFilter === "all" || payment.urgency === urgencyFilter;
-    return matchesSearch && matchesCity && matchesUrgency;
-  });
-
-  const uniqueCities = ["all", ...Array.from(new Set(families.map(f => f.city)))];
-
-  const handleSponsorFamily = (family: Family) => {
-    setSelectedFamily(family);
-    setShowSponsorModal(true);
   };
 
-  const confirmSponsorship = () => {
-    if (selectedFamily) {
-      toast({
-        title: "Parrainage confirmé!",
-        description: `Vous parrainez maintenant ${selectedFamily.name}`,
+  const handleSponsorFamily = async (family: Family) => {
+    try {
+      await apiService.sponsorFamily(family.id, {
+        sponsorType: "monthly",
+        amount: family.monthlyNeed
       });
+
+      toast({
+        title: "Parrainage confirmé",
+        description: `Vous parrainez maintenant ${family.name}`
+      });
+
+      // Update family status
+      setFamilies(prev => prev.map(f => 
+        f.id === family.id 
+          ? { ...f, isSponsored: true, sponsorId: user?.id?.toString() }
+          : f
+      ));
+
+      addNotification({
+        id: `sponsor_${Date.now()}`,
+        type: "success",
+        title: "Nouveau parrainage",
+        message: `Vous parrainez maintenant ${family.name}. Votre première contribution sera prélevée le mois prochain.`,
+        timestamp: new Date(),
+        priority: "medium"
+      });
+
       setShowSponsorModal(false);
       setSelectedFamily(null);
-    }
-  };
-
-  const handlePayOrder = (payment: PendingPayment) => {
-    setSelectedPayment(payment);
-    setShowStripePayment(true);
-  };
-
-  const handleStripePaymentSuccess = (paymentResult: any) => {
-    if (selectedPayment) {
+    } catch (error) {
+      console.error('Sponsorship error:', error);
       toast({
-        title: "Paiement réussi!",
-        description: `€${selectedPayment.amount.toFixed(2)} payés avec succès pour ${selectedPayment.familyName}`,
+        variant: "destructive",
+        title: "Erreur",
+        description: "Impossible de confirmer le parrainage"
       });
-
-      // Here you would typically update the backend and remove the payment from pending list
-      setSelectedPayment(null);
     }
   };
 
@@ -276,164 +297,124 @@ export default function DonatorDashboard() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-app-pink via-app-purple to-app-blue relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute top-1/4 -right-20 w-64 h-64 bg-gradient-to-br from-white/10 to-app-pink/20 rounded-full animate-pulse"></div>
-      <div className="absolute bottom-1/3 -left-20 w-48 h-48 bg-gradient-to-br from-app-blue/20 to-white/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
+  const getUrgencyIcon = (urgency: string) => {
+    switch (urgency) {
+      case "high": return AlertCircle;
+      case "medium": return Clock;
+      case "low": return CheckCircle;
+      default: return Clock;
+    }
+  };
 
-      {/* Header */}
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 relative overflow-hidden">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-white/20 text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-app-purple" />
+            <p className="text-gray-600">Chargement des données...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute top-1/4 -right-20 w-64 h-64 bg-gradient-to-br from-purple-200/30 to-pink-300/30 rounded-full animate-pulse"></div>
+      <div className="absolute bottom-1/3 -left-20 w-48 h-48 bg-gradient-to-br from-pink-200/30 to-blue-200/30 rounded-full animate-bounce [animation-duration:3s]"></div>
+
+      {/* Header with notification bell */}
       <div className="relative z-10 pt-12 pb-8">
         <div className="flex items-center justify-between px-6">
-          <Link to="/" className="text-white hover:scale-110 transition-transform duration-300">
+          <Link to="/" className="text-gray-700 hover:scale-110 transition-transform duration-300">
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-white drop-shadow-lg">Espace Donateur</h1>
-            <p className="text-white/80 text-sm mt-1">Votre impact solidaire</p>
+            <h1 className="text-2xl font-bold text-gray-800 drop-shadow-lg">
+              Espace Donateur
+            </h1>
+            <p className="text-gray-600 text-sm mt-1">
+              Bienvenue, {user?.name}
+            </p>
           </div>
           <button
             onClick={() => setShowNotifications(true)}
-            className="relative text-white hover:scale-110 transition-transform duration-300"
+            className="relative p-2 text-gray-700 hover:bg-white/50 rounded-xl transition-colors"
           >
             <Bell className="w-6 h-6" />
             {unreadCount > 0 && (
-              <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                <span className="text-xs text-white font-bold">
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              </div>
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {unreadCount}
+              </span>
             )}
           </button>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="relative z-10 px-6 mb-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
-                <Heart className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-white/80 text-sm">Total donné</p>
-                <p className="text-white text-lg font-bold">€2,450</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
-                <Users className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-white/80 text-sm">Familles aidées</p>
-                <p className="text-white text-lg font-bold">23</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center">
-                <Crown className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-white/80 text-sm">Parrainages</p>
-                <p className="text-white text-lg font-bold">3</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-yellow-500 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-white/80 text-sm">Impact score</p>
-                <p className="text-white text-lg font-bold">85%</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Tab Navigation */}
       <div className="relative z-10 px-6 mb-6">
-        <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-2 border border-white/30">
+        <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-2 shadow-lg border border-white/30">
           <div className="grid grid-cols-5 gap-1">
             {[
-              { key: "pending", label: "À payer", icon: AlertCircle },
-              { key: "families", label: "Familles", icon: Users },
-              { key: "cities", label: "Villes", icon: MapPin },
-              { key: "history", label: "Historique", icon: Calendar },
-              { key: "stats", label: "Impact", icon: TrendingUp }
-            ].map(({ key, label, icon: Icon }) => (
+              { id: "pending", label: "En Attente", icon: Clock },
+              { id: "families", label: "Familles", icon: Users },
+              { id: "cities", label: "Villes", icon: MapPin },
+              { id: "history", label: "Historique", icon: Calendar },
+              { id: "stats", label: "Impact", icon: TrendingUp }
+            ].map(({ id, label, icon: Icon }) => (
               <button
-                key={key}
-                onClick={() => setActiveTab(key as any)}
-                className={`flex flex-col items-center gap-1 py-3 px-2 rounded-xl transition-all duration-300 ${
-                  activeTab === key
-                    ? "bg-white text-app-purple shadow-lg"
-                    : "text-white hover:bg-white/10"
+                key={id}
+                onClick={() => setActiveTab(id as any)}
+                className={`py-2 px-2 rounded-xl text-xs font-medium transition-all duration-300 flex flex-col items-center gap-1 ${
+                  activeTab === id
+                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
+                    : "text-gray-600 hover:bg-white/50"
                 }`}
               >
                 <Icon className="w-4 h-4" />
-                <span className="text-xs font-medium">{label}</span>
+                <span className="hidden sm:block">{label}</span>
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Search and Filter Bar */}
-      {(activeTab === "pending" || activeTab === "families" || activeTab === "cities") && (
+      {/* Filters */}
+      {(activeTab === "pending" || activeTab === "families") && (
         <div className="relative z-10 px-6 mb-6">
-          <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30 space-y-3">
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <Input
-                  placeholder="Rechercher familles, villes..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-white/50 border-white/30 text-gray-800 placeholder:text-gray-600"
-                />
-              </div>
+          <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-white/30">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Input
+                placeholder="Rechercher..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="bg-white/70 border-white/50"
+              />
               <select
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
-                className="px-4 py-2 bg-white/50 border border-white/30 rounded-lg text-gray-800"
+                className="bg-white/70 border border-white/50 rounded-lg px-3 py-2 text-gray-700"
               >
-                {uniqueCities.map(city => (
-                  <option key={city} value={city}>
-                    {city === "all" ? "Toutes les villes" : city}
-                  </option>
-                ))}
+                <option value="all">Toutes les villes</option>
+                <option value="Paris">Paris</option>
+                <option value="Lyon">Lyon</option>
+                <option value="Marseille">Marseille</option>
               </select>
+              {activeTab === "pending" && (
+                <select
+                  value={urgencyFilter}
+                  onChange={(e) => setUrgencyFilter(e.target.value as any)}
+                  className="bg-white/70 border border-white/50 rounded-lg px-3 py-2 text-gray-700"
+                >
+                  <option value="all">Toutes urgences</option>
+                  <option value="high">Urgence élevée</option>
+                  <option value="medium">Urgence moyenne</option>
+                  <option value="low">Urgence faible</option>
+                </select>
+              )}
             </div>
-            
-            {activeTab === "pending" && (
-              <div className="flex gap-2">
-                {["all", "high", "medium", "low"].map(urgency => (
-                  <button
-                    key={urgency}
-                    onClick={() => setUrgencyFilter(urgency as any)}
-                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                      urgencyFilter === urgency
-                        ? "bg-white text-app-purple"
-                        : "bg-white/30 text-white hover:bg-white/40"
-                    }`}
-                  >
-                    {urgency === "all" ? "Toutes" : 
-                     urgency === "high" ? "Urgent" :
-                     urgency === "medium" ? "Moyen" : "Bas"}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       )}
@@ -443,85 +424,179 @@ export default function DonatorDashboard() {
         {/* Pending Payments Tab */}
         {activeTab === "pending" && (
           <div className="space-y-4">
-            {filteredPendingPayments.length === 0 ? (
-              <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-8 text-center">
-                <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Aucune commande en attente</h3>
-                <p className="text-gray-600">Modifiez vos filtres pour voir plus de commandes</p>
+            {pendingPayments.length === 0 ? (
+              <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 text-center shadow-xl border border-white/20">
+                <CreditCard className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucun paiement en attente</h3>
+                <p className="text-gray-500">Toutes les demandes de paiement ont été traitées</p>
               </div>
             ) : (
-              filteredPendingPayments.map(payment => (
-                <div key={payment.id} className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={payment.familyAvatar}
-                        alt={payment.familyName}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                      <div>
-                        <h3 className="font-bold text-gray-800">{payment.familyName}</h3>
-                        <p className="text-sm text-gray-600 flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          {payment.familyCity}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className={`px-2 py-1 rounded-lg text-xs font-medium border ${getUrgencyColor(payment.urgency)}`}>
-                        {payment.urgency === "high" ? "Urgent" :
-                         payment.urgency === "medium" ? "Moyen" : "Bas"}
-                      </div>
-                      {payment.deadlineDate && (
-                        <p className="text-xs text-gray-500 mt-1">
-                          Échéance: {new Date(payment.deadlineDate).toLocaleDateString('fr-FR')}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 rounded-xl p-3 mb-4">
-                    <p className="text-sm text-gray-700 font-medium mb-2">Commande chez {payment.vendorName}</p>
-                    <div className="space-y-1">
-                      {payment.items.map(item => (
-                        <div key={item.id} className="flex justify-between text-sm">
-                          <span>{item.quantity}x {item.name}</span>
-                          <span>€{(item.price * item.quantity).toFixed(2)}</span>
+              pendingPayments.map((payment) => {
+                const UrgencyIcon = getUrgencyIcon(payment.urgency);
+                return (
+                  <div key={payment.id} className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <img 
+                          src={payment.familyAvatar} 
+                          alt={payment.familyName}
+                          className="w-12 h-12 rounded-full"
+                        />
+                        <div>
+                          <h3 className="font-bold text-gray-800">{payment.familyName}</h3>
+                          <p className="text-sm text-gray-600">{payment.familyCity}</p>
+                          <p className="text-xs text-gray-500">{payment.vendorName}</p>
                         </div>
-                      ))}
+                      </div>
+                      <div className="text-right">
+                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg border text-xs font-medium ${getUrgencyColor(payment.urgency)}`}>
+                          <UrgencyIcon className="w-3 h-3" />
+                          {payment.urgency === "high" ? "Urgent" : payment.urgency === "medium" ? "Modéré" : "Normal"}
+                        </div>
+                        <p className="text-2xl font-bold text-purple-600 mt-1">{payment.amount.toFixed(2)}€</p>
+                      </div>
                     </div>
-                  </div>
 
-                  {payment.familyStory && (
-                    <div className="bg-blue-50 rounded-xl p-3 mb-4">
-                      <p className="text-sm text-blue-800">{payment.familyStory}</p>
-                    </div>
-                  )}
+                    {payment.familyStory && (
+                      <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                        <p className="text-sm text-gray-700">{payment.familyStory}</p>
+                      </div>
+                    )}
 
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-2xl font-bold text-app-purple">€{payment.amount.toFixed(2)}</span>
-                      <p className="text-xs text-gray-500">Demandé le {new Date(payment.requestDate).toLocaleDateString('fr-FR')}</p>
-                    </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <Button
-                        onClick={() => handlePayOrder(payment)}
-                        className="bg-green-500 hover:bg-green-600 text-white"
+                        onClick={() => {
+                          setSelectedPayment(payment);
+                          setShowStripePayment(true);
+                        }}
+                        className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
                       >
                         <CreditCard className="w-4 h-4 mr-2" />
-                        Payer
+                        Payer maintenant
                       </Button>
                       <Button
                         variant="outline"
                         onClick={() => {
-                          const family = families.find(f => f.id === payment.familyId);
-                          if (family) handleSponsorFamily(family);
+                          setSelectedPayment(payment);
+                          setShowPaymentModal(true);
                         }}
-                        className="border-app-purple text-app-purple hover:bg-app-purple hover:text-white"
+                        className="bg-white/70"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        )}
+
+        {/* Families Tab */}
+        {activeTab === "families" && (
+          <div className="space-y-4">
+            {families.length === 0 ? (
+              <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 text-center shadow-xl border border-white/20">
+                <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucune famille trouvée</h3>
+                <p className="text-gray-500">Essayez de modifier vos critères de recherche</p>
+              </div>
+            ) : (
+              families.map((family) => (
+                <div key={family.id} className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <img 
+                        src={family.avatar} 
+                        alt={family.name}
+                        className="w-12 h-12 rounded-full"
+                      />
+                      <div>
+                        <h3 className="font-bold text-gray-800">{family.name}</h3>
+                        <p className="text-sm text-gray-600">{family.city}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                            {family.memberCount} membres
+                          </span>
+                          <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                            {family.children} enfants
+                          </span>
+                          {family.verified && (
+                            <Shield className="w-4 h-4 text-green-600" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-gray-500">Besoin mensuel</p>
+                      <p className="text-xl font-bold text-purple-600">{family.monthlyNeed}€</p>
+                      <p className="text-xs text-gray-500">Reçu: {family.totalReceived}€</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-gray-700">{family.story}</p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    {family.isSponsored ? (
+                      <div className="flex-1 bg-green-100 text-green-800 py-2 px-4 rounded-lg text-center font-medium">
+                        <Crown className="w-4 h-4 inline mr-2" />
+                        Déjà parrainée
+                      </div>
+                    ) : (
+                      <Button
+                        onClick={() => {
+                          setSelectedFamily(family);
+                          setShowSponsorModal(true);
+                        }}
+                        className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
                       >
                         <Heart className="w-4 h-4 mr-2" />
-                        Parrainer
+                        Parrainer cette famille
                       </Button>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {/* Cities Tab */}
+        {activeTab === "cities" && (
+          <div className="space-y-4">
+            {cityStats.length === 0 ? (
+              <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 text-center shadow-xl border border-white/20">
+                <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucune statistique disponible</h3>
+                <p className="text-gray-500">Les données des villes seront bientôt disponibles</p>
+              </div>
+            ) : (
+              cityStats.map((city) => (
+                <div key={city.city} className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <MapPin className="w-8 h-8 text-purple-600" />
+                      <div>
+                        <h3 className="font-bold text-gray-800">{city.city}</h3>
+                        <p className="text-sm text-gray-600">{city.familiesCount} familles</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-gray-500">Besoin total</p>
+                      <p className="text-xl font-bold text-purple-600">{city.totalNeeded}€</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-gray-50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-gray-500">Moyenne mensuelle</p>
+                      <p className="font-semibold text-gray-800">{city.avgMonthlyNeed}€</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-gray-500">Par famille</p>
+                      <p className="font-semibold text-gray-800">{Math.round(city.totalNeeded / city.familiesCount)}€</p>
                     </div>
                   </div>
                 </div>
@@ -530,347 +605,105 @@ export default function DonatorDashboard() {
           </div>
         )}
 
-        {/* Families Tab */}
-        {activeTab === "families" && (
-          <div className="space-y-4">
-            {filteredFamilies.map(family => (
-              <div key={family.id} className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <div className="relative">
-                      <img
-                        src={family.avatar}
-                        alt={family.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                      {family.verified && (
-                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                          <Shield className="w-3 h-3 text-white" />
-                        </div>
-                      )}
-                      {family.isSponsored && (
-                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
-                          <Crown className="w-3 h-3 text-white" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-gray-800 text-lg">{family.name}</h3>
-                      <p className="text-sm text-gray-600 flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        {family.city} • {family.memberCount} membres • {family.children} enfants
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        {family.isSponsored ? (
-                          <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-lg font-medium">
-                            Parrainée
-                          </span>
-                        ) : (
-                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-lg font-medium">
-                            Disponible
-                          </span>
-                        )}
-                        <div className={`px-2 py-1 rounded-lg text-xs font-medium ${getUrgencyColor(family.urgencyLevel)}`}>
-                          {family.urgencyLevel === "high" ? "Urgent" :
-                           family.urgencyLevel === "medium" ? "Moyen" : "Bas"}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gray-50 rounded-xl p-4 mb-4">
-                  <p className="text-sm text-gray-700 mb-3">{family.story}</p>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-xs text-gray-500">Besoin mensuel</p>
-                      <p className="font-semibold text-gray-800">€{family.monthlyNeed}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Besoin actuel</p>
-                      <p className="font-semibold text-app-purple">€{family.currentNeed}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Total reçu</p>
-                      <p className="font-semibold text-green-600">€{family.totalReceived}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Dernière donation</p>
-                      <p className="font-semibold text-gray-600">
-                        {family.lastDonation ? new Date(family.lastDonation).toLocaleDateString('fr-FR') : 'Jamais'}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  {!family.isSponsored && (
-                    <Button
-                      onClick={() => handleSponsorFamily(family)}
-                      className="flex-1 bg-app-purple text-white hover:bg-app-purple/90"
-                    >
-                      <Heart className="w-4 h-4 mr-2" />
-                      Parrainer cette famille
-                    </Button>
-                  )}
-                  <Button
-                    variant="outline"
-                    className="border-app-purple text-app-purple hover:bg-app-purple hover:text-white"
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    Voir détails
-                  </Button>
-                </div>
+        {/* Stats Tab */}
+        {activeTab === "stats" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 text-center">
+                <DollarSign className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                <p className="text-2xl font-bold text-green-600">{donatorStats.totalDonated}€</p>
+                <p className="text-sm text-gray-600">Total donné</p>
               </div>
-            ))}
-          </div>
-        )}
-
-        {/* Cities Tab */}
-        {activeTab === "cities" && (
-          <div className="space-y-4">
-            {cityStats.map(city => (
-              <div key={city.city} className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-app-purple to-app-sky rounded-xl flex items-center justify-center">
-                      <MapPin className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-800 text-lg">{city.city}</h3>
-                      <p className="text-sm text-gray-600">{city.familiesCount} familles en attente d'aide</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-app-purple">€{city.totalNeeded.toLocaleString()}</p>
-                    <p className="text-xs text-gray-500">Besoin total</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div className="text-center">
-                    <p className="text-lg font-semibold text-gray-800">{city.familiesCount}</p>
-                    <p className="text-xs text-gray-500">Familles</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-lg font-semibold text-gray-800">€{city.avgMonthlyNeed}</p>
-                    <p className="text-xs text-gray-500">Besoin moyen</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-lg font-semibold text-gray-800">{Math.round(city.totalNeeded / city.familiesCount)}</p>
-                    <p className="text-xs text-gray-500">€ par famille</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => setSelectedCity(city.city)}
-                    className="flex-1 bg-app-purple text-white hover:bg-app-purple/90"
-                  >
-                    <Target className="w-4 h-4 mr-2" />
-                    Aider cette ville
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="border-app-purple text-app-purple hover:bg-app-purple hover:text-white"
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    Voir familles
-                  </Button>
-                </div>
+              <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 text-center">
+                <Users className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                <p className="text-2xl font-bold text-blue-600">{donatorStats.familiesHelped}</p>
+                <p className="text-sm text-gray-600">Familles aidées</p>
               </div>
-            ))}
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 text-center">
+                <Heart className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                <p className="text-2xl font-bold text-purple-600">{donatorStats.activeSponsorships}</p>
+                <p className="text-sm text-gray-600">Parrainages actifs</p>
+              </div>
+              <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 text-center">
+                <Award className="w-8 h-8 text-orange-600 mx-auto mb-2" />
+                <p className="text-2xl font-bold text-orange-600">{donatorStats.impactScore}%</p>
+                <p className="text-sm text-gray-600">Score d'impact</p>
+              </div>
+            </div>
           </div>
         )}
 
         {/* History Tab */}
         {activeTab === "history" && (
-          <div className="space-y-4">
-            {donationHistory.map(donation => (
-              <div key={donation.id} className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={donation.familyAvatar}
-                      alt={donation.familyName}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    <div>
-                      <h3 className="font-bold text-gray-800">{donation.familyName}</h3>
-                      <p className="text-sm text-gray-600">{donation.vendorName}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-green-600">€{donation.amount.toFixed(2)}</p>
-                    <p className="text-xs text-gray-500">{new Date(donation.date).toLocaleDateString('fr-FR')}</p>
-                  </div>
-                </div>
-
-                {donation.impact && (
-                  <div className="bg-green-50 rounded-xl p-3 mb-4">
-                    <p className="text-sm text-green-800 font-medium">Impact:</p>
-                    <p className="text-sm text-green-700">{donation.impact}</p>
-                  </div>
-                )}
-
-                {donation.message && (
-                  <div className="bg-blue-50 rounded-xl p-3">
-                    <p className="text-sm text-blue-800 font-medium">Message de la famille:</p>
-                    <p className="text-sm text-blue-700">"{donation.message}"</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Stats Tab */}
-        {activeTab === "stats" && (
-          <div className="space-y-6">
-            <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Award className="w-5 h-5 text-yellow-500" />
-                Votre Impact Social
-              </h3>
-              
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="text-center p-4 bg-gradient-to-br from-green-50 to-blue-50 rounded-xl">
-                  <div className="text-3xl font-bold text-green-600 mb-1">23</div>
-                  <div className="text-sm text-gray-600">Familles aidées</div>
-                </div>
-                <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl">
-                  <div className="text-3xl font-bold text-purple-600 mb-1">€2,450</div>
-                  <div className="text-sm text-gray-600">Total donné</div>
-                </div>
-                <div className="text-center p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl">
-                  <div className="text-3xl font-bold text-yellow-600 mb-1">3</div>
-                  <div className="text-sm text-gray-600">Parrainages actifs</div>
-                </div>
-                <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl">
-                  <div className="text-3xl font-bold text-blue-600 mb-1">85%</div>
-                  <div className="text-sm text-gray-600">Score d'impact</div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-600">Objectif mensuel</span>
-                    <span className="font-medium">€500 / €500</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-green-500 h-2 rounded-full w-full"></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-600">Engagement communautaire</span>
-                    <span className="font-medium">85%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-purple-500 h-2 rounded-full w-[85%]"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">Répartition par ville</h3>
-              <div className="space-y-3">
-                {cityStats.slice(0, 3).map((city, index) => (
-                  <div key={city.city} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${
-                        index === 0 ? 'bg-blue-500' : 
-                        index === 1 ? 'bg-green-500' : 'bg-purple-500'
-                      }`}></div>
-                      <span className="font-medium">{city.city}</span>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold">€{(city.totalNeeded * 0.3).toFixed(0)}</div>
-                      <div className="text-xs text-gray-500">donné</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 text-center shadow-xl border border-white/20">
+            <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">Historique des dons</h3>
+            <p className="text-gray-500">L'historique détaillé sera bientôt disponible</p>
           </div>
         )}
       </div>
 
-      {/* Sponsorship Modal */}
-      {showSponsorModal && selectedFamily && (
+      {/* Modals */}
+      {showStripePayment && selectedPayment && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Parrainer une famille</h3>
-            
-            <div className="flex items-center gap-4 mb-4">
-              <img
-                src={selectedFamily.avatar}
-                alt={selectedFamily.name}
-                className="w-16 h-16 rounded-full object-cover"
-              />
-              <div>
-                <h4 className="font-bold text-gray-800">{selectedFamily.name}</h4>
-                <p className="text-sm text-gray-600">{selectedFamily.city} • {selectedFamily.memberCount} membres</p>
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-800">Paiement sécurisé</h3>
+              <button
+                onClick={() => {
+                  setShowStripePayment(false);
+                  setSelectedPayment(null);
+                }}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <img 
+                  src={selectedPayment.familyAvatar} 
+                  alt={selectedPayment.familyName}
+                  className="w-10 h-10 rounded-full"
+                />
+                <div>
+                  <p className="font-semibold text-gray-800">{selectedPayment.familyName}</p>
+                  <p className="text-sm text-gray-600">{selectedPayment.familyCity}</p>
+                </div>
               </div>
+              <p className="text-2xl font-bold text-purple-600">{selectedPayment.amount.toFixed(2)}€</p>
             </div>
 
-            <div className="bg-yellow-50 rounded-xl p-4 mb-4">
-              <h5 className="font-semibold text-yellow-800 mb-2">Engagement de parrainage</h5>
-              <ul className="text-sm text-yellow-700 space-y-1">
-                <li>• Donation mensuelle recommandée: €{selectedFamily.monthlyNeed}</li>
-                <li>• Suivi privilégié de la famille</li>
-                <li>• Messages de remerciement directs</li>
-                <li>• Rapport d'impact personnalisé</li>
-              </ul>
-            </div>
-
-            <div className="flex gap-3">
-              <Button
-                onClick={confirmSponsorship}
-                className="flex-1 bg-app-purple text-white hover:bg-app-purple/90"
-              >
-                <Heart className="w-4 h-4 mr-2" />
-                Confirmer le parrainage
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setShowSponsorModal(false)}
-                className="flex-1"
-              >
-                Annuler
-              </Button>
-            </div>
+            <StripePayment
+              amount={selectedPayment.amount}
+              description={`Don pour ${selectedPayment.familyName}`}
+              onSuccess={(result) => handlePayment(selectedPayment, result.id)}
+              onError={(error) => {
+                console.error('Payment error:', error);
+                toast({
+                  variant: "destructive",
+                  title: "Erreur de paiement",
+                  description: "Le paiement a échoué"
+                });
+              }}
+            />
           </div>
         </div>
       )}
 
-      {/* Stripe Payment Modal */}
-      {selectedPayment && (
-        <StripePayment
-          isOpen={showStripePayment}
-          onClose={() => setShowStripePayment(false)}
-          paymentDetails={{
-            amount: selectedPayment.amount,
-            currency: 'EUR',
-            description: `Donation pour commande ${selectedPayment.id}`,
-            familyName: selectedPayment.familyName,
-            vendorName: selectedPayment.vendorName
-          }}
-          onSuccess={handleStripePaymentSuccess}
+      {/* Notifications */}
+      {showNotifications && (
+        <DonatorNotifications
+          notifications={notifications}
+          onClose={() => setShowNotifications(false)}
+          onMarkAsRead={markAsRead}
+          onMarkAllAsRead={markAllAsRead}
         />
       )}
-
-      {/* Notifications Modal */}
-      <DonatorNotifications
-        isOpen={showNotifications}
-        onClose={() => setShowNotifications(false)}
-        notifications={notifications}
-        onMarkAsRead={markAsRead}
-        onMarkAllAsRead={markAllAsRead}
-      />
 
       <BottomNavigation />
     </div>
