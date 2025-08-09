@@ -182,6 +182,10 @@ interface Paiement {
 }
 
 class ApiService {
+  private isApiAvailable(): boolean {
+    return Boolean(API_BASE_URL);
+  }
+
   private getAuthToken(): string | null {
     return localStorage.getItem('auth_token');
   }
