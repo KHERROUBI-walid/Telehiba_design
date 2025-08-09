@@ -421,15 +421,23 @@ class ApiService {
   }
 
   async getCurrentUser(): Promise<AuthResponse['user']> {
+    const token = this.getAuthToken();
+
+    // Validate token exists and is valid
+    if (!token || !this.validateToken(token)) {
+      this.clearAuthData();
+      throw new Error('Token d\'authentification invalide ou expiré');
+    }
+
     const response = await this.makeRequest<User>('/users/me');
-    
+
     // Transform API Platform User to frontend user format
     const user = response.data;
     return {
       id: user.id,
       email: user.email,
       name: user.name,
-      role: user.roles.includes('ROLE_VENDOR') ? 'vendor' : 
+      role: user.roles.includes('ROLE_VENDOR') ? 'vendor' :
             user.roles.includes('ROLE_DONATOR') ? 'donator' : 'family',
       avatar: user.avatar,
       phone: user.phone,
