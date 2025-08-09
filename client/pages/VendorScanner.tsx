@@ -42,6 +42,39 @@ export default function VendorScanner() {
   // Load orders from API for verification
   const [availableOrders, setAvailableOrders] = useState<Record<string, OrderDetails>>({});
 
+  // Load vendor orders for verification
+  useEffect(() => {
+    const loadOrders = async () => {
+      try {
+        const orders = await apiService.getVendorOrders({ status: 'ready_for_pickup' });
+        const ordersMap: Record<string, OrderDetails> = {};
+
+        orders.forEach(order => {
+          if (order.pickupCode) {
+            ordersMap[order.pickupCode] = {
+              id: order.id,
+              customerName: order.customerName,
+              customerPhone: order.customerPhone,
+              customerAvatar: order.customerAvatar,
+              donatorName: order.donatorName,
+              items: order.items,
+              total: order.total,
+              pickupCode: order.pickupCode,
+              status: order.status
+            };
+          }
+        });
+
+        setAvailableOrders(ordersMap);
+      } catch (error) {
+        console.error('Error loading orders for verification:', error);
+        setAvailableOrders({});
+      }
+    };
+
+    loadOrders();
+  }, []);
+
   const simulateQRScan = async () => {
     setIsScanning(true);
     setScanResult(null);
