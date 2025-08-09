@@ -87,12 +87,34 @@ export default function Landing() {
     }
   ];
 
-  const stats: StatItem[] = [
-    { number: "500+", label: "Familles aidées" },
-    { number: "50+", label: "Vendeurs partenaires" },
-    { number: "1000+", label: "Donations effectuées" },
-    { number: "€25k+", label: "Montant total donné" }
-  ];
+  const [stats, setStats] = useState<StatItem[]>([
+    { number: "0", label: "Familles aidées" },
+    { number: "0", label: "Vendeurs partenaires" },
+    { number: "0", label: "Donations effectuées" },
+    { number: "€0", label: "Montant total donné" }
+  ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const publicStats = await apiService.getPublicStats();
+        setStats([
+          { number: publicStats.familiesHelped?.toString() || "0", label: "Familles aidées" },
+          { number: publicStats.vendorsCount?.toString() || "0", label: "Vendeurs partenaires" },
+          { number: publicStats.donationsCount?.toString() || "0", label: "Donations effectuées" },
+          { number: `€${publicStats.totalAmount || 0}`, label: "Montant total donné" }
+        ]);
+      } catch (error) {
+        console.error('Error loading stats:', error);
+        // Keep default values if API fails
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStats();
+  }, []);
 
   const howItWorksSteps = [
     {
