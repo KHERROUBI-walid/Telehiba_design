@@ -80,7 +80,7 @@ const ApiStatus: React.FC = () => {
           isConnected ? 'bg-green-500' : 'bg-yellow-500'
         }`}></div>
         <span>
-          {isConnected ? 'API Connectée' : 'Mode Développement'}
+          {isConnected ? 'API Connectée' : 'API Déconnectée'}
         </span>
       </div>
     </div>
