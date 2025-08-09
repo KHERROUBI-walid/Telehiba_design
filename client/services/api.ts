@@ -362,6 +362,11 @@ class ApiService {
       }
     }
 
+    // If API is not available, provide demo authentication
+    if (!this.isApiAvailable()) {
+      return this.handleDemoLogin(credentials);
+    }
+
     try {
       const response = await this.makeRequest<AuthResponse>('/auth/login', {
         method: 'POST',
@@ -389,8 +394,53 @@ class ApiService {
       localStorage.setItem('login_attempts', newAttemptCount.toString());
       localStorage.setItem('last_login_attempt', Date.now().toString());
 
+      // If API error and we have demo credentials, try demo login
+      if (this.isDemoCredentials(credentials)) {
+        return this.handleDemoLogin(credentials);
+      }
+
       throw error;
     }
+  }
+
+  private isDemoCredentials(credentials: LoginRequest): boolean {
+    const demoAccounts = [
+      'family@demo.com',
+      'vendor@demo.com',
+      'donator@demo.com',
+      'admin@demo.com'
+    ];
+    return demoAccounts.includes(credentials.email.toLowerCase()) && credentials.password === 'demo123';
+  }
+
+  private handleDemoLogin(credentials: LoginRequest): AuthResponse {
+    const email = credentials.email.toLowerCase();
+    let role: UserRole = 'family';
+    let name = 'Utilisateur Demo';
+
+    if (email.includes('vendor')) {
+      role = 'vendor';
+      name = 'Vendeur Demo';
+    } else if (email.includes('donator')) {
+      role = 'donator';
+      name = 'Donateur Demo';
+    } else if (email.includes('family')) {
+      role = 'family';
+      name = 'Famille Demo';
+    }
+
+    const user = {
+      id: Date.now(),
+      email: credentials.email,
+      name,
+      role,
+      avatar: `https://images.unsplash.com/photo-1494790108755-2616b5b85644?w=100&h=100&fit=crop&crop=center`
+    };
+
+    const token = `demo_token_${Date.now()}`;
+    localStorage.setItem('auth_token', token);
+
+    return { token, user };
   }
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
