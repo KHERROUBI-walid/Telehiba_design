@@ -507,10 +507,33 @@ class ApiService {
   async getCurrentUser(): Promise<AuthResponse['user']> {
     const token = this.getAuthToken();
 
-    // Validate token exists and is valid
-    if (!token || !this.validateToken(token)) {
+    // Validate token exists
+    if (!token) {
       this.clearAuthData();
       throw new Error('Token d\'authentification invalide ou expiré');
+    }
+
+    // For demo tokens, return stored user
+    if (token.startsWith('demo_token_')) {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        return JSON.parse(storedUser);
+      }
+    }
+
+    // Validate real token
+    if (!this.validateToken(token)) {
+      this.clearAuthData();
+      throw new Error('Token d\'authentification invalide ou expiré');
+    }
+
+    // If API not available, return stored user
+    if (!this.isApiAvailable()) {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        return JSON.parse(storedUser);
+      }
+      throw new Error('Aucun utilisateur connecté en mode déconnecté');
     }
 
     const response = await this.makeRequest<User>('/users/me');
