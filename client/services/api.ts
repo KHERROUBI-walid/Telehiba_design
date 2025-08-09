@@ -742,32 +742,43 @@ class ApiService {
   async getVendorOrders(filters?: {
     status?: string;
   }): Promise<any[]> {
-    const params = new URLSearchParams();
-    if (filters?.status) params.append('status', filters.status);
-    
-    const endpoint = `/commande_vendeurs${params.toString() ? `?${params.toString()}` : ''}`;
-    const response = await this.makeRequest<CommandeVendeur[]>(endpoint);
-    
-    return response.data.map(commande => ({
-      id: commande.id.toString(),
-      customerName: commande.commandeFamille.famille.user.name,
-      customerPhone: commande.commandeFamille.famille.user.phone,
-      customerAvatar: commande.commandeFamille.famille.user.avatar,
-      donatorName: "Donateur", // Need to get from paiement
-      donatorAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=center",
-      items: commande.ligneProduits.map(ligne => ({
-        id: ligne.produit.id,
-        name: ligne.produit.name,
-        price: ligne.price,
-        quantity: ligne.quantity,
-        image: ligne.produit.image
-      })),
-      total: commande.total,
-      status: this.mapOrderStatus(commande.status),
-      orderDate: commande.orderDate,
-      pickupCode: commande.pickupCode,
-      notes: commande.notes
-    }));
+    // If API not available, return empty array
+    if (!this.isApiAvailable()) {
+      console.warn('API not available - returning empty orders list');
+      return [];
+    }
+
+    try {
+      const params = new URLSearchParams();
+      if (filters?.status) params.append('status', filters.status);
+
+      const endpoint = `/commande_vendeurs${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await this.makeRequest<CommandeVendeur[]>(endpoint);
+
+      return response.data.map(commande => ({
+        id: commande.id.toString(),
+        customerName: commande.commandeFamille.famille.user.name,
+        customerPhone: commande.commandeFamille.famille.user.phone,
+        customerAvatar: commande.commandeFamille.famille.user.avatar,
+        donatorName: "Donateur", // Need to get from paiement
+        donatorAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=center",
+        items: commande.ligneProduits.map(ligne => ({
+          id: ligne.produit.id,
+          name: ligne.produit.name,
+          price: ligne.price,
+          quantity: ligne.quantity,
+          image: ligne.produit.image
+        })),
+        total: commande.total,
+        status: this.mapOrderStatus(commande.status),
+        orderDate: commande.orderDate,
+        pickupCode: commande.pickupCode,
+        notes: commande.notes
+      }));
+    } catch (error) {
+      console.warn('Failed to fetch vendor orders:', error);
+      return [];
+    }
   }
 
   private mapOrderStatus(apiStatus: string): "paid_by_donator" | "preparing" | "ready_for_pickup" {
