@@ -10,12 +10,25 @@ const ApiStatus: React.FC = () => {
 
     const checkConnection = async () => {
       try {
+        const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+
+        // Don't try to connect if we're in a cloud environment trying to reach localhost
+        const isLocalhost = window.location.hostname === 'localhost' ||
+                           window.location.hostname === '127.0.0.1' ||
+                           window.location.hostname === '0.0.0.0';
+
+        if (!isLocalhost && apiUrl.includes('127.0.0.1')) {
+          console.warn('API Status: Skipping connection check - localhost API not accessible from cloud environment');
+          setIsConnected(false);
+          return;
+        }
+
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
           controller.abort();
         }, 3000);
 
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api'}/health`, {
+        const response = await fetch(`${apiUrl}/health`, {
           method: 'GET',
           signal: controller.signal,
           headers: { 'Content-Type': 'application/json' }
@@ -25,6 +38,7 @@ const ApiStatus: React.FC = () => {
         setIsConnected(response.ok);
       } catch (error) {
         // Any error means API is not available (including timeouts)
+        console.warn('API Status: Connection check failed:', error.message);
         setIsConnected(false);
       }
     };
