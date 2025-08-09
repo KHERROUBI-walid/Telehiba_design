@@ -196,11 +196,49 @@ class ApiService {
       try {
         data = await response.json();
       } catch (jsonError) {
-        throw new Error('Invalid JSON response');
+        if (response.status === 204) {
+          // No content response is valid
+          return {
+            success: true,
+            data: {} as T
+          };
+        }
+        throw new Error('Invalid JSON response from server');
       }
 
       if (!response.ok) {
-        throw new Error(data.message || `HTTP ${response.status}: ${response.statusText}`);
+        // Handle specific HTTP errors
+        switch (response.status) {
+          case 401:
+            // Unauthorized - clear auth tokens
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+            throw new Error('Session expirée. Veuillez vous reconnecter.');
+
+          case 403:
+            throw new Error('Accès refusé. Vous n\'avez pas les permissions nécessaires.');
+
+          case 404:
+            throw new Error('Ressource non trouvée.');
+
+          case 422:
+            // Validation errors from API Platform
+            if (data.violations) {
+              const violations = data.violations.map((v: any) => v.message).join(', ');
+              throw new Error(`Erreurs de validation: ${violations}`);
+            }
+            throw new Error('Données invalides.');
+
+          case 429:
+            throw new Error('Trop de requêtes. Veuillez réessayer plus tard.');
+
+          case 500:
+            throw new Error('Erreur serveur. Veuillez réessayer plus tard.');
+
+          default:
+            throw new Error(data.message || `Erreur HTTP ${response.status}: ${response.statusText}`);
+        }
       }
 
       // For API Platform responses, wrap the data appropriately
@@ -222,6 +260,11 @@ class ApiService {
         };
       }
     } catch (error) {
+      // Network or other errors
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error('Impossible de contacter le serveur. Vérifiez votre connexion internet.');
+      }
+
       console.error(`API request failed [${endpoint}]:`, error.message);
       throw error;
     }
