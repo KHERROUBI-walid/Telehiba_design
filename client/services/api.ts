@@ -235,6 +235,11 @@ class ApiService {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
+    // Check if API is available
+    if (!this.isApiAvailable()) {
+      throw new Error('API non configurée. L\'application fonctionne en mode déconnecté.');
+    }
+
     const url = `${API_BASE_URL}${endpoint}`;
     const config: RequestInit = {
       headers: this.getAuthHeaders(),
