@@ -58,16 +58,13 @@ const PageContainer: React.FC<PageContainerProps> = ({
     }
   };
 
-  const isDevelopmentMode = import.meta.env.VITE_APP_ENV === 'development' &&
-    (import.meta.env.VITE_USE_MOCK_DATA === 'true' || import.meta.env.VITE_API_BASE_URL?.includes('localhost'));
-
   return (
     <div className={`min-h-screen ${getBackgroundClasses()} relative overflow-hidden ${className}`}>
       {/* Animated background elements */}
       {getAnimationElements()}
 
       {/* Content */}
-      <div className={`relative z-10 ${isDevelopmentMode ? 'pt-10' : ''}`}>
+      <div className="relative z-10">
         {children}
       </div>
     </div>
