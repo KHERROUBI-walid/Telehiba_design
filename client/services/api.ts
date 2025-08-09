@@ -302,17 +302,61 @@ class ApiService {
 
   // Authentication endpoints
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await this.makeRequest<AuthResponse>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-    });
-    
-    // Store token
-    if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token);
+    // Input validation
+    if (!credentials.email || !credentials.password) {
+      throw new Error('Email et mot de passe requis');
     }
-    
-    return response.data;
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(credentials.email)) {
+      throw new Error('Format d\'email invalide');
+    }
+
+    // Check for rate limiting
+    const lastAttempt = localStorage.getItem('last_login_attempt');
+    const attemptCount = parseInt(localStorage.getItem('login_attempts') || '0');
+
+    if (lastAttempt && attemptCount >= 5) {
+      const timeDiff = Date.now() - parseInt(lastAttempt);
+      if (timeDiff < 15 * 60 * 1000) { // 15 minutes
+        throw new Error('Trop de tentatives de connexion. Réessayez dans 15 minutes.');
+      } else {
+        // Reset attempts after 15 minutes
+        localStorage.removeItem('login_attempts');
+        localStorage.removeItem('last_login_attempt');
+      }
+    }
+
+    try {
+      const response = await this.makeRequest<AuthResponse>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: credentials.email.trim().toLowerCase(),
+          password: credentials.password
+        }),
+      });
+
+      // Clear failed attempts on success
+      localStorage.removeItem('login_attempts');
+      localStorage.removeItem('last_login_attempt');
+
+      // Validate token before storing
+      if (response.data.token && this.validateToken(response.data.token)) {
+        localStorage.setItem('auth_token', response.data.token);
+      } else {
+        throw new Error('Token d\'authentification invalide');
+      }
+
+      return response.data;
+    } catch (error) {
+      // Increment failed attempts
+      const newAttemptCount = attemptCount + 1;
+      localStorage.setItem('login_attempts', newAttemptCount.toString());
+      localStorage.setItem('last_login_attempt', Date.now().toString());
+
+      throw error;
+    }
   }
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
