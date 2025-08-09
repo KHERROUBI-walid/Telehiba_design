@@ -360,16 +360,50 @@ class ApiService {
   }
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
+    // Input validation
+    if (!userData.email || !userData.password || !userData.name || !userData.role) {
+      throw new Error('Tous les champs sont requis');
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userData.email)) {
+      throw new Error('Format d\'email invalide');
+    }
+
+    // Password strength validation
+    if (userData.password.length < 8) {
+      throw new Error('Le mot de passe doit contenir au moins 8 caractères');
+    }
+
+    // Name validation
+    if (userData.name.trim().length < 2) {
+      throw new Error('Le nom doit contenir au moins 2 caractères');
+    }
+
+    // Role validation
+    const validRoles: UserRole[] = ['family', 'vendor', 'donator'];
+    if (!validRoles.includes(userData.role)) {
+      throw new Error('Rôle utilisateur invalide');
+    }
+
     const response = await this.makeRequest<AuthResponse>('/auth/register', {
       method: 'POST',
-      body: JSON.stringify(userData),
+      body: JSON.stringify({
+        email: userData.email.trim().toLowerCase(),
+        password: userData.password,
+        name: userData.name.trim(),
+        role: userData.role
+      }),
     });
-    
-    // Store token
-    if (response.data.token) {
+
+    // Validate token before storing
+    if (response.data.token && this.validateToken(response.data.token)) {
       localStorage.setItem('auth_token', response.data.token);
+    } else {
+      throw new Error('Token d\'authentification invalide');
     }
-    
+
     return response.data;
   }
 
