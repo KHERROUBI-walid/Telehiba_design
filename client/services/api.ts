@@ -321,8 +321,12 @@ class ApiService {
       }
     } catch (error) {
       // Network or other errors
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error('Impossible de contacter le serveur. Vérifiez votre connexion internet.');
+      if (error instanceof TypeError && (error.message.includes('fetch') || error.message.includes('Failed to fetch'))) {
+        // Check if it's a CORS issue or network connectivity issue
+        if (window.location.hostname !== 'localhost' && API_BASE_URL.includes('127.0.0.1')) {
+          throw new Error('Serveur API non accessible depuis cet environnement. Configuration requise.');
+        }
+        throw new Error('Impossible de contacter le serveur. Vérifiez que l\'API est démarrée et accessible.');
       }
 
       console.error(`API request failed [${endpoint}]:`, error.message);
