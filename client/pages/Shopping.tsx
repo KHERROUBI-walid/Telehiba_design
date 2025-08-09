@@ -39,16 +39,18 @@ export default function Shopping() {
       setError(null);
 
       try {
-        const [productsData, vendorsData, citiesData] = await Promise.all([
+        const [productsData, vendorsData, citiesData, categoriesData] = await Promise.all([
           apiService.getProducts(),
           apiService.getVendors(),
-          apiService.getCities()
+          apiService.getCities(),
+          apiService.getCategories()
         ]);
 
         // Ensure data is always arrays
         setProducts(Array.isArray(productsData) ? productsData : []);
         setVendors(Array.isArray(vendorsData) ? vendorsData : []);
         setCities(Array.isArray(citiesData) ? citiesData : []);
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
       } catch (error) {
         console.error("Error fetching initial data:", error);
         setError("Erreur lors du chargement des données. Veuillez réessayer.");
