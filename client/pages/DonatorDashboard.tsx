@@ -166,40 +166,20 @@ export default function DonatorDashboard() {
           description: `Impossible de charger les données de ${activeTab}`
         });
 
-        // Fallback to mock data for demonstration
-        if (activeTab === "pending") {
-          setPendingPayments([
-            {
-              id: "PAY001",
-              familyId: "FAM001",
-              familyName: "Famille Martin",
-              familyAvatar: "https://images.unsplash.com/photo-1494790108755-2616b85644?w=100&h=100&fit=crop&crop=center",
-              familyCity: "Paris",
-              vendorName: "Épicerie Bio Paris",
-              amount: 69.30,
-              urgency: "high",
-              requestDate: "2024-01-15",
-              familyStory: "Famille de 4 personnes en difficulté financière temporaire."
-            }
-          ]);
-        } else if (activeTab === "families") {
-          setFamilies([
-            {
-              id: "FAM001",
-              name: "Famille Martin",
-              avatar: "https://images.unsplash.com/photo-1494790108755-2616b85644?w=100&h=100&fit=crop&crop=center",
-              city: "Paris",
-              memberCount: 4,
-              monthlyNeed: 450,
-              currentNeed: 120,
-              story: "Famille de 4 personnes, parents au chômage suite à la pandémie.",
-              isSponsored: false,
-              urgencyLevel: "high",
-              totalReceived: 340,
-              children: 2,
-              verified: true
-            }
-          ]);
+        // No fallback data - keep arrays empty if API fails
+        switch (activeTab) {
+          case "pending":
+            setPendingPayments([]);
+            break;
+          case "families":
+            setFamilies([]);
+            break;
+          case "cities":
+            setCityStats([]);
+            break;
+          case "history":
+            setDonationHistory([]);
+            break;
         }
       } finally {
         setLoading(false);
