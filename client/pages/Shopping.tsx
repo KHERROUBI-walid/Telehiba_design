@@ -59,6 +59,7 @@ export default function Shopping() {
         setProducts([]);
         setVendors([]);
         setCities([]);
+        setCategories([]);
       } finally {
         setIsLoading(false);
       }
