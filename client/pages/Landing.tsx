@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Heart, ShoppingCart, Store, Gift, Users, ArrowRight, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { statisticsData } from "../data/mockData";
+import { apiService } from "../services/api";
 import PageContainer from "../components/common/PageContainer";
 import { useAuth } from "../context/AuthContext";
 
