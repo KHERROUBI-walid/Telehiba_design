@@ -140,16 +140,8 @@ export default function Login() {
             <p className="text-gray-600 text-sm">Marketplace solidaire</p>
           </div>
 
-          {/* Demo accounts info */}
-          <div className="mb-6 p-4 bg-blue-50 rounded-2xl border border-blue-200">
-            <h3 className="font-semibold text-blue-800 mb-2 text-sm">🎯 Comptes de démonstration :</h3>
-            <div className="space-y-2 text-xs text-blue-700">
-              <div><strong>Famille :</strong> family@test.com</div>
-              <div><strong>Vendeur :</strong> vendor@test.com</div>
-              <div><strong>Donateur :</strong> donator@test.com</div>
-              <div className="text-blue-600 mt-2"><strong>Mot de passe :</strong> n'importe lequel</div>
-            </div>
-          </div>
+          {/* Demo Instructions */}
+          <DemoInstructions />
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email field */}
