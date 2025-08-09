@@ -9,6 +9,7 @@ import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import CartSidebar from "./components/CartSidebar";
 import ApiStatus from "./components/common/ApiStatus";
+import ConnectionBanner from "./components/common/ConnectionBanner";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import ProtectedRoute, { VendorRoute, DonatorRoute, FamilyRoute, PublicOnlyRoute } from "./components/ProtectedRoute";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
