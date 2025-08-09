@@ -8,8 +8,6 @@ const ApiStatus: React.FC = () => {
     // Always show status in production
     setShowStatus(true);
 
-    if (!isDev) return;
-
     const checkConnection = async () => {
       try {
         const controller = new AbortController();
