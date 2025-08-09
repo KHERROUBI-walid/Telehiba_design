@@ -36,8 +36,12 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!email || !password) {
+
+    // Input validation and sanitization
+    const sanitizedEmail = sanitizeInput(email);
+    const trimmedPassword = password.trim();
+
+    if (!sanitizedEmail || !trimmedPassword) {
       toast({
         variant: "destructive",
         title: "Erreur",
@@ -46,28 +50,58 @@ export default function Login() {
       return;
     }
 
-    const success = await login(email, password);
+    // Email format validation
+    if (!validateEmail(sanitizedEmail)) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Format d'email invalide"
+      });
+      return;
+    }
 
-    if (success) {
-      // Wait a moment for the auth context to update with user data
-      setTimeout(() => {
-        const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
-        if (currentUser.role) {
-          const redirectPath = getRedirectPath(currentUser.role);
-          toast({
-            title: "Connexion réussie",
-            description: `Bienvenue ! Redirection vers votre espace ${currentUser.role}.`
-          });
-          navigate(redirectPath, { replace: true });
-        } else {
-          navigate("/", { replace: true });
-        }
-      }, 100);
-    } else {
+    // Rate limiting check
+    if (!checkRateLimit('login', 5, 15 * 60 * 1000)) {
+      toast({
+        variant: "destructive",
+        title: "Trop de tentatives",
+        description: "Trop de tentatives de connexion. Réessayez dans 15 minutes."
+      });
+      return;
+    }
+
+    try {
+      const success = await login(sanitizedEmail, trimmedPassword);
+
+      if (success) {
+        // Wait a moment for the auth context to update with user data
+        setTimeout(() => {
+          const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+          if (currentUser.role) {
+            const redirectPath = getRedirectPath(currentUser.role);
+            toast({
+              title: "Connexion réussie",
+              description: `Bienvenue ! Redirection vers votre espace ${currentUser.role}.`
+            });
+            navigate(redirectPath, { replace: true });
+          } else {
+            navigate("/", { replace: true });
+          }
+        }, 100);
+      } else {
+        recordAttempt('login');
+        toast({
+          variant: "destructive",
+          title: "Erreur de connexion",
+          description: "Email ou mot de passe incorrect"
+        });
+      }
+    } catch (error) {
+      recordAttempt('login');
       toast({
         variant: "destructive",
         title: "Erreur de connexion",
-        description: "Email ou mot de passe incorrect"
+        description: error instanceof Error ? error.message : "Une erreur est survenue"
       });
     }
   };
