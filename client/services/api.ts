@@ -710,6 +710,11 @@ class ApiService {
     return cities;
   }
 
+  async getPublicStats(): Promise<any> {
+    const response = await this.makeRequest<any>('/stats/public');
+    return response.data;
+  }
+
   // Profile update endpoints
   async updateEmail(email: string): Promise<any> {
     const userId = JSON.parse(localStorage.getItem('user') || '{}').id;
