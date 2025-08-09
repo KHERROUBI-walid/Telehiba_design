@@ -5,6 +5,7 @@ import { useAuth, UserRole } from "../context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { validateEmail, sanitizeInput, checkRateLimit, recordAttempt } from "../utils/security";
 
 export default function Login() {
   const [email, setEmail] = useState("");
