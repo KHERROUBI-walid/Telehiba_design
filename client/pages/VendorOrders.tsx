@@ -89,90 +89,10 @@ export default function VendorOrders() {
         toast({
           variant: "destructive",
           title: "Erreur",
-          description: "Impossible de charger les commandes"
+          description: "Impossible de charger les commandes. Vérifiez que l'API est disponible."
         });
-        
-        // Fallback to mock data for demonstration
-        setOrders([
-          {
-            id: "ORD001",
-            customerName: "Sophie Martin",
-            customerPhone: "+33 6 12 34 56 78",
-            customerAvatar: "https://images.unsplash.com/photo-1494790108755-2616c96c5263?w=100&h=100&fit=crop&crop=center",
-            donatorName: "Marie Dubois",
-            donatorAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=center",
-            items: [
-              {
-                id: 1,
-                name: "Tomates Bio",
-                price: 4.99,
-                quantity: 2,
-                image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=100&h=100&fit=crop&crop=center",
-              },
-              {
-                id: 2,
-                name: "Pommes Golden",
-                price: 3.5,
-                quantity: 1,
-                image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop&crop=center",
-              },
-            ],
-            total: 13.48,
-            status: "paid_by_donator",
-            orderDate: "2024-01-15T10:30:00Z",
-            pickupCode: "AB123",
-            notes: "Merci de bien emballer les tomates",
-          },
-          {
-            id: "ORD002",
-            customerName: "Lucas Petit",
-            customerPhone: "+33 6 98 76 54 32",
-            customerAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=center",
-            donatorName: "Pierre Durand",
-            donatorAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=center",
-            items: [
-              {
-                id: 3,
-                name: "Pain de Campagne",
-                price: 2.8,
-                quantity: 3,
-                image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop&crop=center",
-              },
-            ],
-            total: 8.4,
-            status: "preparing",
-            orderDate: "2024-01-15T09:15:00Z",
-            pickupCode: "CD456",
-          },
-          {
-            id: "ORD003",
-            customerName: "Emma Laurent",
-            customerPhone: "+33 6 55 44 33 22",
-            customerAvatar: "https://images.unsplash.com/photo-1494790108755-2616b5b85644?w=100&h=100&fit=crop&crop=center",
-            donatorName: "Jean Martin",
-            donatorAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=center",
-            items: [
-              {
-                id: 1,
-                name: "Tomates Bio",
-                price: 4.99,
-                quantity: 1,
-                image: "https://images.unsplash.com/photo-1546470427-227b7ce4f34e?w=100&h=100&fit=crop&crop=center",
-              },
-              {
-                id: 2,
-                name: "Pommes Golden",
-                price: 3.5,
-                quantity: 2,
-                image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop&crop=center",
-              },
-            ],
-            total: 11.99,
-            status: "ready_for_pickup",
-            orderDate: "2024-01-14T16:20:00Z",
-            pickupCode: "EF789",
-          },
-        ]);
+        // Keep orders empty if API fails
+        setOrders([]);
       } finally {
         setLoading(false);
       }
