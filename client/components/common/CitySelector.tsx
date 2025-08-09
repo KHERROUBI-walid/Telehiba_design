@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MapPin, Navigation, Search, X } from "lucide-react";
-import { cities } from "../../data/mockData";
+import { apiService } from "../../services/api";
 
 interface CitySelectorProps {
   selectedCity: string;
