@@ -77,7 +77,28 @@ export default function VendorScanner() {
     }
   };
 
-  const handleManualCodeSubmit = () => {
+  const handleCodeVerification = async (code: string) => {
+    try {
+      // Call API to verify pickup code
+      const orderData = await apiService.verifyPickupCode(orderId || '', code);
+
+      setScannedOrder(orderData);
+      setScanResult("success");
+      toast({
+        title: "Code validé",
+        description: `Commande de ${orderData.customerName} trouvée`
+      });
+    } catch (error) {
+      setScanResult("error");
+      toast({
+        variant: "destructive",
+        title: "Code invalide",
+        description: "Ce code n'existe pas ou la commande n'est pas prête"
+      });
+    }
+  };
+
+  const handleManualCodeSubmit = async () => {
     if (!manualCode.trim()) {
       toast({
         variant: "destructive",
@@ -87,30 +108,7 @@ export default function VendorScanner() {
       return;
     }
 
-    const order = mockOrders[manualCode.toUpperCase()];
-    
-    if (order && order.status === "ready_for_pickup") {
-      setScannedOrder(order);
-      setScanResult("success");
-      toast({
-        title: "Code validé",
-        description: `Commande de ${order.customerName} trouvée`
-      });
-    } else if (order && order.status !== "ready_for_pickup") {
-      setScanResult("error");
-      toast({
-        variant: "destructive",
-        title: "Commande non prête",
-        description: "Cette commande n'est pas encore prête pour le retrait"
-      });
-    } else {
-      setScanResult("error");
-      toast({
-        variant: "destructive",
-        title: "Code invalide",
-        description: "Ce code n'existe pas ou a déjà été utilisé"
-      });
-    }
+    await handleCodeVerification(manualCode.toUpperCase());
   };
 
   const confirmDelivery = () => {
