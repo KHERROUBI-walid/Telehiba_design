@@ -5,9 +5,8 @@ const ApiStatus: React.FC = () => {
   const [showStatus, setShowStatus] = useState(false);
 
   useEffect(() => {
-    // Only show in development mode
-    const isDev = import.meta.env.VITE_APP_ENV === 'development';
-    setShowStatus(isDev);
+    // Always show status in production
+    setShowStatus(true);
 
     if (!isDev) return;
 
