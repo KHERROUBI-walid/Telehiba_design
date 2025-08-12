@@ -39,9 +39,21 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 // Check if we're in demo mode (API not available)
-const isApiAvailable = Boolean(import.meta.env.VITE_API_BASE_URL) &&
-  !(window.location.hostname !== 'localhost' &&
-    (import.meta.env.VITE_API_BASE_URL || '').includes('127.0.0.1'));
+const isCloudEnvironment = window.location.hostname.includes('.fly.dev') ||
+                          window.location.hostname.includes('.vercel.app') ||
+                          window.location.hostname.includes('.netlify.app') ||
+                          window.location.hostname.includes('.herokuapp.com');
+
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+const isApiAvailable = Boolean(apiBaseUrl) &&
+  !(isCloudEnvironment && apiBaseUrl.includes('127.0.0.1'));
+
+console.log('🏗️  Environment:', {
+  hostname: window.location.hostname,
+  isCloudEnvironment,
+  apiBaseUrl: apiBaseUrl || 'not configured',
+  isApiAvailable
+});
 
 const App = () => (
   <ErrorBoundary>
