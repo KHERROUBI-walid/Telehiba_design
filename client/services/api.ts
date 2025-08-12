@@ -185,19 +185,27 @@ class ApiService {
         }
       }
 
-      // For API Platform responses, wrap the data appropriately
-      if (Array.isArray(data)) {
-        return {
-          success: true,
-          data: data as T
-        };
-      } else if (data['hydra:member']) {
+      // For API Platform responses, handle collections and single entities
+      if (data['hydra:member']) {
         // API Platform collection response
         return {
           success: true,
           data: data['hydra:member'] as T
         };
+      } else if (data['@type']) {
+        // Single API Platform entity
+        return {
+          success: true,
+          data: data as T
+        };
+      } else if (Array.isArray(data)) {
+        // Regular array response
+        return {
+          success: true,
+          data: data as T
+        };
       } else {
+        // Other response formats
         return {
           success: true,
           data: data as T
