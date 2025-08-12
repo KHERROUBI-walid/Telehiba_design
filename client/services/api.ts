@@ -133,7 +133,7 @@ class ApiService {
   ): Promise<ApiResponse<T>> {
     // Check if API is available
     if (!this.isApiAvailable()) {
-      throw new Error('API non configurée. L\'application fonctionne en mode déconnecté.');
+      throw new Error('API non configurée - Mode démonstration actif');
     }
 
     const url = `${API_BASE_URL}${endpoint}`;
