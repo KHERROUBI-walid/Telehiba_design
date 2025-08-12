@@ -959,10 +959,21 @@ class ApiService {
 
   // Utility endpoints
   async getCities(): Promise<string[]> {
-    // Get unique cities from users
-    const response = await this.makeRequest<User[]>('/users?exists[city]=true');
-    const cities = [...new Set(response.data.map(user => user.city).filter(Boolean))];
-    return cities;
+    // If API not available, return empty array
+    if (!this.isApiAvailable()) {
+      console.warn('API not available - returning empty cities list');
+      return [];
+    }
+
+    try {
+      // Get unique cities from users - API Platform filtering
+      const response = await this.makeRequest<User[]>('/users?exists[city]=true');
+      const cities = [...new Set(response.data.map(user => user.city).filter(Boolean))].sort();
+      return cities;
+    } catch (error) {
+      console.warn('Failed to fetch cities:', error);
+      return [];
+    }
   }
 
   async getPublicStats(): Promise<any> {
