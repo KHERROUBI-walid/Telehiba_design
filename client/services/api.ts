@@ -428,17 +428,31 @@ class ApiService {
       throw new Error('Aucun utilisateur connecté en mode déconnecté');
     }
 
-    const response = await this.makeRequest<User>('/users/me');
+    // Try different endpoints to get current user
+    let response: any;
+    try {
+      response = await this.makeRequest<User>('/users/me');
+    } catch (error) {
+      // Fallback to /me endpoint if /users/me doesn't exist
+      try {
+        response = await this.makeRequest<User>('/me');
+      } catch (fallbackError) {
+        throw new Error('Impossible de récupérer les informations utilisateur');
+      }
+    }
 
     // Transform API Platform User to frontend user format
     const user = response.data;
+    const fullName = user.firstName && user.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : (user.firstName || user.lastName || user.email);
+
     return {
       id: user.id,
       email: user.email,
-      name: user.name,
+      name: fullName,
       role: user.roles.includes('ROLE_VENDOR') ? 'vendor' :
             user.roles.includes('ROLE_DONATOR') ? 'donator' : 'family',
-      avatar: user.avatar,
       phone: user.phone,
       address: user.address,
       city: user.city
