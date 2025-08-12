@@ -1,9 +1,30 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  ArrowLeft, Heart, CreditCard, Users, TrendingUp, Gift, Eye, Calendar, Search,
-  MapPin, Star, Filter, Globe, Target, Award, DollarSign,
-  Clock, CheckCircle, AlertCircle, Zap, Crown, Shield, Bell, Loader2
+  ArrowLeft,
+  Heart,
+  CreditCard,
+  Users,
+  TrendingUp,
+  Gift,
+  Eye,
+  Calendar,
+  Search,
+  MapPin,
+  Star,
+  Filter,
+  Globe,
+  Target,
+  Award,
+  DollarSign,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  Zap,
+  Crown,
+  Shield,
+  Bell,
+  Loader2,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -90,16 +111,23 @@ interface DonatorStats {
 export default function DonatorDashboard() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState<"pending" | "families" | "cities" | "history" | "stats">("pending");
+  const [activeTab, setActiveTab] = useState<
+    "pending" | "families" | "cities" | "history" | "stats"
+  >("pending");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCity, setSelectedCity] = useState<string>("all");
-  const [selectedDonation, setSelectedDonation] = useState<DonationRecord | null>(null);
+  const [selectedDonation, setSelectedDonation] =
+    useState<DonationRecord | null>(null);
   const [selectedFamily, setSelectedFamily] = useState<Family | null>(null);
-  const [urgencyFilter, setUrgencyFilter] = useState<"all" | "low" | "medium" | "high">("all");
+  const [urgencyFilter, setUrgencyFilter] = useState<
+    "all" | "low" | "medium" | "high"
+  >("all");
   const [showSponsorModal, setShowSponsorModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showStripePayment, setShowStripePayment] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<PendingPayment | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<PendingPayment | null>(
+    null,
+  );
   const [showNotifications, setShowNotifications] = useState(false);
 
   // Data states
@@ -111,7 +139,7 @@ export default function DonatorDashboard() {
     totalDonated: 0,
     familiesHelped: 0,
     activeSponsorships: 0,
-    impactScore: 0
+    impactScore: 0,
   });
   const [loading, setLoading] = useState(false);
 
@@ -120,7 +148,7 @@ export default function DonatorDashboard() {
     unreadCount,
     markAsRead,
     markAllAsRead,
-    addNotification
+    addNotification,
   } = useNotifications();
 
   // Load data based on active tab
@@ -133,13 +161,16 @@ export default function DonatorDashboard() {
             const payments = await apiService.getPendingPayments({
               city: selectedCity !== "all" ? selectedCity : undefined,
               urgency: urgencyFilter !== "all" ? urgencyFilter : undefined,
-              search: searchTerm || undefined
+              search: searchTerm || undefined,
             });
             setPendingPayments(payments);
             break;
 
           case "families":
-            const familiesData = await apiService.searchFamilies(searchTerm, selectedCity);
+            const familiesData = await apiService.searchFamilies(
+              searchTerm,
+              selectedCity,
+            );
             setFamilies(familiesData);
             break;
 
@@ -162,11 +193,14 @@ export default function DonatorDashboard() {
         console.warn(`Data not available for ${activeTab}:`, error.message);
 
         // Don't show error toast in demo mode, just log it
-        if (!error.message.includes('API non configurée') && !error.message.includes('contacter le serveur')) {
+        if (
+          !error.message.includes("API non configurée") &&
+          !error.message.includes("contacter le serveur")
+        ) {
           toast({
             variant: "destructive",
             title: "Erreur",
-            description: `Impossible de charger les données de ${activeTab}`
+            description: `Impossible de charger les données de ${activeTab}`,
           });
         }
 
@@ -181,11 +215,12 @@ export default function DonatorDashboard() {
                 familyAvatar: "/placeholder-family.jpg",
                 familyCity: "Paris",
                 vendorName: "Épicerie Bio Paris",
-                amount: 69.30,
+                amount: 69.3,
                 urgency: "high",
                 requestDate: "2024-01-15",
-                familyStory: "Famille de 4 personnes en difficulté financière temporaire."
-              }
+                familyStory:
+                  "Famille de 4 personnes en difficulté financière temporaire.",
+              },
             ]);
             break;
           case "families":
@@ -198,20 +233,36 @@ export default function DonatorDashboard() {
                 memberCount: 4,
                 monthlyNeed: 450,
                 currentNeed: 120,
-                story: "Famille de 4 personnes, parents au chômage suite à la pandémie.",
+                story:
+                  "Famille de 4 personnes, parents au chômage suite à la pandémie.",
                 isSponsored: false,
                 urgencyLevel: "high",
                 totalReceived: 340,
                 children: 2,
-                verified: true
-              }
+                verified: true,
+              },
             ]);
             break;
           case "cities":
             setCityStats([
-              { city: "Paris", familiesCount: 45, totalNeeded: 12500, avgMonthlyNeed: 278 },
-              { city: "Lyon", familiesCount: 32, totalNeeded: 8900, avgMonthlyNeed: 278 },
-              { city: "Marseille", familiesCount: 28, totalNeeded: 7800, avgMonthlyNeed: 279 }
+              {
+                city: "Paris",
+                familiesCount: 45,
+                totalNeeded: 12500,
+                avgMonthlyNeed: 278,
+              },
+              {
+                city: "Lyon",
+                familiesCount: 32,
+                totalNeeded: 8900,
+                avgMonthlyNeed: 278,
+              },
+              {
+                city: "Marseille",
+                familiesCount: 28,
+                totalNeeded: 7800,
+                avgMonthlyNeed: 279,
+              },
             ]);
             break;
           case "history":
@@ -226,23 +277,26 @@ export default function DonatorDashboard() {
     loadData();
   }, [activeTab, selectedCity, urgencyFilter, searchTerm, toast]);
 
-  const handlePayment = async (payment: PendingPayment, paymentMethodId: string) => {
+  const handlePayment = async (
+    payment: PendingPayment,
+    paymentMethodId: string,
+  ) => {
     try {
       const result = await apiService.processPayment({
         paymentId: payment.id,
         amount: payment.amount,
         paymentMethodId,
-        familyId: payment.familyId
+        familyId: payment.familyId,
       });
 
       toast({
         title: "Paiement réussi",
-        description: `Paiement de ${payment.amount}€ effectué pour ${payment.familyName}`
+        description: `Paiement de ${payment.amount}€ effectué pour ${payment.familyName}`,
       });
 
       // Remove from pending payments
-      setPendingPayments(prev => prev.filter(p => p.id !== payment.id));
-      
+      setPendingPayments((prev) => prev.filter((p) => p.id !== payment.id));
+
       // Add notification
       addNotification({
         id: `payment_${Date.now()}`,
@@ -250,17 +304,17 @@ export default function DonatorDashboard() {
         title: "Paiement confirmé",
         message: `Votre don de ${payment.amount}€ pour ${payment.familyName} a été traité avec succès.`,
         timestamp: new Date(),
-        priority: "high"
+        priority: "high",
       });
 
       setShowStripePayment(false);
       setSelectedPayment(null);
     } catch (error) {
-      console.error('Payment error:', error);
+      console.error("Payment error:", error);
       toast({
         variant: "destructive",
         title: "Erreur de paiement",
-        description: "Le paiement n'a pas pu être traité"
+        description: "Le paiement n'a pas pu être traité",
       });
     }
   };
@@ -269,20 +323,22 @@ export default function DonatorDashboard() {
     try {
       await apiService.sponsorFamily(family.id, {
         sponsorType: "monthly",
-        amount: family.monthlyNeed
+        amount: family.monthlyNeed,
       });
 
       toast({
         title: "Parrainage confirmé",
-        description: `Vous parrainez maintenant ${family.name}`
+        description: `Vous parrainez maintenant ${family.name}`,
       });
 
       // Update family status
-      setFamilies(prev => prev.map(f => 
-        f.id === family.id 
-          ? { ...f, isSponsored: true, sponsorId: user?.id?.toString() }
-          : f
-      ));
+      setFamilies((prev) =>
+        prev.map((f) =>
+          f.id === family.id
+            ? { ...f, isSponsored: true, sponsorId: user?.id?.toString() }
+            : f,
+        ),
+      );
 
       addNotification({
         id: `sponsor_${Date.now()}`,
@@ -290,36 +346,44 @@ export default function DonatorDashboard() {
         title: "Nouveau parrainage",
         message: `Vous parrainez maintenant ${family.name}. Votre première contribution sera prélevée le mois prochain.`,
         timestamp: new Date(),
-        priority: "medium"
+        priority: "medium",
       });
 
       setShowSponsorModal(false);
       setSelectedFamily(null);
     } catch (error) {
-      console.error('Sponsorship error:', error);
+      console.error("Sponsorship error:", error);
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Impossible de confirmer le parrainage"
+        description: "Impossible de confirmer le parrainage",
       });
     }
   };
 
   const getUrgencyColor = (urgency: string) => {
     switch (urgency) {
-      case "high": return "text-red-600 bg-red-50 border-red-200";
-      case "medium": return "text-orange-600 bg-orange-50 border-orange-200";
-      case "low": return "text-green-600 bg-green-50 border-green-200";
-      default: return "text-gray-600 bg-gray-50 border-gray-200";
+      case "high":
+        return "text-red-600 bg-red-50 border-red-200";
+      case "medium":
+        return "text-orange-600 bg-orange-50 border-orange-200";
+      case "low":
+        return "text-green-600 bg-green-50 border-green-200";
+      default:
+        return "text-gray-600 bg-gray-50 border-gray-200";
     }
   };
 
   const getUrgencyIcon = (urgency: string) => {
     switch (urgency) {
-      case "high": return AlertCircle;
-      case "medium": return Clock;
-      case "low": return CheckCircle;
-      default: return Clock;
+      case "high":
+        return AlertCircle;
+      case "medium":
+        return Clock;
+      case "low":
+        return CheckCircle;
+      default:
+        return Clock;
     }
   };
 
@@ -345,7 +409,10 @@ export default function DonatorDashboard() {
       {/* Header with notification bell */}
       <div className="relative z-10 pt-12 pb-8">
         <div className="flex items-center justify-between px-6">
-          <Link to="/" className="text-gray-700 hover:scale-110 transition-transform duration-300">
+          <Link
+            to="/"
+            className="text-gray-700 hover:scale-110 transition-transform duration-300"
+          >
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div className="text-center">
@@ -379,7 +446,7 @@ export default function DonatorDashboard() {
               { id: "families", label: "Familles", icon: Users },
               { id: "cities", label: "Villes", icon: MapPin },
               { id: "history", label: "Historique", icon: Calendar },
-              { id: "stats", label: "Impact", icon: TrendingUp }
+              { id: "stats", label: "Impact", icon: TrendingUp },
             ].map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
@@ -444,39 +511,62 @@ export default function DonatorDashboard() {
             {pendingPayments.length === 0 ? (
               <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 text-center shadow-xl border border-white/20">
                 <CreditCard className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucun paiement en attente</h3>
-                <p className="text-gray-500">Toutes les demandes de paiement ont été traitées</p>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  Aucun paiement en attente
+                </h3>
+                <p className="text-gray-500">
+                  Toutes les demandes de paiement ont été traitées
+                </p>
               </div>
             ) : (
               pendingPayments.map((payment) => {
                 const UrgencyIcon = getUrgencyIcon(payment.urgency);
                 return (
-                  <div key={payment.id} className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20">
+                  <div
+                    key={payment.id}
+                    className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20"
+                  >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <img 
-                          src={payment.familyAvatar} 
+                        <img
+                          src={payment.familyAvatar}
                           alt={payment.familyName}
                           className="w-12 h-12 rounded-full"
                         />
                         <div>
-                          <h3 className="font-bold text-gray-800">{payment.familyName}</h3>
-                          <p className="text-sm text-gray-600">{payment.familyCity}</p>
-                          <p className="text-xs text-gray-500">{payment.vendorName}</p>
+                          <h3 className="font-bold text-gray-800">
+                            {payment.familyName}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {payment.familyCity}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {payment.vendorName}
+                          </p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg border text-xs font-medium ${getUrgencyColor(payment.urgency)}`}>
+                        <div
+                          className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg border text-xs font-medium ${getUrgencyColor(payment.urgency)}`}
+                        >
                           <UrgencyIcon className="w-3 h-3" />
-                          {payment.urgency === "high" ? "Urgent" : payment.urgency === "medium" ? "Modéré" : "Normal"}
+                          {payment.urgency === "high"
+                            ? "Urgent"
+                            : payment.urgency === "medium"
+                              ? "Modéré"
+                              : "Normal"}
                         </div>
-                        <p className="text-2xl font-bold text-purple-600 mt-1">{payment.amount.toFixed(2)}€</p>
+                        <p className="text-2xl font-bold text-purple-600 mt-1">
+                          {payment.amount.toFixed(2)}€
+                        </p>
                       </div>
                     </div>
 
                     {payment.familyStory && (
                       <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                        <p className="text-sm text-gray-700">{payment.familyStory}</p>
+                        <p className="text-sm text-gray-700">
+                          {payment.familyStory}
+                        </p>
                       </div>
                     )}
 
@@ -515,21 +605,30 @@ export default function DonatorDashboard() {
             {families.length === 0 ? (
               <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 text-center shadow-xl border border-white/20">
                 <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucune famille trouvée</h3>
-                <p className="text-gray-500">Essayez de modifier vos critères de recherche</p>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  Aucune famille trouvée
+                </h3>
+                <p className="text-gray-500">
+                  Essayez de modifier vos critères de recherche
+                </p>
               </div>
             ) : (
               families.map((family) => (
-                <div key={family.id} className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20">
+                <div
+                  key={family.id}
+                  className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20"
+                >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <img 
-                        src={family.avatar} 
+                      <img
+                        src={family.avatar}
                         alt={family.name}
                         className="w-12 h-12 rounded-full"
                       />
                       <div>
-                        <h3 className="font-bold text-gray-800">{family.name}</h3>
+                        <h3 className="font-bold text-gray-800">
+                          {family.name}
+                        </h3>
                         <p className="text-sm text-gray-600">{family.city}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
@@ -546,8 +645,12 @@ export default function DonatorDashboard() {
                     </div>
                     <div className="text-right">
                       <p className="text-sm text-gray-500">Besoin mensuel</p>
-                      <p className="text-xl font-bold text-purple-600">{family.monthlyNeed}€</p>
-                      <p className="text-xs text-gray-500">Reçu: {family.totalReceived}€</p>
+                      <p className="text-xl font-bold text-purple-600">
+                        {family.monthlyNeed}€
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Reçu: {family.totalReceived}€
+                      </p>
                     </div>
                   </div>
 
@@ -586,34 +689,49 @@ export default function DonatorDashboard() {
             {cityStats.length === 0 ? (
               <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 text-center shadow-xl border border-white/20">
                 <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucune statistique disponible</h3>
-                <p className="text-gray-500">Les données des villes seront bientôt disponibles</p>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  Aucune statistique disponible
+                </h3>
+                <p className="text-gray-500">
+                  Les données des villes seront bientôt disponibles
+                </p>
               </div>
             ) : (
               cityStats.map((city) => (
-                <div key={city.city} className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20">
+                <div
+                  key={city.city}
+                  className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20"
+                >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <MapPin className="w-8 h-8 text-purple-600" />
                       <div>
                         <h3 className="font-bold text-gray-800">{city.city}</h3>
-                        <p className="text-sm text-gray-600">{city.familiesCount} familles</p>
+                        <p className="text-sm text-gray-600">
+                          {city.familiesCount} familles
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm text-gray-500">Besoin total</p>
-                      <p className="text-xl font-bold text-purple-600">{city.totalNeeded}€</p>
+                      <p className="text-xl font-bold text-purple-600">
+                        {city.totalNeeded}€
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-gray-50 rounded-lg p-3 text-center">
                       <p className="text-xs text-gray-500">Moyenne mensuelle</p>
-                      <p className="font-semibold text-gray-800">{city.avgMonthlyNeed}€</p>
+                      <p className="font-semibold text-gray-800">
+                        {city.avgMonthlyNeed}€
+                      </p>
                     </div>
                     <div className="bg-gray-50 rounded-lg p-3 text-center">
                       <p className="text-xs text-gray-500">Par famille</p>
-                      <p className="font-semibold text-gray-800">{Math.round(city.totalNeeded / city.familiesCount)}€</p>
+                      <p className="font-semibold text-gray-800">
+                        {Math.round(city.totalNeeded / city.familiesCount)}€
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -628,25 +746,33 @@ export default function DonatorDashboard() {
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 text-center">
                 <DollarSign className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-green-600">{donatorStats.totalDonated}€</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {donatorStats.totalDonated}€
+                </p>
                 <p className="text-sm text-gray-600">Total donné</p>
               </div>
               <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 text-center">
                 <Users className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-blue-600">{donatorStats.familiesHelped}</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {donatorStats.familiesHelped}
+                </p>
                 <p className="text-sm text-gray-600">Familles aidées</p>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 text-center">
                 <Heart className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-purple-600">{donatorStats.activeSponsorships}</p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {donatorStats.activeSponsorships}
+                </p>
                 <p className="text-sm text-gray-600">Parrainages actifs</p>
               </div>
               <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 text-center">
                 <Award className="w-8 h-8 text-orange-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-orange-600">{donatorStats.impactScore}%</p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {donatorStats.impactScore}%
+                </p>
                 <p className="text-sm text-gray-600">Score d'impact</p>
               </div>
             </div>
@@ -657,8 +783,12 @@ export default function DonatorDashboard() {
         {activeTab === "history" && (
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 text-center shadow-xl border border-white/20">
             <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">Historique des dons</h3>
-            <p className="text-gray-500">L'historique détaillé sera bientôt disponible</p>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              Historique des dons
+            </h3>
+            <p className="text-gray-500">
+              L'historique détaillé sera bientôt disponible
+            </p>
           </div>
         )}
       </div>
@@ -668,7 +798,9 @@ export default function DonatorDashboard() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-800">Paiement sécurisé</h3>
+              <h3 className="text-xl font-bold text-gray-800">
+                Paiement sécurisé
+              </h3>
               <button
                 onClick={() => {
                   setShowStripePayment(false);
@@ -682,17 +814,23 @@ export default function DonatorDashboard() {
 
             <div className="mb-6 p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3 mb-2">
-                <img 
-                  src={selectedPayment.familyAvatar} 
+                <img
+                  src={selectedPayment.familyAvatar}
                   alt={selectedPayment.familyName}
                   className="w-10 h-10 rounded-full"
                 />
                 <div>
-                  <p className="font-semibold text-gray-800">{selectedPayment.familyName}</p>
-                  <p className="text-sm text-gray-600">{selectedPayment.familyCity}</p>
+                  <p className="font-semibold text-gray-800">
+                    {selectedPayment.familyName}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {selectedPayment.familyCity}
+                  </p>
                 </div>
               </div>
-              <p className="text-2xl font-bold text-purple-600">{selectedPayment.amount.toFixed(2)}€</p>
+              <p className="text-2xl font-bold text-purple-600">
+                {selectedPayment.amount.toFixed(2)}€
+              </p>
             </div>
 
             <StripePayment
@@ -700,11 +838,11 @@ export default function DonatorDashboard() {
               description={`Don pour ${selectedPayment.familyName}`}
               onSuccess={(result) => handlePayment(selectedPayment, result.id)}
               onError={(error) => {
-                console.error('Payment error:', error);
+                console.error("Payment error:", error);
                 toast({
                   variant: "destructive",
                   title: "Erreur de paiement",
-                  description: "Le paiement a échoué"
+                  description: "Le paiement a échoué",
                 });
               }}
             />

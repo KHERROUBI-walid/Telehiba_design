@@ -1,13 +1,13 @@
 // TypeScript interfaces based on API Platform schemas
 
 export interface ApiEntity {
-  '@id': string;
-  '@type': string;
+  "@id": string;
+  "@type": string;
   id: number;
 }
 
 export interface User extends ApiEntity {
-  '@type': 'User';
+  "@type": "User";
   email: string;
   firstName?: string;
   lastName?: string;
@@ -22,7 +22,7 @@ export interface User extends ApiEntity {
 }
 
 export interface Vendeur extends ApiEntity {
-  '@type': 'Vendeur';
+  "@type": "Vendeur";
   user: User | string; // Can be populated or just IRI
   storeName: string;
   storeDescription?: string;
@@ -37,7 +37,7 @@ export interface Vendeur extends ApiEntity {
 }
 
 export interface Donateur extends ApiEntity {
-  '@type': 'Donateur';
+  "@type": "Donateur";
   user: User | string;
   organization?: string;
   donationCapacity?: number;
@@ -49,13 +49,13 @@ export interface Donateur extends ApiEntity {
 }
 
 export interface Famille extends ApiEntity {
-  '@type': 'Famille';
+  "@type": "Famille";
   user: User | string;
   familySize: number;
   monthlyIncome?: number;
   needsDescription?: string;
   isVerified: boolean;
-  priority: 'LOW' | 'MEDIUM' | 'HIGH';
+  priority: "LOW" | "MEDIUM" | "HIGH";
   donateurs?: Donateur[];
   commandeFamilles?: CommandeFamille[];
   createdAt: string;
@@ -63,7 +63,7 @@ export interface Famille extends ApiEntity {
 }
 
 export interface Categorie extends ApiEntity {
-  '@type': 'Categorie';
+  "@type": "Categorie";
   name: string;
   description?: string;
   parentCategory?: Categorie | string;
@@ -76,7 +76,7 @@ export interface Categorie extends ApiEntity {
 }
 
 export interface Produit extends ApiEntity {
-  '@type': 'Produit';
+  "@type": "Produit";
   name: string;
   description?: string;
   price: number;
@@ -94,11 +94,11 @@ export interface Produit extends ApiEntity {
 }
 
 export interface CommandeFamille extends ApiEntity {
-  '@type': 'CommandeFamille';
+  "@type": "CommandeFamille";
   famille: Famille | string;
   donateur?: Donateur | string;
   orderNumber: string;
-  status: 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+  status: "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
   totalAmount: number;
   shippingAddress?: string;
   notes?: string;
@@ -110,10 +110,16 @@ export interface CommandeFamille extends ApiEntity {
 }
 
 export interface CommandeVendeur extends ApiEntity {
-  '@type': 'CommandeVendeur';
+  "@type": "CommandeVendeur";
   vendeur: Vendeur | string;
   orderNumber: string;
-  status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'PROCESSING' | 'SHIPPED' | 'COMPLETED';
+  status:
+    | "PENDING"
+    | "ACCEPTED"
+    | "REJECTED"
+    | "PROCESSING"
+    | "SHIPPED"
+    | "COMPLETED";
   totalAmount: number;
   commission?: number;
   ligneProduits?: LigneProduit[];
@@ -123,7 +129,7 @@ export interface CommandeVendeur extends ApiEntity {
 }
 
 export interface LigneProduit extends ApiEntity {
-  '@type': 'LigneProduit';
+  "@type": "LigneProduit";
   produit: Produit | string;
   quantity: number;
   unitPrice: number;
@@ -134,11 +140,11 @@ export interface LigneProduit extends ApiEntity {
 }
 
 export interface Paiement extends ApiEntity {
-  '@type': 'Paiement';
+  "@type": "Paiement";
   commandeFamille: CommandeFamille | string;
   amount: number;
-  paymentMethod: 'CARD' | 'BANK_TRANSFER' | 'CASH' | 'DONATION';
-  status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED';
+  paymentMethod: "CARD" | "BANK_TRANSFER" | "CASH" | "DONATION";
+  status: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED";
   transactionId?: string;
   paymentDate?: string;
   donateur?: Donateur | string;
@@ -205,20 +211,20 @@ export interface FamilyFrontend {
 
 // API Collection response
 export interface ApiCollection<T> {
-  '@context': string;
-  '@id': string;
-  '@type': 'hydra:Collection';
-  'hydra:member': T[];
-  'hydra:totalItems': number;
-  'hydra:search'?: any;
+  "@context": string;
+  "@id": string;
+  "@type": "hydra:Collection";
+  "hydra:member": T[];
+  "hydra:totalItems": number;
+  "hydra:search"?: any;
 }
 
 // Error response
 export interface ApiError {
-  '@context': string;
-  '@type': 'hydra:Error';
-  'hydra:title': string;
-  'hydra:description': string;
+  "@context": string;
+  "@type": "hydra:Error";
+  "hydra:title": string;
+  "hydra:description": string;
   violations?: Array<{
     propertyPath: string;
     message: string;

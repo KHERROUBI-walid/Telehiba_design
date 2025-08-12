@@ -39,12 +39,13 @@ export default function Shopping() {
       setError(null);
 
       try {
-        const [productsData, vendorsData, citiesData, categoriesData] = await Promise.all([
-          apiService.getProducts(),
-          apiService.getVendors(),
-          apiService.getCities(),
-          apiService.getCategories()
-        ]);
+        const [productsData, vendorsData, citiesData, categoriesData] =
+          await Promise.all([
+            apiService.getProducts(),
+            apiService.getVendors(),
+            apiService.getCities(),
+            apiService.getCategories(),
+          ]);
 
         // Ensure data is always arrays
         setProducts(Array.isArray(productsData) ? productsData : []);
@@ -55,8 +56,13 @@ export default function Shopping() {
         console.warn("API data not available, using demo mode:", error.message);
 
         // Only show error if it's not an API connectivity issue
-        if (!error.message.includes('contacter le serveur') && !error.message.includes('API non configurée')) {
-          setError("Erreur lors du chargement des données. Veuillez réessayer.");
+        if (
+          !error.message.includes("contacter le serveur") &&
+          !error.message.includes("API non configurée")
+        ) {
+          setError(
+            "Erreur lors du chargement des données. Veuillez réessayer.",
+          );
         }
 
         // Set empty arrays on error - components will handle empty state gracefully
@@ -116,7 +122,7 @@ export default function Shopping() {
         const vendorId = product.vendor?.id;
         if (vendorId) {
           if (!grouped[vendorId]) {
-            const vendor = vendors.find(v => v.id === vendorId);
+            const vendor = vendors.find((v) => v.id === vendorId);
             if (vendor) {
               grouped[vendorId] = { vendor, products: [] };
             }
@@ -183,8 +189,15 @@ export default function Shopping() {
 
           {error ? (
             <div className="text-center py-6 sm:py-8 px-3 sm:px-4">
-              <div className="text-red-400 text-3xl sm:text-4xl mb-2" aria-hidden="true">⚠️</div>
-              <p className="text-red-600 text-xs sm:text-sm mb-1">Erreur de chargement</p>
+              <div
+                className="text-red-400 text-3xl sm:text-4xl mb-2"
+                aria-hidden="true"
+              >
+                ⚠️
+              </div>
+              <p className="text-red-600 text-xs sm:text-sm mb-1">
+                Erreur de chargement
+              </p>
               <p className="text-red-500 text-xs">{error}</p>
               <button
                 onClick={() => window.location.reload()}
@@ -195,14 +208,28 @@ export default function Shopping() {
             </div>
           ) : isLoading ? (
             <div className="text-center py-6 sm:py-8 px-3 sm:px-4">
-              <div className="text-gray-400 text-3xl sm:text-4xl mb-2" aria-hidden="true">⏳</div>
-              <p className="text-gray-500 text-xs sm:text-sm mb-1">Chargement des produits...</p>
+              <div
+                className="text-gray-400 text-3xl sm:text-4xl mb-2"
+                aria-hidden="true"
+              >
+                ⏳
+              </div>
+              <p className="text-gray-500 text-xs sm:text-sm mb-1">
+                Chargement des produits...
+              </p>
               <div className="animate-spin w-5 h-5 sm:w-6 sm:h-6 border-2 border-app-purple border-t-transparent rounded-full mx-auto mt-4"></div>
             </div>
           ) : productsByVendor.length === 0 ? (
             <div className="text-center py-6 sm:py-8 px-3 sm:px-4">
-              <div className="text-gray-400 text-3xl sm:text-4xl mb-2" aria-hidden="true">📦</div>
-              <p className="text-gray-500 text-xs sm:text-sm mb-1">Aucun produit trouvé</p>
+              <div
+                className="text-gray-400 text-3xl sm:text-4xl mb-2"
+                aria-hidden="true"
+              >
+                📦
+              </div>
+              <p className="text-gray-500 text-xs sm:text-sm mb-1">
+                Aucun produit trouvé
+              </p>
               <p className="text-gray-400 text-xs">
                 {searchTerm || currentLocation
                   ? "Essayez de modifier vos critères de recherche"
@@ -210,7 +237,11 @@ export default function Shopping() {
               </p>
             </div>
           ) : (
-            <div className="space-y-4 sm:space-y-8" role="main" aria-label="Produits par vendeur">
+            <div
+              className="space-y-4 sm:space-y-8"
+              role="main"
+              aria-label="Produits par vendeur"
+            >
               {productsByVendor.map(({ vendor, products }) => (
                 <VendorProductSection
                   key={vendor.id}

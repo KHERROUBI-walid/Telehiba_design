@@ -10,7 +10,7 @@ Visitez `http://127.0.0.1:8000/api` et vérifiez que ces endpoints existent :
 
 ```
 ✅ /api/users
-✅ /api/vendeurs  
+✅ /api/vendeurs
 ✅ /api/donateurs
 ✅ /api/familles
 ✅ /api/produits
@@ -37,20 +37,22 @@ curl -X GET http://127.0.0.1:8000/api/me \
 ```
 
 **Si ces endpoints n'existent pas**, vous devez :
+
 - Créer un endpoint `/auth/login` qui retourne `{token, user}`
 - Créer un endpoint `/me` qui retourne les infos utilisateur
 
 ### 3. Vérifiez la Structure des Données
 
 #### User Structure Attendue :
+
 ```json
 {
   "@id": "/api/users/1",
-  "@type": "User", 
+  "@type": "User",
   "id": 1,
   "email": "user@test.com",
   "firstName": "Jean",
-  "lastName": "Dupont", 
+  "lastName": "Dupont",
   "phone": "+33123456789",
   "city": "Paris",
   "roles": ["ROLE_USER"]
@@ -58,6 +60,7 @@ curl -X GET http://127.0.0.1:8000/api/me \
 ```
 
 #### Produit Structure Attendue :
+
 ```json
 {
   "@id": "/api/produits/1",
@@ -78,7 +81,7 @@ curl -X GET http://127.0.0.1:8000/api/me \
 Le frontend attend ces relations :
 
 - `Vendeur.user` → User object ou IRI
-- `Famille.user` → User object ou IRI  
+- `Famille.user` → User object ou IRI
 - `Produit.vendeur` → Vendeur object ou IRI
 - `Produit.categorie` → Categorie object ou IRI
 - `CommandeVendeur.ligneProduits` → Array of LigneProduit
@@ -88,28 +91,30 @@ Le frontend attend ces relations :
 ### Si vos champs sont différents :
 
 1. **Noms de champs différents** :
-   
+
    Editez `client/services/api.ts` et adaptez les mappings :
+
    ```typescript
    // Si votre API utilise 'title' au lieu de 'name'
    name: produit.title,
-   
+
    // Si votre API utilise 'full_name' au lieu de firstName/lastName
    name: produit.full_name,
    ```
 
 2. **Structure de relations différente** :
-   
+
    Modifiez les transformations dans `getProducts()`, `getVendors()`, etc.
 
 3. **Endpoints différents** :
-   
+
    Editez `client/config/api-config.ts` :
+
    ```typescript
    export const API_ENDPOINTS = {
-     PRODUITS: '/api/products', // Si vous utilisez /products au lieu de /produits
+     PRODUITS: "/api/products", // Si vous utilisez /products au lieu de /produits
      // ...
-   }
+   };
    ```
 
 ### Si vous n'avez pas certaines entités :
@@ -128,14 +133,16 @@ if (!isFeatureEnabled('donator')) {
 Votre API doit supporter ces filtres :
 
 ### Produits :
+
 ```
 GET /api/produits?name=tomate                 # Recherche par nom
-GET /api/produits?categorie.name=legumes      # Filtrage par catégorie  
+GET /api/produits?categorie.name=legumes      # Filtrage par catégorie
 GET /api/produits?vendeur=1                   # Filtrage par vendeur
 GET /api/produits?isActive=true               # Produits actifs uniquement
 ```
 
 ### Vendeurs :
+
 ```
 GET /api/vendeurs?user.city=Paris             # Filtrage par ville
 GET /api/vendeurs?storeName=bio               # Recherche par nom magasin
@@ -143,6 +150,7 @@ GET /api/vendeurs?isVerified=true             # Vendeurs vérifiés
 ```
 
 ### Familles :
+
 ```
 GET /api/familles?user.city=Lyon              # Filtrage par ville
 GET /api/familles?isVerified=true             # Familles vérifiées
@@ -158,12 +166,12 @@ Si vous obtenez des erreurs CORS, ajoutez dans votre Symfony :
 ```yaml
 # config/packages/nelmio_cors.yaml
 nelmio_cors:
-    defaults:
-        origin_regex: true
-        allow_origin: ['http://localhost:5173', 'http://127.0.0.1:5173']
-        allow_methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
-        allow_headers: ['Content-Type', 'Authorization']
-        max_age: 3600
+  defaults:
+    origin_regex: true
+    allow_origin: ["http://localhost:5173", "http://127.0.0.1:5173"]
+    allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+    allow_headers: ["Content-Type", "Authorization"]
+    max_age: 3600
 ```
 
 ### 2. Authentification JWT
@@ -188,7 +196,7 @@ Le frontend gère automatiquement les réponses paginées :
 ```json
 {
   "@context": "/api/contexts/Produit",
-  "@id": "/api/produits", 
+  "@id": "/api/produits",
   "@type": "hydra:Collection",
   "hydra:member": [...],
   "hydra:totalItems": 150
@@ -198,7 +206,7 @@ Le frontend gère automatiquement les réponses paginées :
 ## 🧪 Test de l'Intégration
 
 1. **Démarrez votre API** : `symfony serve`
-2. **Démarrez le frontend** : `npm run dev` 
+2. **Démarrez le frontend** : `npm run dev`
 3. **Testez la connexion** : Utilisez les comptes démo
 4. **Vérifiez les logs** : Ouvrez la console navigateur
 

@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Heart, ShoppingCart, Store, Gift, Users, ArrowRight, Star, Check } from "lucide-react";
+import {
+  Heart,
+  ShoppingCart,
+  Store,
+  Gift,
+  Users,
+  ArrowRight,
+  Star,
+  Check,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiService } from "../services/api";
 import PageContainer from "../components/common/PageContainer";
@@ -50,10 +59,10 @@ export default function Landing() {
         "Accès à des produits de qualité",
         "Aide financière de donateurs généreux",
         "Commandes sécurisées et livrées rapidement",
-        "Interface simple et intuitive"
+        "Interface simple et intuitive",
       ],
       ctaText: "Commencer mes achats",
-      route: "/signup"
+      route: "/signup",
     },
     {
       type: "vendor",
@@ -65,10 +74,10 @@ export default function Landing() {
         "Gestion complète de vos produits",
         "Suivi des commandes en temps réel",
         "Scanner QR pour les retraits",
-        "Participation à l'économie solidaire"
+        "Participation à l'économie solidaire",
       ],
       ctaText: "Ouvrir ma boutique",
-      route: "/signup"
+      route: "/signup",
     },
     {
       type: "donator",
@@ -80,18 +89,18 @@ export default function Landing() {
         "Aidez des familles dans le besoin",
         "Transparence totale sur vos donations",
         "Impact mesurable et suivi détaillé",
-        "Communauté solidaire et bienveillante"
+        "Communauté solidaire et bienveillante",
       ],
       ctaText: "Commencer à donner",
-      route: "/signup"
-    }
+      route: "/signup",
+    },
   ];
 
   const [stats, setStats] = useState<StatItem[]>([
     { number: "0", label: "Familles aidées" },
     { number: "0", label: "Vendeurs partenaires" },
     { number: "0", label: "Donations effectuées" },
-    { number: "€0", label: "Montant total donné" }
+    { number: "€0", label: "Montant total donné" },
   ]);
   const [loading, setLoading] = useState(true);
 
@@ -100,19 +109,31 @@ export default function Landing() {
       try {
         const publicStats = await apiService.getPublicStats();
         setStats([
-          { number: publicStats.familiesHelped?.toString() || "0", label: "Familles aidées" },
-          { number: publicStats.vendorsCount?.toString() || "0", label: "Vendeurs partenaires" },
-          { number: publicStats.donationsCount?.toString() || "0", label: "Donations effectuées" },
-          { number: `€${publicStats.totalAmount || 0}`, label: "Montant total donné" }
+          {
+            number: publicStats.familiesHelped?.toString() || "0",
+            label: "Familles aidées",
+          },
+          {
+            number: publicStats.vendorsCount?.toString() || "0",
+            label: "Vendeurs partenaires",
+          },
+          {
+            number: publicStats.donationsCount?.toString() || "0",
+            label: "Donations effectuées",
+          },
+          {
+            number: `€${publicStats.totalAmount || 0}`,
+            label: "Montant total donné",
+          },
         ]);
       } catch (error) {
-        console.warn('Stats not available - using demo values:', error.message);
+        console.warn("Stats not available - using demo values:", error.message);
         // Use demo values when API is not available
         setStats([
           { number: "150+", label: "Familles aidées" },
           { number: "25+", label: "Vendeurs partenaires" },
           { number: "500+", label: "Donations effectuées" },
-          { number: "€15k+", label: "Montant total donné" }
+          { number: "€15k+", label: "Montant total donné" },
         ]);
       } finally {
         setLoading(false);
@@ -127,26 +148,26 @@ export default function Landing() {
       number: "1",
       title: "Les familles passent commande",
       description: "Sélection de produits essentiels chez des vendeurs locaux",
-      color: "from-green-400 to-blue-500"
+      color: "from-green-400 to-blue-500",
     },
     {
-      number: "2", 
+      number: "2",
       title: "Les donateurs paient",
       description: "Des personnes généreuses financent les commandes",
-      color: "from-purple-400 to-pink-500"
+      color: "from-purple-400 to-pink-500",
     },
     {
       number: "3",
       title: "Les vendeurs préparent",
       description: "Préparation soignée des commandes par les vendeurs",
-      color: "from-orange-400 to-red-500"
+      color: "from-orange-400 to-red-500",
     },
     {
       number: "4",
       title: "Retrait sécurisé",
       description: "Code QR pour un retrait simple et sécurisé",
-      color: "from-green-500 to-green-600"
-    }
+      color: "from-green-500 to-green-600",
+    },
   ];
 
   return (
@@ -162,7 +183,9 @@ export default function Landing() {
                 </div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white drop-shadow-lg">TeleHiba</h1>
+                <h1 className="text-2xl font-bold text-white drop-shadow-lg">
+                  TeleHiba
+                </h1>
                 <p className="text-xs text-white/80">Marketplace Solidaire</p>
               </div>
             </div>
@@ -180,15 +203,21 @@ export default function Landing() {
       <section className="relative z-10 px-6 mb-12">
         <div className="text-center text-white mb-8">
           <h2 className="text-4xl font-bold mb-4 drop-shadow-lg">
-            Une Marketplace<br />
-            <span className="text-app-yellow">Solidaire</span> et <span className="text-app-yellow">Inclusive</span>
+            Une Marketplace
+            <br />
+            <span className="text-app-yellow">Solidaire</span> et{" "}
+            <span className="text-app-yellow">Inclusive</span>
           </h2>
           <p className="text-lg text-white/90 mb-6 leading-relaxed">
-            TeleHiba connecte les familles dans le besoin avec des vendeurs locaux 
-            et des donateurs généreux pour créer une communauté d'entraide.
+            TeleHiba connecte les familles dans le besoin avec des vendeurs
+            locaux et des donateurs généreux pour créer une communauté
+            d'entraide.
           </p>
-          
-          <div className="flex items-center justify-center gap-2 mb-8" aria-hidden="true">
+
+          <div
+            className="flex items-center justify-center gap-2 mb-8"
+            aria-hidden="true"
+          >
             <Heart className="w-6 h-6 text-red-400" />
             <Users className="w-6 h-6 text-blue-400" />
             <Star className="w-6 h-6 text-yellow-400" />
@@ -198,7 +227,10 @@ export default function Landing() {
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4 mb-8">
           {stats.map((stat, index) => (
-            <div key={index} className="bg-white/20 backdrop-blur-xl rounded-2xl p-4 text-center border border-white/30">
+            <div
+              key={index}
+              className="bg-white/20 backdrop-blur-xl rounded-2xl p-4 text-center border border-white/30"
+            >
               <p className="text-2xl font-bold text-white">{stat.number}</p>
               <p className="text-sm text-white/80">{stat.label}</p>
             </div>
@@ -212,11 +244,13 @@ export default function Landing() {
           <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
             Comment ça marche ?
           </h2>
-          
+
           <div className="space-y-4">
             {howItWorksSteps.map((step, index) => (
               <div key={index} className="flex items-center gap-4">
-                <div className={`w-8 h-8 bg-gradient-to-r ${step.color} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
+                <div
+                  className={`w-8 h-8 bg-gradient-to-r ${step.color} rounded-full flex items-center justify-center text-white font-bold text-sm`}
+                >
                   {step.number}
                 </div>
                 <div className="flex-1">
@@ -234,36 +268,48 @@ export default function Landing() {
         <h2 className="text-2xl font-bold text-white text-center mb-8">
           Choisissez votre profil
         </h2>
-        
+
         <div className="space-y-6">
           {userTypes.map((userType, index) => {
             const IconComponent = userType.icon;
             return (
-              <article key={index} className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/20">
+              <article
+                key={index}
+                className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/20"
+              >
                 <div className="flex items-center gap-4 mb-4">
-                  <div className={`w-16 h-16 bg-gradient-to-r ${userType.color} rounded-2xl flex items-center justify-center text-white shadow-lg`}>
+                  <div
+                    className={`w-16 h-16 bg-gradient-to-r ${userType.color} rounded-2xl flex items-center justify-center text-white shadow-lg`}
+                  >
                     <IconComponent className="w-8 h-8" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-800">{userType.title}</h3>
+                    <h3 className="text-xl font-bold text-gray-800">
+                      {userType.title}
+                    </h3>
                     <p className="text-sm text-gray-600">{userType.subtitle}</p>
                   </div>
                 </div>
-                
+
                 <ul className="space-y-2 mb-6">
                   {userType.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center gap-3">
-                      <Check className="w-4 h-4 text-green-600 flex-shrink-0" aria-hidden="true" />
+                      <Check
+                        className="w-4 h-4 text-green-600 flex-shrink-0"
+                        aria-hidden="true"
+                      />
                       <span className="text-sm text-gray-700">{feature}</span>
                     </li>
                   ))}
                 </ul>
-                
+
                 <Link
                   to={`${userType.route}?role=${userType.type}`}
                   className="block w-full"
                 >
-                  <Button className={`w-full bg-gradient-to-r ${userType.color} hover:shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50 transition-all duration-300 text-white font-semibold h-12`}>
+                  <Button
+                    className={`w-full bg-gradient-to-r ${userType.color} hover:shadow-lg transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50 transition-all duration-300 text-white font-semibold h-12`}
+                  >
                     {userType.ctaText}
                     <ArrowRight className="w-5 h-5 ml-2" aria-hidden="true" />
                   </Button>
