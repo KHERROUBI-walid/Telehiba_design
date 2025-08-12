@@ -491,36 +491,64 @@ class ApiService {
     vendor?: number;
     city?: string;
     search?: string;
-  }): Promise<any[]> {
-    const params = new URLSearchParams();
-    if (filters?.search) params.append('name', filters.search);
-    if (filters?.category && filters.category !== 'all') {
-      params.append('categorie.name', filters.category);
+  }): Promise<ProductFrontend[]> {
+    // If API not available, return empty array
+    if (!this.isApiAvailable()) {
+      console.warn('API not available - returning empty products list');
+      return [];
     }
-    if (filters?.vendor) params.append('vendeur.id', filters.vendor.toString());
-    if (filters?.city) params.append('vendeur.user.city', filters.city);
-    
-    const endpoint = `/produits${params.toString() ? `?${params.toString()}` : ''}`;
-    const response = await this.makeRequest<Produit[]>(endpoint);
-    
-    // Transform API Platform data to frontend format
-    return response.data.map(produit => ({
-      id: produit.id,
-      name: produit.name,
-      price: produit.price,
-      image: produit.image,
-      category: produit.categorie.name.toLowerCase(),
-      vendor: {
-        id: produit.vendeur.id,
-        name: produit.vendeur.user.name,
-        avatar: produit.vendeur.user.avatar,
-        city: produit.vendeur.user.city,
-      },
-      rating: produit.rating || 4.5,
-      description: produit.description,
-      inStock: produit.inStock,
-      unit: produit.unit,
-    }));
+
+    try {
+      const params = new URLSearchParams();
+
+      // API Platform filtering - check if these exact parameter names work
+      if (filters?.search) {
+        params.append('name', filters.search);
+        // Also try searching in description
+        params.append('description', filters.search);
+      }
+      if (filters?.category && filters.category !== 'all') {
+        params.append('categorie.name', filters.category);
+      }
+      if (filters?.vendor) {
+        params.append('vendeur', filters.vendor.toString());
+      }
+      // For city filtering, we might need to join through vendeur.user.city
+
+      const endpoint = `/produits${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await this.makeRequest<Produit[]>(endpoint);
+
+      // Transform API Platform data to frontend format
+      return response.data.map(produit => {
+        // Handle nested relationships - might be IRI strings or objects
+        const vendeur = typeof produit.vendeur === 'string' ? null : produit.vendeur;
+        const categorie = typeof produit.categorie === 'string' ? null : produit.categorie;
+        const vendeurUser = vendeur && typeof vendeur.user === 'object' ? vendeur.user : null;
+
+        return {
+          id: produit.id,
+          name: produit.name,
+          price: produit.price,
+          image: produit.images?.[0] || '/placeholder-product.jpg',
+          category: categorie?.name?.toLowerCase() || 'unknown',
+          vendor: {
+            id: vendeur?.id || 0,
+            name: vendeurUser?.firstName && vendeurUser?.lastName
+              ? `${vendeurUser.firstName} ${vendeurUser.lastName}`
+              : vendeurUser?.email || vendeur?.storeName || 'Vendeur inconnu',
+            avatar: vendeurUser?.avatar || '/placeholder-avatar.jpg',
+            city: vendeurUser?.city || 'Ville inconnue',
+          },
+          rating: 4.5, // Default rating since not in schema
+          description: produit.description || '',
+          inStock: produit.isActive && produit.stockQuantity > 0,
+          unit: 'pièce', // Default unit
+        };
+      });
+    } catch (error) {
+      console.warn('Failed to fetch products:', error);
+      return [];
+    }
   }
 
   async getVendorProducts(vendorId: number): Promise<any[]> {
