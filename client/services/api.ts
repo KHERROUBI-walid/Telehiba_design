@@ -838,29 +838,54 @@ class ApiService {
   }
 
   // Family/Donator endpoints
-  async searchFamilies(query: string, city?: string): Promise<any[]> {
-    const params = new URLSearchParams();
-    if (query) params.append('user.name', query);
-    if (city && city !== 'all') params.append('user.city', city);
+  async searchFamilies(query: string, city?: string): Promise<FamilyFrontend[]> {
+    // If API not available, return empty array
+    if (!this.isApiAvailable()) {
+      console.warn('API not available - returning empty families list');
+      return [];
+    }
 
-    const endpoint = `/familles${params.toString() ? `?${params.toString()}` : ''}`;
-    const response = await this.makeRequest<Famille[]>(endpoint);
-    
-    return response.data.map(famille => ({
-      id: famille.id.toString(),
-      name: famille.user.name,
-      avatar: famille.user.avatar,
-      city: famille.user.city,
-      memberCount: famille.memberCount,
-      monthlyNeed: famille.monthlyNeed,
-      currentNeed: famille.currentNeed,
-      story: famille.story,
-      isSponsored: famille.isSponsored,
-      urgencyLevel: famille.urgencyLevel,
-      totalReceived: famille.totalReceived,
-      children: famille.children,
-      verified: famille.verified
-    }));
+    try {
+      const params = new URLSearchParams();
+      if (query) {
+        // Search in user's first name, last name, or email
+        params.append('user.firstName', query);
+      }
+      if (city && city !== 'all') {
+        params.append('user.city', city);
+      }
+      // Only show verified families
+      params.append('isVerified', 'true');
+
+      const endpoint = `/familles${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await this.makeRequest<Famille[]>(endpoint);
+
+      return response.data.map(famille => {
+        const user = typeof famille.user === 'object' ? famille.user : null;
+        const familyName = user?.firstName && user?.lastName
+          ? `Famille ${user.lastName}`
+          : `Famille ${user?.email?.split('@')[0] || 'Anonyme'}`;
+
+        return {
+          id: famille.id.toString(),
+          name: familyName,
+          avatar: user?.avatar || '/placeholder-family.jpg',
+          city: user?.city || 'Ville inconnue',
+          memberCount: famille.familySize,
+          monthlyNeed: famille.monthlyIncome || 500,
+          currentNeed: Math.floor((famille.monthlyIncome || 500) * 0.3), // 30% of monthly income
+          story: famille.needsDescription || 'Cette famille a besoin de votre aide.',
+          isSponsored: false, // TODO: Check if famille has active donateurs
+          urgencyLevel: famille.priority.toLowerCase() as "low" | "medium" | "high",
+          totalReceived: 0, // TODO: Calculate from paiements
+          children: Math.max(0, famille.familySize - 2), // Adults assumed to be 2, rest are children
+          verified: famille.isVerified
+        };
+      });
+    } catch (error) {
+      console.warn('Failed to fetch families:', error);
+      return [];
+    }
   }
 
   async sponsorFamily(familyId: string, sponsorshipData: any): Promise<any> {
