@@ -13,6 +13,12 @@ const ApiStatus: React.FC = () => {
         const apiUrl =
           import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
 
+        console.log("🔍 API Status: Environment details", {
+          hostname: window.location.hostname,
+          envApiUrl: import.meta.env.VITE_API_BASE_URL,
+          finalApiUrl: apiUrl
+        });
+
         // Don't try to connect if API URL is empty (demo mode)
         if (!apiUrl) {
           console.warn("📱 API Status: Demo mode - no API configured");
