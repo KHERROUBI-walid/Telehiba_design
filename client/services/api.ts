@@ -816,18 +816,6 @@ class ApiService {
     }
   }
 
-  private mapOrderStatus(apiStatus: string): "paid_by_donator" | "preparing" | "ready_for_pickup" {
-    switch (apiStatus) {
-      case 'paid':
-        return 'paid_by_donator';
-      case 'preparing':
-        return 'preparing';
-      case 'ready':
-        return 'ready_for_pickup';
-      default:
-        return 'paid_by_donator';
-    }
-  }
 
   async updateOrderStatus(orderId: string, status: string): Promise<any> {
     const apiStatus = status === 'preparing' ? 'preparing' : 
