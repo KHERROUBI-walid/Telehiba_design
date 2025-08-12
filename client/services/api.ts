@@ -7,20 +7,10 @@ import {
 
 // Detect environment and set appropriate API URL
 const getApiBaseUrl = (): string => {
-  // Use environment variable if set
+  // Always use the environment variable if set, regardless of environment
   if (import.meta.env.VITE_API_BASE_URL) {
     const url = import.meta.env.VITE_API_BASE_URL;
-    // Check if we're trying to use localhost from a cloud environment
-    const isCloudEnvironment = window.location.hostname.includes('.fly.dev') ||
-                              window.location.hostname.includes('.vercel.app') ||
-                              window.location.hostname.includes('.netlify.app') ||
-                              window.location.hostname.includes('.herokuapp.com');
-
-    if (isCloudEnvironment && url.includes('127.0.0.1')) {
-      console.warn('⚠️  Cloud environment detected but API_BASE_URL points to localhost. Disabling API calls.');
-      return '';
-    }
-
+    console.log('🔗 Using configured API URL:', url);
     return url;
   }
 
@@ -33,9 +23,9 @@ const getApiBaseUrl = (): string => {
     return 'http://127.0.0.1:8000/api';
   }
 
-  // For production/cloud environments, disable API calls and use demo mode
-  console.warn('🌐 Production/cloud environment detected - Running in demo mode');
-  return ''; // This will disable API calls and enable demo mode
+  // For production/cloud environments without explicit API URL, use demo mode
+  console.warn('🌐 No API URL configured for cloud environment - Running in demo mode');
+  return '';
 };
 
 const API_BASE_URL = getApiBaseUrl();

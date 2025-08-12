@@ -12,25 +12,14 @@ const ApiStatus: React.FC = () => {
       try {
         const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
 
-        // Detect cloud environment
-        const isCloudEnvironment = window.location.hostname.includes('.fly.dev') ||
-                                  window.location.hostname.includes('.vercel.app') ||
-                                  window.location.hostname.includes('.netlify.app') ||
-                                  window.location.hostname.includes('.herokuapp.com');
-
-        // Don't try to connect if we're in a cloud environment trying to reach localhost
-        if (isCloudEnvironment && apiUrl.includes('127.0.0.1')) {
-          console.warn('🌐 API Status: Cloud environment detected - skipping localhost API check');
-          setIsConnected(false);
-          return;
-        }
-
         // Don't try to connect if API URL is empty (demo mode)
         if (!apiUrl) {
           console.warn('📱 API Status: Demo mode - no API configured');
           setIsConnected(false);
           return;
         }
+
+        console.log('🔍 API Status: Checking connection to:', apiUrl);
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
