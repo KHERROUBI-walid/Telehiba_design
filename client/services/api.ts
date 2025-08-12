@@ -609,13 +609,51 @@ class ApiService {
 
   // Category endpoints
   async getCategories(): Promise<any[]> {
-    const response = await this.makeRequest<Categorie[]>('/categories');
-    return response.data.map(categorie => ({
-      id: categorie.id,
-      name: categorie.name,
-      description: categorie.description,
-      isActive: categorie.isActive
-    }));
+    // If API not available, return empty array
+    if (!this.isApiAvailable()) {
+      console.warn('API not available - returning empty categories list');
+      return [];
+    }
+
+    try {
+      const response = await this.makeRequest<Categorie[]>('/categories');
+      return response.data
+        .filter(categorie => categorie.isActive)
+        .map(categorie => ({
+          id: categorie.id,
+          name: categorie.name,
+          description: categorie.description,
+          isActive: categorie.isActive,
+          icon: this.getCategoryIcon(categorie.name),
+          gradient: this.getCategoryGradient(categorie.name)
+        }));
+    } catch (error) {
+      console.warn('Failed to fetch categories:', error);
+      return [];
+    }
+  }
+
+  private getCategoryIcon(categoryName: string): string {
+    const name = categoryName.toLowerCase();
+    if (name.includes('légume') || name.includes('vegetable')) return '🥬';
+    if (name.includes('fruit')) return '🍎';
+    if (name.includes('viande') || name.includes('meat')) return '🥩';
+    if (name.includes('poisson') || name.includes('fish')) return '🐟';
+    if (name.includes('boulangerie') || name.includes('bread')) return '🍞';
+    if (name.includes('laitier') || name.includes('dairy')) return '🥛';
+    if (name.includes('épicerie') || name.includes('grocery')) return '🛒';
+    return '🏪'; // Default store icon
+  }
+
+  private getCategoryGradient(categoryName: string): string {
+    const name = categoryName.toLowerCase();
+    if (name.includes('légume')) return 'from-green-400 to-green-600';
+    if (name.includes('fruit')) return 'from-red-400 to-orange-500';
+    if (name.includes('viande')) return 'from-red-500 to-red-700';
+    if (name.includes('poisson')) return 'from-blue-400 to-blue-600';
+    if (name.includes('boulangerie')) return 'from-yellow-400 to-orange-500';
+    if (name.includes('laitier')) return 'from-blue-200 to-blue-400';
+    return 'from-app-purple to-app-pink'; // Default gradient
   }
 
   async createCategory(categoryData: any): Promise<any> {
