@@ -1,7 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Info, User, Users, Heart, Store } from "lucide-react";
 
 const DemoInstructions: React.FC = () => {
+  const [isApiConnected, setIsApiConnected] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkApiConnection = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+        if (!apiUrl) {
+          setIsApiConnected(false);
+          return;
+        }
+
+        const response = await fetch(`${apiUrl}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        setIsApiConnected(response.ok);
+      } catch (error) {
+        setIsApiConnected(false);
+      }
+    };
+
+    checkApiConnection();
+  }, []);
+
+  // Don't show demo instructions if API is connected
+  if (isApiConnected) {
+    return null;
+  }
   const demoAccounts = [
     {
       icon: Users,
