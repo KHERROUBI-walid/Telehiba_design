@@ -27,7 +27,7 @@ const ApiStatus: React.FC = () => {
           controller.abort();
         }, 3000);
 
-        const response = await fetch(`${apiUrl}/health`, {
+        const response = await fetch(`${apiUrl}`, {
           method: "GET",
           signal: controller.signal,
           headers: { "Content-Type": "application/json" },
