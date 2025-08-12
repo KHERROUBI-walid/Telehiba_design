@@ -1,4 +1,9 @@
 import { UserRole } from "../context/AuthContext";
+import {
+  User, Vendeur, Donateur, Famille, Produit, Categorie,
+  CommandeFamille, CommandeVendeur, LigneProduit, Paiement,
+  ApiCollection, ApiError, VendorOrderFrontend, ProductFrontend, FamilyFrontend
+} from "../types/api";
 
 // Detect environment and set appropriate API URL
 const getApiBaseUrl = (): string => {
