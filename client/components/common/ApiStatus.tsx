@@ -34,6 +34,11 @@ const ApiStatus: React.FC = () => {
         });
 
         clearTimeout(timeoutId);
+        console.log("✅ API Status: Response received", {
+          status: response.status,
+          ok: response.ok,
+          url: apiUrl
+        });
         setIsConnected(response.ok);
       } catch (error) {
         // Any error means API is not available (including timeouts)
