@@ -737,7 +737,7 @@ class ApiService {
   // Vendor Orders endpoints
   async getVendorOrders(filters?: {
     status?: string;
-  }): Promise<any[]> {
+  }): Promise<VendorOrderFrontend[]> {
     // If API not available, return empty array
     if (!this.isApiAvailable()) {
       console.warn('API not available - returning empty orders list');
@@ -746,34 +746,73 @@ class ApiService {
 
     try {
       const params = new URLSearchParams();
-      if (filters?.status) params.append('status', filters.status);
+      if (filters?.status) {
+        // Map frontend status to API status
+        const apiStatus = this.mapFrontendStatusToApi(filters.status);
+        params.append('status', apiStatus);
+      }
 
       const endpoint = `/commande_vendeurs${params.toString() ? `?${params.toString()}` : ''}`;
       const response = await this.makeRequest<CommandeVendeur[]>(endpoint);
 
-      return response.data.map(commande => ({
-        id: commande.id.toString(),
-        customerName: commande.commandeFamille.famille.user.name,
-        customerPhone: commande.commandeFamille.famille.user.phone,
-        customerAvatar: commande.commandeFamille.famille.user.avatar,
-        donatorName: "Donateur", // Need to get from paiement
-        donatorAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=center",
-        items: commande.ligneProduits.map(ligne => ({
-          id: ligne.produit.id,
-          name: ligne.produit.name,
-          price: ligne.price,
-          quantity: ligne.quantity,
-          image: ligne.produit.image
-        })),
-        total: commande.total,
-        status: this.mapOrderStatus(commande.status),
-        orderDate: commande.orderDate,
-        pickupCode: commande.pickupCode,
-        notes: commande.notes
-      }));
+      return response.data.map(commande => {
+        // Handle potentially nested or IRI references
+        const famille = typeof commande.famille === 'object' ? commande.famille : null;
+        const familleUser = famille && typeof famille.user === 'object' ? famille.user : null;
+
+        return {
+          id: commande.orderNumber || commande.id.toString(),
+          customerName: familleUser?.firstName && familleUser?.lastName
+            ? `${familleUser.firstName} ${familleUser.lastName}`
+            : familleUser?.email || 'Client',
+          customerPhone: familleUser?.phone || '',
+          customerAvatar: familleUser?.avatar || '/placeholder-avatar.jpg',
+          donatorName: "Donateur généreut", // TODO: Get from paiement relation
+          donatorAvatar: "/placeholder-donator.jpg",
+          items: commande.ligneProduits?.map(ligne => {
+            const produit = typeof ligne.produit === 'object' ? ligne.produit : null;
+            return {
+              id: produit?.id || 0,
+              name: produit?.name || 'Produit',
+              price: ligne.unitPrice,
+              quantity: ligne.quantity,
+              image: produit?.images?.[0] || '/placeholder-product.jpg'
+            };
+          }) || [],
+          total: commande.totalAmount,
+          status: this.mapApiStatusToFrontend(commande.status),
+          orderDate: commande.createdAt,
+          pickupCode: commande.orderNumber, // Use order number as pickup code
+          notes: commande.notes || ''
+        };
+      });
     } catch (error) {
       console.warn('Failed to fetch vendor orders:', error);
       return [];
+    }
+  }
+
+  private mapFrontendStatusToApi(frontendStatus: string): string {
+    switch (frontendStatus) {
+      case 'paid_by_donator': return 'PENDING';
+      case 'preparing': return 'PROCESSING';
+      case 'ready_for_pickup': return 'SHIPPED';
+      default: return frontendStatus.toUpperCase();
+    }
+  }
+
+  private mapApiStatusToFrontend(apiStatus: string): "paid_by_donator" | "preparing" | "ready_for_pickup" {
+    switch (apiStatus.toUpperCase()) {
+      case 'PENDING':
+      case 'ACCEPTED':
+        return 'paid_by_donator';
+      case 'PROCESSING':
+        return 'preparing';
+      case 'SHIPPED':
+      case 'COMPLETED':
+        return 'ready_for_pickup';
+      default:
+        return 'paid_by_donator';
     }
   }
 
