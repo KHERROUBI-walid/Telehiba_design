@@ -9,7 +9,19 @@ import {
 const getApiBaseUrl = (): string => {
   // Use environment variable if set
   if (import.meta.env.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL;
+    const url = import.meta.env.VITE_API_BASE_URL;
+    // Check if we're trying to use localhost from a cloud environment
+    const isCloudEnvironment = window.location.hostname.includes('.fly.dev') ||
+                              window.location.hostname.includes('.vercel.app') ||
+                              window.location.hostname.includes('.netlify.app') ||
+                              window.location.hostname.includes('.herokuapp.com');
+
+    if (isCloudEnvironment && url.includes('127.0.0.1')) {
+      console.warn('⚠️  Cloud environment detected but API_BASE_URL points to localhost. Disabling API calls.');
+      return '';
+    }
+
+    return url;
   }
 
   // Detect if running in development or production
@@ -21,9 +33,9 @@ const getApiBaseUrl = (): string => {
     return 'http://127.0.0.1:8000/api';
   }
 
-  // For production/cloud environments, use a placeholder or return empty to disable API
-  console.warn('API_BASE_URL not configured for production environment');
-  return ''; // This will disable API calls
+  // For production/cloud environments, disable API calls and use demo mode
+  console.warn('🌐 Production/cloud environment detected - Running in demo mode');
+  return ''; // This will disable API calls and enable demo mode
 };
 
 const API_BASE_URL = getApiBaseUrl();
