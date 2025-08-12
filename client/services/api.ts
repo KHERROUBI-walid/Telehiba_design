@@ -653,23 +653,47 @@ class ApiService {
     search?: string;
     city?: string;
   }): Promise<any[]> {
-    const params = new URLSearchParams();
-    if (filters?.search) params.append('user.name', filters.search);
-    if (filters?.city) params.append('user.city', filters.city);
+    // If API not available, return empty array
+    if (!this.isApiAvailable()) {
+      console.warn('API not available - returning empty vendors list');
+      return [];
+    }
 
-    const endpoint = `/vendeurs${params.toString() ? `?${params.toString()}` : ''}`;
-    const response = await this.makeRequest<Vendeur[]>(endpoint);
-    
-    return response.data.map(vendeur => ({
-      id: vendeur.id,
-      name: vendeur.user.name,
-      avatar: vendeur.user.avatar,
-      city: vendeur.user.city,
-      specialty: vendeur.specialty,
-      rating: vendeur.rating || 4.5,
-      businessName: vendeur.businessName,
-      gradient: "from-app-purple to-app-sky" // Default gradient
-    }));
+    try {
+      const params = new URLSearchParams();
+      if (filters?.search) {
+        params.append('storeName', filters.search);
+        // Also search in store description
+        params.append('storeDescription', filters.search);
+      }
+      if (filters?.city) {
+        params.append('user.city', filters.city);
+      }
+
+      const endpoint = `/vendeurs${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await this.makeRequest<Vendeur[]>(endpoint);
+
+      return response.data.map(vendeur => {
+        const user = typeof vendeur.user === 'object' ? vendeur.user : null;
+        const userName = user?.firstName && user?.lastName
+          ? `${user.firstName} ${user.lastName}`
+          : user?.email || 'Vendeur';
+
+        return {
+          id: vendeur.id,
+          name: userName,
+          avatar: user?.avatar || '/placeholder-avatar.jpg',
+          city: user?.city || 'Ville inconnue',
+          specialty: vendeur.storeDescription || 'Commerce général',
+          rating: vendeur.rating || 4.5,
+          businessName: vendeur.storeName,
+          gradient: "from-app-purple to-app-sky" // Default gradient
+        };
+      });
+    } catch (error) {
+      console.warn('Failed to fetch vendors:', error);
+      return [];
+    }
   }
 
   // Vendor Orders endpoints
