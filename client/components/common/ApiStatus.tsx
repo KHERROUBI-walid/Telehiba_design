@@ -12,13 +12,22 @@ const ApiStatus: React.FC = () => {
       try {
         const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
 
-        // Don't try to connect if we're in a cloud environment trying to reach localhost
-        const isLocalhost = window.location.hostname === 'localhost' ||
-                           window.location.hostname === '127.0.0.1' ||
-                           window.location.hostname === '0.0.0.0';
+        // Detect cloud environment
+        const isCloudEnvironment = window.location.hostname.includes('.fly.dev') ||
+                                  window.location.hostname.includes('.vercel.app') ||
+                                  window.location.hostname.includes('.netlify.app') ||
+                                  window.location.hostname.includes('.herokuapp.com');
 
-        if (!isLocalhost && apiUrl.includes('127.0.0.1')) {
-          console.warn('API Status: Skipping connection check - localhost API not accessible from cloud environment');
+        // Don't try to connect if we're in a cloud environment trying to reach localhost
+        if (isCloudEnvironment && apiUrl.includes('127.0.0.1')) {
+          console.warn('🌐 API Status: Cloud environment detected - skipping localhost API check');
+          setIsConnected(false);
+          return;
+        }
+
+        // Don't try to connect if API URL is empty (demo mode)
+        if (!apiUrl) {
+          console.warn('📱 API Status: Demo mode - no API configured');
           setIsConnected(false);
           return;
         }
@@ -38,7 +47,7 @@ const ApiStatus: React.FC = () => {
         setIsConnected(response.ok);
       } catch (error) {
         // Any error means API is not available (including timeouts)
-        console.warn('API Status: Connection check failed:', error.message);
+        console.warn('⚠️  API Status: Connection check failed:', error.message);
         setIsConnected(false);
       }
     };
