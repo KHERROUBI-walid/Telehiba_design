@@ -16,7 +16,7 @@ const ApiStatus: React.FC = () => {
         console.log("🔍 API Status: Environment details", {
           hostname: window.location.hostname,
           envApiUrl: import.meta.env.VITE_API_BASE_URL,
-          finalApiUrl: apiUrl
+          finalApiUrl: apiUrl,
         });
 
         // Don't try to connect if API URL is empty (demo mode)
@@ -43,7 +43,7 @@ const ApiStatus: React.FC = () => {
         console.log("✅ API Status: Response received", {
           status: response.status,
           ok: response.ok,
-          url: apiUrl
+          url: apiUrl,
         });
         setIsConnected(response.ok);
       } catch (error) {
