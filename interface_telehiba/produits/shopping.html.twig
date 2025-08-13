@@ -1,0 +1,196 @@
+{% extends 'base/layout.html.twig' %}
+
+{% set show_bottom_navigation = true %}
+{% set user_type = 'famille' %}
+
+{% block title %}Shopping - TeleHiba{% endblock %}
+
+{% block content %}
+<div class="pb-20">
+    <!-- En-tête avec recherche -->
+    <div class="bg-white px-6 py-4 border-b border-gray-200">
+        <div class="flex items-center gap-4 mb-4">
+            <h1 class="text-2xl font-bold text-gray-800">Shopping</h1>
+            <div class="flex-1"></div>
+            <button class="p-2 text-gray-600 hover:text-app-purple">
+                <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+            </button>
+        </div>
+        
+        <!-- Barre de recherche -->
+        <div class="relative">
+            <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+            <input type="text" placeholder="Rechercher un produit..." 
+                   class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:border-app-purple focus:ring-2 focus:ring-app-purple/20 transition-colors">
+        </div>
+    </div>
+
+    <!-- Solde disponible -->
+    <div class="px-6 py-4 bg-gradient-to-r from-app-pink/10 to-app-purple/10">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm">Solde disponible</p>
+                <p class="text-2xl font-bold text-app-purple">{{ solde|default('€45.20') }}</p>
+            </div>
+            <i data-lucide="wallet" class="w-8 h-8 text-app-purple"></i>
+        </div>
+    </div>
+
+    <!-- Catégories -->
+    <div class="px-6 py-4">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Catégories</h2>
+        <div class="grid grid-cols-4 gap-4">
+            <a href="/categories/legumes" class="text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                    <i data-lucide="leaf" class="w-8 h-8 text-green-600"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-800">Légumes</span>
+            </a>
+            
+            <a href="/categories/fruits" class="text-center">
+                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                    <i data-lucide="apple" class="w-8 h-8 text-orange-600"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-800">Fruits</span>
+            </a>
+            
+            <a href="/categories/pain" class="text-center">
+                <div class="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                    <i data-lucide="wheat" class="w-8 h-8 text-yellow-600"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-800">Pain</span>
+            </a>
+            
+            <a href="/categories/hygiene" class="text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                    <i data-lucide="droplets" class="w-8 h-8 text-blue-600"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-800">Hygiène</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Vendeurs populaires -->
+    <div class="px-6 py-4">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Vendeurs populaires</h2>
+        <div class="flex gap-4 overflow-x-auto pb-2">
+            <div class="flex-shrink-0 bg-white rounded-xl p-4 shadow-lg border border-gray-100 w-48">
+                <div class="w-16 h-16 bg-gray-200 rounded-xl mx-auto mb-3"></div>
+                <h3 class="font-medium text-gray-800 text-center mb-1">Boulangerie Walid</h3>
+                <p class="text-gray-600 text-sm text-center mb-2">Pain & Viennoiseries</p>
+                <div class="flex items-center justify-center gap-1">
+                    <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-current"></i>
+                    <span class="text-sm font-medium">4.8</span>
+                </div>
+            </div>
+            
+            <div class="flex-shrink-0 bg-white rounded-xl p-4 shadow-lg border border-gray-100 w-48">
+                <div class="w-16 h-16 bg-gray-200 rounded-xl mx-auto mb-3"></div>
+                <h3 class="font-medium text-gray-800 text-center mb-1">Épicerie Bio</h3>
+                <p class="text-gray-600 text-sm text-center mb-2">Fruits & Légumes</p>
+                <div class="flex items-center justify-center gap-1">
+                    <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-current"></i>
+                    <span class="text-sm font-medium">4.6</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Produits récents -->
+    <div class="px-6 py-4">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-800">Produits disponibles</h2>
+            <a href="/produits" class="text-app-purple text-sm font-medium">Voir tout</a>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Produit 1 -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="h-32 bg-gray-200"></div>
+                <div class="p-4">
+                    <h3 class="font-medium text-gray-800 mb-1">Tomates</h3>
+                    <p class="text-gray-600 text-sm mb-2">Boulangerie Walid</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-lg font-bold text-app-purple">€10.00</span>
+                        <button class="w-8 h-8 bg-app-purple text-white rounded-lg flex items-center justify-center">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-1">Stock: 10</p>
+                </div>
+            </div>
+
+            <!-- Produit 2 -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="h-32 bg-gray-200"></div>
+                <div class="p-4">
+                    <h3 class="font-medium text-gray-800 mb-1">Salade</h3>
+                    <p class="text-gray-600 text-sm mb-2">Épicerie Bio</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-lg font-bold text-app-purple">€4.00</span>
+                        <button class="w-8 h-8 bg-app-purple text-white rounded-lg flex items-center justify-center">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-1">Stock: 15</p>
+                </div>
+            </div>
+
+            <!-- Produit 3 -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="h-32 bg-gray-200"></div>
+                <div class="p-4">
+                    <h3 class="font-medium text-gray-800 mb-1">Pain complet</h3>
+                    <p class="text-gray-600 text-sm mb-2">Boulangerie Walid</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-lg font-bold text-app-purple">€2.50</span>
+                        <button class="w-8 h-8 bg-app-purple text-white rounded-lg flex items-center justify-center">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-1">Stock: 15</p>
+                </div>
+            </div>
+
+            <!-- Produit 4 -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="h-32 bg-gray-200"></div>
+                <div class="p-4">
+                    <h3 class="font-medium text-gray-800 mb-1">Pommes</h3>
+                    <p class="text-gray-600 text-sm mb-2">Marché Local</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-lg font-bold text-app-purple">€13.00</span>
+                        <button class="w-8 h-8 bg-app-purple text-white rounded-lg flex items-center justify-center">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-1">Stock: 14</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promotions -->
+    <div class="px-6 py-4">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Promotions du jour</h2>
+        <div class="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                    <i data-lucide="percent" class="w-6 h-6 text-red-600"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-medium text-red-900">Promotion spéciale</h3>
+                    <p class="text-red-700 text-sm">-20% sur tous les produits d'hygiène</p>
+                </div>
+                <span class="px-3 py-1 bg-red-500 text-white text-sm font-medium rounded-full">-20%</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Panier flottant -->
+<div class="fixed bottom-20 right-6 w-14 h-14 bg-app-purple text-white rounded-full shadow-lg flex items-center justify-center">
+    <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+    <span class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">3</span>
+</div>
+{% endblock %}
