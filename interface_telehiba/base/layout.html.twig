@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TeleHiba - Marketplace Solidaire{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'app-pink': '#FF6B9D',
+                        'app-purple': '#9B59B6',
+                        'app-blue': '#3498DB'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Icônes Lucide -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    {% block styles %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    {% if not hide_navigation|default(false) %}
+        {% include 'base/navigation.html.twig' %}
+    {% endif %}
+
+    <!-- Contenu principal -->
+    <main class="{% if not hide_navigation|default(false) %}pt-16{% endif %}">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Navigation du bas -->
+    {% if show_bottom_navigation|default(false) %}
+        {% include 'base/bottom_navigation.html.twig' %}
+    {% endif %}
+
+    <!-- Scripts -->
+    <script>
+        // Initialiser les icônes Lucide
+        lucide.createIcons();
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
