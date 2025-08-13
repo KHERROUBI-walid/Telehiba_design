@@ -1,0 +1,33 @@
+<nav class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+    <div class="px-4 py-3">
+        <div class="flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-app-pink to-app-purple rounded-xl flex items-center justify-center">
+                    <i data-lucide="heart" class="w-6 h-6 text-white"></i>
+                </div>
+                <h1 class="text-xl font-bold text-gray-800">TeleHiba</h1>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-4">
+                <!-- Notifications -->
+                <button class="relative p-2 text-gray-600 hover:text-app-purple">
+                    <i data-lucide="bell" class="w-6 h-6"></i>
+                    <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
+                </button>
+
+                <!-- Profil -->
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
+                    <span class="text-sm font-medium text-gray-700">{{ user_name|default('Utilisateur') }}</span>
+                </div>
+
+                <!-- Menu -->
+                <button class="p-2 text-gray-600 hover:text-app-purple">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
