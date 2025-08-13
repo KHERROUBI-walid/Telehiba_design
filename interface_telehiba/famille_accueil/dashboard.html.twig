@@ -1,0 +1,141 @@
+{% extends 'base/layout.html.twig' %}
+
+{% set show_bottom_navigation = true %}
+{% set user_type = 'famille' %}
+
+{% block title %}Accueil Famille - TeleHiba{% endblock %}
+
+{% block content %}
+<div class="pb-20">
+    <!-- En-tête de bienvenue -->
+    <div class="bg-gradient-to-r from-app-pink to-app-purple px-6 py-8 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold">Bonjour {{ user.prenom|default('Alberto') }} !</h1>
+                <p class="text-white/80">Famille {{ user.nom|default('Machado') }}</p>
+            </div>
+            <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                <i data-lucide="users" class="w-8 h-8"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Solde et crédits -->
+    <div class="px-6 -mt-4">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">Mon solde</h2>
+                <i data-lucide="wallet" class="w-6 h-6 text-app-purple"></i>
+            </div>
+            <div class="text-3xl font-bold text-app-purple mb-2">{{ solde|default('€45.20') }}</div>
+            <p class="text-gray-600 text-sm">Disponible pour vos achats</p>
+            
+            <div class="mt-4 pt-4 border-t border-gray-100">
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Crédits reçus ce mois</span>
+                    <span class="font-semibold text-green-600">{{ credits_mois|default('+€125.50') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="px-6 mt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Actions rapides</h3>
+        <div class="grid grid-cols-2 gap-4">
+            <a href="/shopping" class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                <div class="w-12 h-12 bg-app-purple/10 rounded-xl flex items-center justify-center mb-4">
+                    <i data-lucide="shopping-cart" class="w-6 h-6 text-app-purple"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 mb-1">Faire mes courses</h4>
+                <p class="text-gray-600 text-sm">Parcourir les produits</p>
+            </a>
+            
+            <a href="/commandes" class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                <div class="w-12 h-12 bg-app-pink/10 rounded-xl flex items-center justify-center mb-4">
+                    <i data-lucide="package" class="w-6 h-6 text-app-pink"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 mb-1">Mes commandes</h4>
+                <p class="text-gray-600 text-sm">Suivre mes livraisons</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Commandes récentes -->
+    <div class="px-6 mt-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Commandes récentes</h3>
+            <a href="/commandes" class="text-app-purple text-sm font-medium">Voir tout</a>
+        </div>
+        
+        <div class="space-y-3">
+            <!-- Commande 1 -->
+            <div class="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <h4 class="font-medium text-gray-800">Commande #12345</h4>
+                        <p class="text-gray-600 text-sm">3 produits • {{ 'now'|date('d/m/Y') }}</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Livrée</span>
+                            <span class="text-sm font-semibold text-gray-800">€18.50</span>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- Commande 2 -->
+            <div class="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <h4 class="font-medium text-gray-800">Commande #12344</h4>
+                        <p class="text-gray-600 text-sm">5 produits • {{ 'yesterday'|date('d/m/Y') }}</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">En cours</span>
+                            <span class="text-sm font-semibold text-gray-800">€24.30</span>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendeurs favoris -->
+    <div class="px-6 mt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Vendeurs favoris</h3>
+        <div class="grid grid-cols-3 gap-4">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gray-200 rounded-xl mx-auto mb-2"></div>
+                <h4 class="font-medium text-gray-800 text-sm">Boulangerie Walid</h4>
+                <p class="text-gray-600 text-xs">Pain & Viennoiseries</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gray-200 rounded-xl mx-auto mb-2"></div>
+                <h4 class="font-medium text-gray-800 text-sm">Épicerie Bio</h4>
+                <p class="text-gray-600 text-xs">Fruits & Légumes</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gray-200 rounded-xl mx-auto mb-2"></div>
+                <h4 class="font-medium text-gray-800 text-sm">Marché Local</h4>
+                <p class="text-gray-600 text-xs">Produits frais</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="px-6 mt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Notifications</h3>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div class="flex items-start gap-3">
+                <i data-lucide="info" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                <div class="flex-1">
+                    <h4 class="font-medium text-blue-900">Nouveaux crédits disponibles</h4>
+                    <p class="text-blue-700 text-sm">Vous avez reçu €25.00 de la part de donateurs généreux.</p>
+                    <p class="text-blue-600 text-xs mt-1">Il y a 2 heures</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
