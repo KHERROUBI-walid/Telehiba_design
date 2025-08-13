@@ -1,0 +1,267 @@
+{% extends 'base/layout.html.twig' %}
+
+{% set show_bottom_navigation = true %}
+{% set user_type = 'famille' %}
+
+{% block title %}Mes Commandes - TeleHiba{% endblock %}
+
+{% block content %}
+<div class="pb-20">
+    <!-- En-tête -->
+    <div class="bg-white px-6 py-4 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-800">Mes Commandes</h1>
+            <button class="p-2 text-gray-600 hover:text-app-purple">
+                <i data-lucide="search" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Résumé rapide -->
+    <div class="px-6 py-4 bg-gradient-to-r from-app-pink/10 to-app-purple/10">
+        <div class="grid grid-cols-3 gap-4">
+            <div class="text-center">
+                <div class="text-2xl font-bold text-blue-600">{{ stats.en_cours|default('2') }}</div>
+                <div class="text-gray-600 text-sm">En cours</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl font-bold text-green-600">{{ stats.livrees|default('15') }}</div>
+                <div class="text-gray-600 text-sm">Livrées</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl font-bold text-app-purple">{{ stats.total_economise|default('€245.80') }}</div>
+                <div class="text-gray-600 text-sm">Économisé</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="px-6 py-4">
+        <div class="flex gap-3 overflow-x-auto">
+            <button class="px-4 py-2 bg-app-purple text-white rounded-full text-sm font-medium whitespace-nowrap">
+                Toutes
+            </button>
+            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap">
+                En cours
+            </button>
+            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap">
+                Prêtes
+            </button>
+            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium whitespace-nowrap">
+                Livrées
+            </button>
+        </div>
+    </div>
+
+    <!-- Liste des commandes -->
+    <div class="px-6">
+        <div class="space-y-4">
+            <!-- Commande 1 - En préparation -->
+            <div class="bg-white rounded-xl p-5 shadow-lg border border-blue-200">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <h3 class="font-medium text-gray-800">Commande #12346</h3>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">En préparation</span>
+                        </div>
+                        <p class="text-gray-600 text-sm">Boulangerie Walid</p>
+                        <p class="text-gray-500 text-xs">{{ 'now'|date('d/m/Y H:i', '-20 minutes') }}</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-gray-800">€18.50</div>
+                        <div class="text-sm text-green-600">Financé par donations</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-700">2x Baguette tradition</span>
+                        <span class="text-sm font-medium">€2.40</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-700">1x Croissant</span>
+                        <span class="text-sm font-medium">€1.10</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-sm text-gray-700">1x Pain complet</span>
+                        <span class="text-sm font-medium">€2.50</span>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm text-gray-600">Préparation</span>
+                        <span class="text-sm font-medium">En cours...</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-500 h-2 rounded-full animate-pulse" style="width: 60%"></div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium text-sm">
+                        <i data-lucide="message-circle" class="w-4 h-4 inline mr-2"></i>
+                        Contacter vendeur
+                    </button>
+                    <button class="px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium text-sm">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+
+            <!-- Commande 2 - Prête à récupérer -->
+            <div class="bg-white rounded-xl p-5 shadow-lg border border-green-200">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <h3 class="font-medium text-gray-800">Commande #12345</h3>
+                            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Prête</span>
+                        </div>
+                        <p class="text-gray-600 text-sm">Épicerie Bio</p>
+                        <p class="text-gray-500 text-xs">{{ 'now'|date('d/m/Y H:i', '-1 hour') }}</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-gray-800">€24.30</div>
+                        <div class="text-sm text-green-600">Financé par donations</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-700">2kg Pommes bio</span>
+                        <span class="text-sm font-medium">€6.00</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-700">1kg Carottes</span>
+                        <span class="text-sm font-medium">€3.50</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-sm text-gray-700">3x Salade verte</span>
+                        <span class="text-sm font-medium">€4.50</span>
+                    </div>
+                </div>
+                
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i>
+                        <span class="text-sm text-green-800 font-medium">Votre commande est prête !</span>
+                    </div>
+                    <p class="text-sm text-green-700">
+                        Présentez le QR code ci-dessous au vendeur pour récupérer votre commande.
+                    </p>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-medium text-sm">
+                        <i data-lucide="qr-code" class="w-4 h-4 inline mr-2"></i>
+                        Afficher QR Code
+                    </button>
+                    <button class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium text-sm">
+                        <i data-lucide="map-pin" class="w-4 h-4 inline mr-1"></i>
+                        Itinéraire
+                    </button>
+                </div>
+            </div>
+
+            <!-- Commande 3 - Livrée récemment -->
+            <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-100">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <h3 class="font-medium text-gray-800">Commande #12344</h3>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Livrée</span>
+                        </div>
+                        <p class="text-gray-600 text-sm">Boulangerie Walid</p>
+                        <p class="text-gray-500 text-xs">{{ 'yesterday'|date('d/m/Y H:i') }}</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-gray-800">€15.80</div>
+                        <div class="text-sm text-green-600">Financé par donations</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-700">1x Pain de campagne</span>
+                        <span class="text-sm font-medium">€2.80</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-700">4x Croissants</span>
+                        <span class="text-sm font-medium">€4.40</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-sm text-gray-700">2x Pains au chocolat</span>
+                        <span class="text-sm font-medium">€2.20</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i>
+                        <span class="text-sm text-gray-600">Récupérée avec succès</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-current"></i>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button class="flex-1 bg-app-purple text-white py-2 px-4 rounded-lg font-medium text-sm">
+                        Recommander
+                    </button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium text-sm">
+                        Reçu
+                    </button>
+                </div>
+            </div>
+
+            <!-- Commande 4 - Plus ancienne -->
+            <div class="bg-white rounded-xl p-5 shadow-lg border border-gray-100 opacity-75">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <h3 class="font-medium text-gray-800">Commande #12343</h3>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Livrée</span>
+                        </div>
+                        <p class="text-gray-600 text-sm">Marché Local</p>
+                        <p class="text-gray-500 text-xs">{{ '3 days ago'|date('d/m/Y') }}</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-gray-800">€22.10</div>
+                        <div class="text-sm text-green-600">Financé par donations</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i>
+                        <span class="text-sm text-gray-600">Commande terminée</span>
+                    </div>
+                    <button class="text-app-purple text-sm font-medium">
+                        Voir détails
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conseils -->
+    <div class="px-6 py-6">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div class="flex items-start gap-3">
+                <i data-lucide="lightbulb" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                <div class="flex-1">
+                    <h3 class="font-medium text-blue-900 mb-1">Conseil</h3>
+                    <p class="text-blue-700 text-sm">
+                        Planifiez vos commandes à l'avance pour bénéficier des meilleurs créneaux et éviter les ruptures de stock.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
