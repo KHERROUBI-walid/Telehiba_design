@@ -411,7 +411,7 @@ class ApiService {
       throw new Error("Rôle utilisateur invalide");
     }
 
-    const response = await this.makeRequest<AuthResponse>("/auth/register", {
+    const response = await this.makeRequest<AuthResponse>("/register", {
       method: "POST",
       body: JSON.stringify({
         email: userData.email.trim().toLowerCase(),
