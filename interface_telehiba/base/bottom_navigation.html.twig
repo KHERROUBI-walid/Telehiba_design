@@ -1,0 +1,59 @@
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+    <div class="flex justify-around">
+        {% if user_type == 'famille' %}
+            <!-- Navigation Famille -->
+            <a href="/famille" class="flex flex-col items-center py-2 px-3 text-app-purple">
+                <i data-lucide="home" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Accueil</span>
+            </a>
+            <a href="/shopping" class="flex flex-col items-center py-2 px-3 text-gray-500">
+                <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Shopping</span>
+            </a>
+            <a href="/commandes" class="flex flex-col items-center py-2 px-3 text-gray-500">
+                <i data-lucide="package" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Commandes</span>
+            </a>
+            <a href="/profil" class="flex flex-col items-center py-2 px-3 text-gray-500">
+                <i data-lucide="user" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        {% elseif user_type == 'vendeur' %}
+            <!-- Navigation Vendeur -->
+            <a href="/vendeur" class="flex flex-col items-center py-2 px-3 text-app-purple">
+                <i data-lucide="store" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Boutique</span>
+            </a>
+            <a href="/vendeur/produits" class="flex flex-col items-center py-2 px-3 text-gray-500">
+                <i data-lucide="package" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Produits</span>
+            </a>
+            <a href="/vendeur/commandes" class="flex flex-col items-center py-2 px-3 text-gray-500">
+                <i data-lucide="list-checks" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Commandes</span>
+            </a>
+            <a href="/vendeur/stats" class="flex flex-col items-center py-2 px-3 text-gray-500">
+                <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Stats</span>
+            </a>
+        {% elseif user_type == 'donateur' %}
+            <!-- Navigation Donateur -->
+            <a href="/donateur" class="flex flex-col items-center py-2 px-3 text-app-purple">
+                <i data-lucide="heart" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Donations</span>
+            </a>
+            <a href="/donateur/familles" class="flex flex-col items-center py-2 px-3 text-gray-500">
+                <i data-lucide="users" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Familles</span>
+            </a>
+            <a href="/donateur/historique" class="flex flex-col items-center py-2 px-3 text-gray-500">
+                <i data-lucide="clock" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Historique</span>
+            </a>
+            <a href="/profil" class="flex flex-col items-center py-2 px-3 text-gray-500">
+                <i data-lucide="user" class="w-6 h-6"></i>
+                <span class="text-xs mt-1">Profil</span>
+            </a>
+        {% endif %}
+    </div>
+</nav>
