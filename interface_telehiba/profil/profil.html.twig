@@ -1,0 +1,222 @@
+{% extends 'base/layout.html.twig' %}
+
+{% set show_bottom_navigation = true %}
+
+{% block title %}Mon Profil - TeleHiba{% endblock %}
+
+{% block content %}
+<div class="pb-20">
+    <!-- En-tête du profil -->
+    <div class="bg-gradient-to-r from-app-pink to-app-purple px-6 py-8 text-white">
+        <div class="flex items-center gap-4">
+            <div class="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center">
+                <i data-lucide="user" class="w-10 h-10"></i>
+            </div>
+            <div class="flex-1">
+                <h1 class="text-2xl font-bold">{{ user.prenom|default('Alberto') }} {{ user.nom|default('Machado') }}</h1>
+                <p class="text-white/80 mb-2">{{ user.email|default('alberto@example.com') }}</p>
+                <div class="flex items-center gap-2">
+                    {% if user.type_utilisateur == 'famille' %}
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Famille</span>
+                    {% elseif user.type_utilisateur == 'vendeur' %}
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Vendeur</span>
+                    {% elseif user.type_utilisateur == 'donateur' %}
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-sm">Donateur</span>
+                    {% endif %}
+                    <span class="px-3 py-1 bg-green-500/20 rounded-full text-sm">Vérifié</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations personnelles -->
+    <div class="px-6 py-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Informations personnelles</h2>
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="divide-y divide-gray-100">
+                <div class="p-4 flex items-center justify-between">
+                    <div>
+                        <label class="text-sm text-gray-600">Email</label>
+                        <div class="text-gray-800 font-medium">{{ user.email|default('alberto@example.com') }}</div>
+                    </div>
+                    <button class="text-app-purple">
+                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                
+                <div class="p-4 flex items-center justify-between">
+                    <div>
+                        <label class="text-sm text-gray-600">Téléphone</label>
+                        <div class="text-gray-800 font-medium">{{ user.telephone|default('06 45 56 78 12') }}</div>
+                    </div>
+                    <button class="text-app-purple">
+                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                
+                <div class="p-4 flex items-center justify-between">
+                    <div>
+                        <label class="text-sm text-gray-600">Adresse</label>
+                        <div class="text-gray-800 font-medium">{{ user.adresse|default('1 rue de Cambrai') }}</div>
+                        <div class="text-gray-600 text-sm">{{ user.code_postal|default('06000') }} {{ user.ville|default('Nice') }}</div>
+                    </div>
+                    <button class="text-app-purple">
+                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations spécifiques selon le type d'utilisateur -->
+    {% if user.type_utilisateur == 'famille' %}
+        <div class="px-6 py-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Informations famille</h2>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="divide-y divide-gray-100">
+                    <div class="p-4 flex items-center justify-between">
+                        <div>
+                            <label class="text-sm text-gray-600">Nombre de membres</label>
+                            <div class="text-gray-800 font-medium">{{ famille.nombre_membres|default('2') }} personnes</div>
+                        </div>
+                        <button class="text-app-purple">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="p-4 flex items-center justify-between">
+                        <div>
+                            <label class="text-sm text-gray-600">Revenu mensuel</label>
+                            <div class="text-gray-800 font-medium">{{ famille.revenu_mensuel|default('200') }}€/mois</div>
+                        </div>
+                        <button class="text-app-purple">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% elseif user.type_utilisateur == 'vendeur' %}
+        <div class="px-6 py-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Informations vendeur</h2>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="divide-y divide-gray-100">
+                    <div class="p-4 flex items-center justify-between">
+                        <div>
+                            <label class="text-sm text-gray-600">Nom de la société</label>
+                            <div class="text-gray-800 font-medium">{{ vendeur.nom_societe|default('Boulangerie Walid') }}</div>
+                        </div>
+                        <button class="text-app-purple">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="p-4 flex items-center justify-between">
+                        <div>
+                            <label class="text-sm text-gray-600">SIREN</label>
+                            <div class="text-gray-800 font-medium">{{ vendeur.siren|default('457845125') }}</div>
+                        </div>
+                        <button class="text-app-purple">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% elseif user.type_utilisateur == 'donateur' %}
+        <div class="px-6 py-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Mes donations</h2>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+                <div class="text-center mb-4">
+                    <div class="text-3xl font-bold text-green-600">{{ donateur.montant_total_don|default('€450.75') }}</div>
+                    <div class="text-gray-600">Total de vos donations</div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center">
+                        <div class="text-xl font-bold text-app-purple">12</div>
+                        <div class="text-gray-600 text-sm">Familles aidées</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xl font-bold text-app-pink">€85.50</div>
+                        <div class="text-gray-600 text-sm">Ce mois-ci</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Statistiques d'utilisation -->
+    <div class="px-6 py-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Mon activité</h2>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-4 text-center">
+                <div class="text-2xl font-bold text-app-purple">{{ stats.jours_actif|default('45') }}</div>
+                <div class="text-gray-600 text-sm">Jours d'activité</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-4 text-center">
+                <div class="text-2xl font-bold text-green-600">{{ stats.actions_total|default('128') }}</div>
+                <div class="text-gray-600 text-sm">Actions réalisées</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu d'actions -->
+    <div class="px-6 py-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Paramètres</h2>
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="divide-y divide-gray-100">
+                <a href="/profil/modifier" class="p-4 flex items-center justify-between hover:bg-gray-50">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="edit-3" class="w-5 h-5 text-gray-500"></i>
+                        <span class="text-gray-800">Modifier mes informations</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                </a>
+                
+                <a href="/profil/mot-de-passe" class="p-4 flex items-center justify-between hover:bg-gray-50">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="key" class="w-5 h-5 text-gray-500"></i>
+                        <span class="text-gray-800">Changer mot de passe</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                </a>
+                
+                <a href="/notifications" class="p-4 flex items-center justify-between hover:bg-gray-50">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="bell" class="w-5 h-5 text-gray-500"></i>
+                        <span class="text-gray-800">Notifications</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                </a>
+                
+                <a href="/aide" class="p-4 flex items-center justify-between hover:bg-gray-50">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="help-circle" class="w-5 h-5 text-gray-500"></i>
+                        <span class="text-gray-800">Aide & Support</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                </a>
+                
+                <a href="/mentions-legales" class="p-4 flex items-center justify-between hover:bg-gray-50">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="file-text" class="w-5 h-5 text-gray-500"></i>
+                        <span class="text-gray-800">Mentions légales</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Déconnexion -->
+    <div class="px-6 py-6">
+        <button class="w-full bg-red-50 border border-red-200 text-red-700 py-3 px-4 rounded-xl font-medium flex items-center justify-center gap-2">
+            <i data-lucide="log-out" class="w-5 h-5"></i>
+            Se déconnecter
+        </button>
+    </div>
+</div>
+{% endblock %}
