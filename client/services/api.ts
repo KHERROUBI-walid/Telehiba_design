@@ -300,7 +300,7 @@ class ApiService {
     }
 
     try {
-      const response = await this.makeRequest<AuthResponse>("/auth/login", {
+      const response = await this.makeRequest<AuthResponse>("/login", {
         method: "POST",
         body: JSON.stringify({
           email: credentials.email.trim().toLowerCase(),
