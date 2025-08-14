@@ -423,8 +423,15 @@ class ApiService {
       body: JSON.stringify({
         email: userData.email.trim().toLowerCase(),
         password: userData.password,
-        name: userData.name.trim(),
-        role: userData.role,
+        nom: userData.nom.trim(),
+        prenom: userData.prenom.trim(),
+        type_utilisateur: userData.type_utilisateur,
+        telephone: userData.telephone,
+        ville: userData.ville,
+        civilite: userData.civilite,
+        adresse: userData.adresse,
+        code_postal: userData.code_postal,
+        pays: userData.pays || 'France'
       }),
     });
 
