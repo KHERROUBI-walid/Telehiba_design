@@ -78,11 +78,13 @@ export default function Login() {
         // Wait a moment for the auth context to update with user data
         setTimeout(() => {
           const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
-          if (currentUser.role) {
-            const redirectPath = getRedirectPath(currentUser.role);
+          if (currentUser.type_utilisateur) {
+            // Convert type_utilisateur to UserRole for redirect
+            const userRole = ROLE_MAPPING[currentUser.type_utilisateur];
+            const redirectPath = getRedirectPath(userRole);
             toast({
               title: "Connexion réussie",
-              description: `Bienvenue ! Redirection vers votre espace ${currentUser.role}.`
+              description: `Bienvenue ! Redirection vers votre espace ${currentUser.type_utilisateur}.`
             });
             navigate(redirectPath, { replace: true });
           } else {
