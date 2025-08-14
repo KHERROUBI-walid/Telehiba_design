@@ -59,8 +59,15 @@ interface LoginRequest {
 interface RegisterRequest {
   email: string;
   password: string;
-  name: string;
-  role: UserRole;
+  nom: string;
+  prenom: string;
+  type_utilisateur: 'famille' | 'vendeur' | 'donateur';
+  telephone?: string;
+  ville?: string;
+  civilite?: 'M.' | 'Mme' | 'Mlle';
+  adresse?: string;
+  code_postal?: string;
+  pays?: string;
 }
 
 interface AuthResponse {
