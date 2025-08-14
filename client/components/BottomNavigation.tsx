@@ -92,7 +92,7 @@ export default function BottomNavigation({
         ))}
 
         {/* Cart button in center for families */}
-        {isAuthenticated && user?.role === "family" && (
+        {isAuthenticated && user?.type_utilisateur === "famille" && (
           <button
             onClick={onCartClick}
             className="bg-app-yellow w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-app-yellow/50 transition-colors relative mx-2"
