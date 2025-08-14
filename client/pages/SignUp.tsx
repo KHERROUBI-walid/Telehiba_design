@@ -242,26 +242,50 @@ export default function SignUp() {
               </div>
             </div>
 
-            {/* Name field */}
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Nom complet
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Votre nom complet"
-                  className="pl-12 h-12 bg-gray-50 border-gray-200 focus:border-app-purple focus:ring-app-purple"
-                  required
-                />
+            {/* Prénom et Nom */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="prenom"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Prénom
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Input
+                    id="prenom"
+                    name="prenom"
+                    type="text"
+                    value={formData.prenom}
+                    onChange={handleInputChange}
+                    placeholder="ex: Walid"
+                    className="pl-12 h-12 bg-gray-50 border-gray-200 focus:border-app-purple focus:ring-app-purple"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="nom"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Nom
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Input
+                    id="nom"
+                    name="nom"
+                    type="text"
+                    value={formData.nom}
+                    onChange={handleInputChange}
+                    placeholder="ex: Kherroubi"
+                    className="pl-12 h-12 bg-gray-50 border-gray-200 focus:border-app-purple focus:ring-app-purple"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
