@@ -533,34 +533,22 @@ class ApiService {
   }
 
   async updateProfile(
-    profileData: Partial<AuthResponse["user"]>,
-  ): Promise<AuthResponse["user"]> {
+    profileData: Partial<User>,
+  ): Promise<User> {
     const response = await this.makeRequest<User>(`/users/${profileData.id}`, {
       method: "PUT",
       body: JSON.stringify({
-        name: profileData.name,
-        phone: profileData.phone,
-        address: profileData.address,
-        city: profileData.city,
-        avatar: profileData.avatar,
+        nom: profileData.nom,
+        prenom: profileData.prenom,
+        telephone: profileData.telephone,
+        adresse: profileData.adresse,
+        ville: profileData.ville,
+        code_postal: profileData.code_postal,
+        pays: profileData.pays,
       }),
     });
 
-    const user = response.data;
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.roles.includes("ROLE_VENDOR")
-        ? "vendor"
-        : user.roles.includes("ROLE_DONATOR")
-          ? "donator"
-          : "family",
-      avatar: user.avatar,
-      phone: user.phone,
-      address: user.address,
-      city: user.city,
-    };
+    return response.data;
   }
 
   // Product endpoints
