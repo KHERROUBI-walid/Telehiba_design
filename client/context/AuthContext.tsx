@@ -53,10 +53,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const signup = async (email: string, password: string, name: string, role: UserRole): Promise<boolean> => {
+  const signup = async (email: string, password: string, nom: string, prenom: string, type_utilisateur: 'famille' | 'vendeur' | 'donateur'): Promise<boolean> => {
     setIsLoading(true);
     try {
-      const authResponse = await apiService.register({ email, password, name, role });
+      const authResponse = await apiService.register({ email, password, nom, prenom, type_utilisateur });
       setUser(authResponse.user);
       localStorage.setItem("user", JSON.stringify(authResponse.user));
       return true;
