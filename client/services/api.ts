@@ -333,10 +333,8 @@ class ApiService {
         },
       });
 
-      // Increment failed attempts
-      const newAttemptCount = attemptCount + 1;
-      localStorage.setItem("login_attempts", newAttemptCount.toString());
-      localStorage.setItem("last_login_attempt", Date.now().toString());
+      // Rate limiting temporairement désactivé pour les tests
+      console.log("🔄 Tentative de login échouée - rate limiting désactivé");
 
       // If API error and we have demo credentials, try demo login
       if (this.isDemoCredentials(credentials)) {
