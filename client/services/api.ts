@@ -140,8 +140,21 @@ class ApiService {
       ...options,
     };
 
+    console.log("🌐 Requête API:", {
+      url,
+      method: config.method || 'GET',
+      headers: config.headers,
+      body: options.body ? JSON.parse(options.body as string) : null
+    });
+
     try {
       const response = await fetch(url, config);
+
+      console.log("📡 Réponse API:", {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries())
+      });
 
       let data;
       try {
