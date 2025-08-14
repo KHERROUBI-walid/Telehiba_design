@@ -343,26 +343,39 @@ class ApiService {
 
   private handleDemoLogin(credentials: LoginRequest): AuthResponse {
     const email = credentials.email.toLowerCase();
-    let role: UserRole = "family";
-    let name = "Utilisateur Demo";
+    let type_utilisateur: 'famille' | 'vendeur' | 'donateur' = 'famille';
+    let prenom = "Demo";
+    let nom = "Utilisateur";
 
     if (email.includes("vendor")) {
-      role = "vendor";
-      name = "Vendeur Demo";
+      type_utilisateur = "vendeur";
+      prenom = "Vendeur";
+      nom = "Demo";
     } else if (email.includes("donator")) {
-      role = "donator";
-      name = "Donateur Demo";
+      type_utilisateur = "donateur";
+      prenom = "Donateur";
+      nom = "Demo";
     } else if (email.includes("family")) {
-      role = "family";
-      name = "Famille Demo";
+      type_utilisateur = "famille";
+      prenom = "Famille";
+      nom = "Demo";
     }
 
-    const user = {
+    const user: User = {
+      '@type': 'User',
       id: Date.now(),
       email: credentials.email,
-      name,
-      role,
-      avatar: `https://images.unsplash.com/photo-1494790108755-2616b5b85644?w=100&h=100&fit=crop&crop=center`,
+      roles: [`ROLE_${type_utilisateur.toUpperCase()}`],
+      type_utilisateur,
+      nom,
+      prenom,
+      civilite: 'M.',
+      ville: 'Demo City',
+      pays: 'France',
+      statut: 'actif',
+      date_creation: new Date().toISOString(),
+      date_mise_ajour: new Date().toISOString(),
+      is_verified: true
     };
 
     const token = `demo_token_${Date.now()}`;
