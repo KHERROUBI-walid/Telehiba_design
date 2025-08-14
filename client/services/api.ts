@@ -293,13 +293,23 @@ class ApiService {
     }
 
     try {
+      const loginData = {
+        email: credentials.email.trim().toLowerCase(),
+        password: credentials.password,
+      };
+
+      console.log("🔐 Tentative de login avec:", {
+        email: loginData.email,
+        passwordLength: loginData.password.length,
+        apiUrl: API_BASE_URL + "/login"
+      });
+
       const response = await this.makeRequest<AuthResponse>("/login", {
         method: "POST",
-        body: JSON.stringify({
-          email: credentials.email.trim().toLowerCase(),
-          password: credentials.password,
-        }),
+        body: JSON.stringify(loginData),
       });
+
+      console.log("✅ Réponse login reçue:", response);
 
       // Clear failed attempts on success
       localStorage.removeItem("login_attempts");
