@@ -10,7 +10,13 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  signup: (email: string, password: string, nom: string, prenom: string, type_utilisateur: 'famille' | 'vendeur' | 'donateur') => Promise<boolean>;
+  signup: (
+    email: string,
+    password: string,
+    nom: string,
+    prenom: string,
+    type_utilisateur: "famille" | "vendeur" | "donateur",
+  ) => Promise<boolean>;
   logout: () => Promise<void>;
   updateUser: (userData: Partial<User>) => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -53,10 +59,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const signup = async (email: string, password: string, nom: string, prenom: string, type_utilisateur: 'famille' | 'vendeur' | 'donateur'): Promise<boolean> => {
+  const signup = async (
+    email: string,
+    password: string,
+    nom: string,
+    prenom: string,
+    type_utilisateur: "famille" | "vendeur" | "donateur",
+  ): Promise<boolean> => {
     setIsLoading(true);
     try {
-      const authResponse = await apiService.register({ email, password, nom, prenom, type_utilisateur });
+      const authResponse = await apiService.register({
+        email,
+        password,
+        nom,
+        prenom,
+        type_utilisateur,
+      });
       setUser(authResponse.user);
       localStorage.setItem("user", JSON.stringify(authResponse.user));
       return true;
@@ -102,7 +120,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const refreshUser = async () => {
-    if (!localStorage.getItem('auth_token')) return;
+    if (!localStorage.getItem("auth_token")) return;
 
     setIsLoading(true);
     try {

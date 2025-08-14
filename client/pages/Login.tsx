@@ -5,7 +5,12 @@ import { useAuth, UserRole } from "../context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { validateEmail, sanitizeInput, checkRateLimit, recordAttempt } from "../utils/security";
+import {
+  validateEmail,
+  sanitizeInput,
+  checkRateLimit,
+  recordAttempt,
+} from "../utils/security";
 import { ROLE_MAPPING } from "../types/api";
 import DemoInstructions from "../components/common/DemoInstructions";
 
@@ -22,7 +27,7 @@ export default function Login() {
   const getRedirectPath = (userRole: UserRole): string => {
     // Check if there's a specific page the user was trying to access
     const from = location.state?.from?.pathname;
-    if (from && from !== '/login') {
+    if (from && from !== "/login") {
       return from;
     }
 
@@ -30,7 +35,7 @@ export default function Login() {
     const roleRedirects: Record<UserRole, string> = {
       family: "/",
       vendor: "/vendor-dashboard",
-      donator: "/donator-dashboard"
+      donator: "/donator-dashboard",
     };
 
     return roleRedirects[userRole];
@@ -47,7 +52,7 @@ export default function Login() {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Veuillez remplir tous les champs"
+        description: "Veuillez remplir tous les champs",
       });
       return;
     }
@@ -57,17 +62,18 @@ export default function Login() {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Format d'email invalide"
+        description: "Format d'email invalide",
       });
       return;
     }
 
     // Rate limiting check
-    if (!checkRateLimit('login', 5, 15 * 60 * 1000)) {
+    if (!checkRateLimit("login", 5, 15 * 60 * 1000)) {
       toast({
         variant: "destructive",
         title: "Trop de tentatives",
-        description: "Trop de tentatives de connexion. Réessayez dans 15 minutes."
+        description:
+          "Trop de tentatives de connexion. Réessayez dans 15 minutes.",
       });
       return;
     }
@@ -85,7 +91,7 @@ export default function Login() {
             const redirectPath = getRedirectPath(userRole);
             toast({
               title: "Connexion réussie",
-              description: `Bienvenue ! Redirection vers votre espace ${currentUser.type_utilisateur}.`
+              description: `Bienvenue ! Redirection vers votre espace ${currentUser.type_utilisateur}.`,
             });
             navigate(redirectPath, { replace: true });
           } else {
@@ -93,19 +99,20 @@ export default function Login() {
           }
         }, 100);
       } else {
-        recordAttempt('login');
+        recordAttempt("login");
         toast({
           variant: "destructive",
           title: "Erreur de connexion",
-          description: "Email ou mot de passe incorrect"
+          description: "Email ou mot de passe incorrect",
         });
       }
     } catch (error) {
-      recordAttempt('login');
+      recordAttempt("login");
       toast({
         variant: "destructive",
         title: "Erreur de connexion",
-        description: error instanceof Error ? error.message : "Une erreur est survenue"
+        description:
+          error instanceof Error ? error.message : "Une erreur est survenue",
       });
     }
   };
@@ -114,17 +121,28 @@ export default function Login() {
     <div className="min-h-screen bg-gradient-to-br from-app-pink via-app-purple to-app-blue relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute top-1/4 -right-20 w-64 h-64 bg-gradient-to-br from-white/10 to-app-pink/20 rounded-full animate-pulse"></div>
-      <div className="absolute bottom-1/3 -left-20 w-48 h-48 bg-gradient-to-br from-app-blue/20 to-white/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-app-purple/10 to-app-pink/10 rounded-full animate-spin" style={{animationDuration: '8s'}}></div>
+      <div
+        className="absolute bottom-1/3 -left-20 w-48 h-48 bg-gradient-to-br from-app-blue/20 to-white/10 rounded-full animate-bounce"
+        style={{ animationDuration: "3s" }}
+      ></div>
+      <div
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-app-purple/10 to-app-pink/10 rounded-full animate-spin"
+        style={{ animationDuration: "8s" }}
+      ></div>
 
       {/* Header */}
       <div className="relative z-10 pt-12 pb-8">
         <div className="flex items-center justify-between px-6">
-          <Link to="/" className="text-white hover:scale-110 transition-transform duration-300">
+          <Link
+            to="/"
+            className="text-white hover:scale-110 transition-transform duration-300"
+          >
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-white drop-shadow-lg">Connexion</h1>
+            <h1 className="text-2xl font-bold text-white drop-shadow-lg">
+              Connexion
+            </h1>
             <p className="text-white/80 text-sm mt-1">Accédez à votre espace</p>
           </div>
           <div className="w-6"></div>
@@ -149,7 +167,10 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email
               </label>
               <div className="relative">
@@ -168,7 +189,10 @@ export default function Login() {
 
             {/* Password field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Mot de passe
               </label>
               <div className="relative">
@@ -187,7 +211,11 @@ export default function Login() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -220,8 +248,8 @@ export default function Login() {
           <div className="text-center">
             <p className="text-gray-600 text-sm">
               Pas encore de compte ?{" "}
-              <Link 
-                to="/signup" 
+              <Link
+                to="/signup"
                 className="text-app-purple font-semibold hover:text-app-pink transition-colors duration-300"
               >
                 Créer un compte

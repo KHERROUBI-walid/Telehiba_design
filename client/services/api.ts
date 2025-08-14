@@ -61,10 +61,10 @@ interface RegisterRequest {
   password: string;
   nom: string;
   prenom: string;
-  type_utilisateur: 'famille' | 'vendeur' | 'donateur';
+  type_utilisateur: "famille" | "vendeur" | "donateur";
   telephone?: string;
   ville?: string;
-  civilite?: 'M.' | 'Mme' | 'Mlle';
+  civilite?: "M." | "Mme" | "Mlle";
   adresse?: string;
   code_postal?: string;
   pays?: string;
@@ -343,7 +343,7 @@ class ApiService {
 
   private handleDemoLogin(credentials: LoginRequest): AuthResponse {
     const email = credentials.email.toLowerCase();
-    let type_utilisateur: 'famille' | 'vendeur' | 'donateur' = 'famille';
+    let type_utilisateur: "famille" | "vendeur" | "donateur" = "famille";
     let prenom = "Demo";
     let nom = "Utilisateur";
 
@@ -362,20 +362,20 @@ class ApiService {
     }
 
     const user: User = {
-      '@type': 'User',
+      "@type": "User",
       id: Date.now(),
       email: credentials.email,
       roles: [`ROLE_${type_utilisateur.toUpperCase()}`],
       type_utilisateur,
       nom,
       prenom,
-      civilite: 'M.',
-      ville: 'Demo City',
-      pays: 'France',
-      statut: 'actif',
+      civilite: "M.",
+      ville: "Demo City",
+      pays: "France",
+      statut: "actif",
       date_creation: new Date().toISOString(),
       date_mise_ajour: new Date().toISOString(),
-      is_verified: true
+      is_verified: true,
     };
 
     const token = `demo_token_${Date.now()}`;
@@ -409,11 +409,17 @@ class ApiService {
 
     // Name validation
     if (userData.nom.trim().length < 2 || userData.prenom.trim().length < 2) {
-      throw new Error("Le nom et prénom doivent contenir au moins 2 caractères");
+      throw new Error(
+        "Le nom et prénom doivent contenir au moins 2 caractères",
+      );
     }
 
     // Type utilisateur validation
-    const validTypes: Array<'famille' | 'vendeur' | 'donateur'> = ['famille', 'vendeur', 'donateur'];
+    const validTypes: Array<"famille" | "vendeur" | "donateur"> = [
+      "famille",
+      "vendeur",
+      "donateur",
+    ];
     if (!validTypes.includes(userData.type_utilisateur)) {
       throw new Error("Type d'utilisateur invalide");
     }
@@ -431,7 +437,7 @@ class ApiService {
         civilite: userData.civilite,
         adresse: userData.adresse,
         code_postal: userData.code_postal,
-        pays: userData.pays || 'France'
+        pays: userData.pays || "France",
       }),
     });
 

@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Heart, ShoppingCart, Store, Gift } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  ArrowLeft,
+  Heart,
+  ShoppingCart,
+  Store,
+  Gift,
+} from "lucide-react";
 import { useAuth, UserRole } from "../context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,9 +34,11 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
     telephone: "",
-    ville: ""
+    ville: "",
   });
-  const [selectedRole, setSelectedRole] = useState<'famille' | 'vendeur' | 'donateur' | null>(null);
+  const [selectedRole, setSelectedRole] = useState<
+    "famille" | "vendeur" | "donateur" | null
+  >(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { signup, isLoading } = useAuth();
@@ -34,8 +47,8 @@ export default function SignUp() {
 
   // Pre-select role from URL parameter
   useEffect(() => {
-    const roleParam = searchParams.get('role') as UserRole;
-    if (roleParam && ['family', 'vendor', 'donator'].includes(roleParam)) {
+    const roleParam = searchParams.get("role") as UserRole;
+    if (roleParam && ["family", "vendor", "donator"].includes(roleParam)) {
       setSelectedRole(roleParam);
     }
   }, [searchParams]);
@@ -46,49 +59,54 @@ export default function SignUp() {
       label: "Famille",
       description: "J'achète des produits pour ma famille",
       icon: <ShoppingCart className="w-6 h-6" />,
-      gradient: "from-green-400 to-blue-500"
+      gradient: "from-green-400 to-blue-500",
     },
     {
       value: "vendor",
       label: "Vendeur",
       description: "Je vends des produits alimentaires",
       icon: <Store className="w-6 h-6" />,
-      gradient: "from-orange-400 to-red-500"
+      gradient: "from-orange-400 to-red-500",
     },
     {
       value: "donator",
       label: "Donateur",
       description: "J'aide les familles en payant leurs commandes",
       icon: <Gift className="w-6 h-6" />,
-      gradient: "from-purple-400 to-pink-500"
-    }
+      gradient: "from-purple-400 to-pink-500",
+    },
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validation
     if (!selectedRole) {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Veuillez sélectionner votre type de compte"
+        description: "Veuillez sélectionner votre type de compte",
       });
       return;
     }
 
-    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Veuillez remplir tous les champs"
+        description: "Veuillez remplir tous les champs",
       });
       return;
     }
@@ -97,7 +115,7 @@ export default function SignUp() {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Les mots de passe ne correspondent pas"
+        description: "Les mots de passe ne correspondent pas",
       });
       return;
     }
@@ -106,24 +124,29 @@ export default function SignUp() {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Le mot de passe doit contenir au moins 6 caractères"
+        description: "Le mot de passe doit contenir au moins 6 caractères",
       });
       return;
     }
 
-    const success = await signup(formData.email, formData.password, formData.name, selectedRole);
-    
+    const success = await signup(
+      formData.email,
+      formData.password,
+      formData.name,
+      selectedRole,
+    );
+
     if (success) {
       toast({
         title: "Compte cr��é avec succès",
-        description: "Bienvenue ! Votre compte a été créé."
+        description: "Bienvenue ! Votre compte a été créé.",
       });
       navigate("/");
     } else {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Un compte avec cet email existe déjà"
+        description: "Un compte avec cet email existe déjà",
       });
     }
   };
@@ -132,18 +155,31 @@ export default function SignUp() {
     <div className="min-h-screen bg-gradient-to-br from-app-pink via-app-purple to-app-blue relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute top-1/4 -right-20 w-64 h-64 bg-gradient-to-br from-white/10 to-app-pink/20 rounded-full animate-pulse"></div>
-      <div className="absolute bottom-1/3 -left-20 w-48 h-48 bg-gradient-to-br from-app-blue/20 to-white/10 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-app-purple/10 to-app-pink/10 rounded-full animate-spin" style={{animationDuration: '8s'}}></div>
+      <div
+        className="absolute bottom-1/3 -left-20 w-48 h-48 bg-gradient-to-br from-app-blue/20 to-white/10 rounded-full animate-bounce"
+        style={{ animationDuration: "3s" }}
+      ></div>
+      <div
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-app-purple/10 to-app-pink/10 rounded-full animate-spin"
+        style={{ animationDuration: "8s" }}
+      ></div>
 
       {/* Header */}
       <div className="relative z-10 pt-12 pb-8">
         <div className="flex items-center justify-between px-6">
-          <Link to="/login" className="text-white hover:scale-110 transition-transform duration-300">
+          <Link
+            to="/login"
+            className="text-white hover:scale-110 transition-transform duration-300"
+          >
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-white drop-shadow-lg">Créer un compte</h1>
-            <p className="text-white/80 text-sm mt-1">Rejoignez la communauté</p>
+            <h1 className="text-2xl font-bold text-white drop-shadow-lg">
+              Créer un compte
+            </h1>
+            <p className="text-white/80 text-sm mt-1">
+              Rejoignez la communauté
+            </p>
           </div>
           <div className="w-6"></div>
         </div>
@@ -180,12 +216,18 @@ export default function SignUp() {
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 bg-gradient-to-r ${type.gradient} rounded-xl flex items-center justify-center text-white shadow-lg`}>
+                      <div
+                        className={`w-12 h-12 bg-gradient-to-r ${type.gradient} rounded-xl flex items-center justify-center text-white shadow-lg`}
+                      >
                         {type.icon}
                       </div>
                       <div className="text-left flex-1">
-                        <h3 className="font-semibold text-gray-800">{type.label}</h3>
-                        <p className="text-sm text-gray-600">{type.description}</p>
+                        <h3 className="font-semibold text-gray-800">
+                          {type.label}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {type.description}
+                        </p>
                       </div>
                       {selectedRole === type.value && (
                         <div className="w-6 h-6 bg-app-purple rounded-full flex items-center justify-center">
@@ -200,7 +242,10 @@ export default function SignUp() {
 
             {/* Name field */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Nom complet
               </label>
               <div className="relative">
@@ -220,7 +265,10 @@ export default function SignUp() {
 
             {/* Email field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email
               </label>
               <div className="relative">
@@ -240,7 +288,10 @@ export default function SignUp() {
 
             {/* Password field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Mot de passe
               </label>
               <div className="relative">
@@ -260,14 +311,21 @@ export default function SignUp() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
 
             {/* Confirm Password field */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Confirmer le mot de passe
               </label>
               <div className="relative">
@@ -287,7 +345,11 @@ export default function SignUp() {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -320,8 +382,8 @@ export default function SignUp() {
           <div className="text-center">
             <p className="text-gray-600 text-sm">
               Déjà un compte ?{" "}
-              <Link 
-                to="/login" 
+              <Link
+                to="/login"
                 className="text-app-purple font-semibold hover:text-app-pink transition-colors duration-300"
               >
                 Se connecter
