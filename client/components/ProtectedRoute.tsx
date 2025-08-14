@@ -25,15 +25,18 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // If user is authenticated but doesn't have the required role
-  if (isAuthenticated && allowedRoles.length > 0 && user && !allowedRoles.includes(user.role)) {
-    // Redirect to appropriate dashboard based on user role
-    const roleRedirects: Record<UserRole, string> = {
-      family: "/",
-      vendor: "/vendor-dashboard",
-      donator: "/donator-dashboard"
-    };
-    
-    return <Navigate to={roleRedirects[user.role]} replace />;
+  if (isAuthenticated && allowedRoles.length > 0 && user && user.type_utilisateur) {
+    const userRole = ROLE_MAPPING[user.type_utilisateur];
+    if (!allowedRoles.includes(userRole)) {
+      // Redirect to appropriate dashboard based on user role
+      const roleRedirects: Record<UserRole, string> = {
+        family: "/",
+        vendor: "/vendor-dashboard",
+        donator: "/donator-dashboard"
+      };
+
+      return <Navigate to={roleRedirects[userRole]} replace />;
+    }
   }
 
   // If all checks pass, render the component
