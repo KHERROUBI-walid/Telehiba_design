@@ -98,7 +98,8 @@ export default function SignUp() {
     }
 
     if (
-      !formData.name ||
+      !formData.prenom ||
+      !formData.nom ||
       !formData.email ||
       !formData.password ||
       !formData.confirmPassword
@@ -106,7 +107,7 @@ export default function SignUp() {
       toast({
         variant: "destructive",
         title: "Erreur",
-        description: "Veuillez remplir tous les champs",
+        description: "Veuillez remplir tous les champs requis",
       });
       return;
     }
