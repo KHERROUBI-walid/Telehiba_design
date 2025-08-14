@@ -63,7 +63,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const { isAuthenticated, user } = useAuth();
 
   const refreshCart = async () => {
-    if (!isAuthenticated || user?.role !== 'family') {
+    if (!isAuthenticated || user?.type_utilisateur !== 'famille') {
       setCart([]);
       return;
     }
@@ -81,7 +81,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const addToCart = async (product: Product) => {
-    if (!isAuthenticated || user?.role !== 'family') {
+    if (!isAuthenticated || user?.type_utilisateur !== 'famille') {
       console.warn("Only families can add items to cart");
       return;
     }
@@ -112,7 +112,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const removeFromCart = async (productId: number) => {
-    if (!isAuthenticated || user?.role !== 'family') {
+    if (!isAuthenticated || user?.type_utilisateur !== 'famille') {
       console.warn("Only families can modify cart");
       return;
     }
@@ -146,7 +146,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const clearItemFromCart = async (productId: number) => {
-    if (!isAuthenticated || user?.role !== 'family') {
+    if (!isAuthenticated || user?.type_utilisateur !== 'famille') {
       console.warn("Only families can modify cart");
       return;
     }
@@ -165,7 +165,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const clearCart = async () => {
-    if (!isAuthenticated || user?.role !== 'family') {
+    if (!isAuthenticated || user?.type_utilisateur !== 'famille') {
       console.warn("Only families can modify cart");
       return;
     }
