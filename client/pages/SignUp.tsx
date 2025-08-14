@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 interface UserTypeOption {
-  value: UserRole;
+  value: 'famille' | 'vendeur' | 'donateur';
   label: string;
   description: string;
   icon: React.ReactNode;
