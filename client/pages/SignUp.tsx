@@ -17,10 +17,13 @@ interface UserTypeOption {
 export default function SignUp() {
   const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({
-    name: "",
+    prenom: "",
+    nom: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    telephone: "",
+    ville: ""
   });
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [showPassword, setShowPassword] = useState(false);
