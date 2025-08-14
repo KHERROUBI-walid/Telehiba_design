@@ -96,8 +96,8 @@ const Header: React.FC<HeaderProps> = ({
                     <>
                       <div className="px-4 py-2 border-b border-gray-200">
                         <p className="text-sm text-gray-500">Connecté en tant que</p>
-                        <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
-                        <p className="text-xs text-app-purple capitalize">{user?.role}</p>
+                        <p className="text-sm font-semibold text-gray-800">{user?.prenom} {user?.nom}</p>
+                        <p className="text-xs text-app-purple capitalize">{user?.type_utilisateur}</p>
                       </div>
                       <button
                         onClick={handleLogout}
