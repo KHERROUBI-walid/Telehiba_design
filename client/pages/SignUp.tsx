@@ -55,21 +55,21 @@ export default function SignUp() {
 
   const userTypes: UserTypeOption[] = [
     {
-      value: "family",
+      value: "famille",
       label: "Famille",
       description: "J'achète des produits pour ma famille",
       icon: <ShoppingCart className="w-6 h-6" />,
       gradient: "from-green-400 to-blue-500",
     },
     {
-      value: "vendor",
+      value: "vendeur",
       label: "Vendeur",
       description: "Je vends des produits alimentaires",
       icon: <Store className="w-6 h-6" />,
       gradient: "from-orange-400 to-red-500",
     },
     {
-      value: "donator",
+      value: "donateur",
       label: "Donateur",
       description: "J'aide les familles en payant leurs commandes",
       icon: <Gift className="w-6 h-6" />,
