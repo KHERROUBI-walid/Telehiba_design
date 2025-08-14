@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { validateEmail, sanitizeInput, checkRateLimit, recordAttempt } from "../utils/security";
+import { ROLE_MAPPING } from "../types/api";
 import DemoInstructions from "../components/common/DemoInstructions";
 
 export default function Login() {
