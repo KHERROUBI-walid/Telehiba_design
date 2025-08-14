@@ -324,6 +324,12 @@ class ApiService {
 
       return response.data;
     } catch (error) {
+      console.error("❌ Erreur login:", {
+        error: error.message,
+        status: error.status || 'N/A',
+        credentials: { email: credentials.email, passwordLength: credentials.password.length }
+      });
+
       // Increment failed attempts
       const newAttemptCount = attemptCount + 1;
       localStorage.setItem("login_attempts", newAttemptCount.toString());
@@ -331,6 +337,7 @@ class ApiService {
 
       // If API error and we have demo credentials, try demo login
       if (this.isDemoCredentials(credentials)) {
+        console.log("🎭 Utilisation des identifiants de démo");
         return this.handleDemoLogin(credentials);
       }
 
