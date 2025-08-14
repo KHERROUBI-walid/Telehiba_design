@@ -1,25 +1,9 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { apiService } from "../services/api";
 
-export type UserRole = "family" | "vendor" | "donator";
+import { User, ROLE_MAPPING } from "../types/api";
 
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-  role: UserRole;
-  avatar?: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  // Vendor specific fields
-  businessName?: string;
-  specialty?: string;
-  rating?: number;
-  // Donator specific fields
-  totalDonations?: number;
-  donationsCount?: number;
-}
+export type UserRole = "family" | "vendor" | "donator";
 
 interface AuthContextType {
   user: User | null;
