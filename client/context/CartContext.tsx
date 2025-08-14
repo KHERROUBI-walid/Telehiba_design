@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { apiService } from "../services/api";
 import { useAuth } from "./AuthContext";
 
@@ -63,7 +69,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const { isAuthenticated, user } = useAuth();
 
   const refreshCart = async () => {
-    if (!isAuthenticated || user?.type_utilisateur !== 'famille') {
+    if (!isAuthenticated || user?.type_utilisateur !== "famille") {
       setCart([]);
       return;
     }
@@ -81,7 +87,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const addToCart = async (product: Product) => {
-    if (!isAuthenticated || user?.type_utilisateur !== 'famille') {
+    if (!isAuthenticated || user?.type_utilisateur !== "famille") {
       console.warn("Only families can add items to cart");
       return;
     }
@@ -92,7 +98,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
       // Update local cart state optimistically
       setCart((prev) => {
-        const existingItem = prev.find((item) => item.product.id === product.id);
+        const existingItem = prev.find(
+          (item) => item.product.id === product.id,
+        );
         if (existingItem) {
           return prev.map((item) =>
             item.product.id === product.id
@@ -112,7 +120,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const removeFromCart = async (productId: number) => {
-    if (!isAuthenticated || user?.type_utilisateur !== 'famille') {
+    if (!isAuthenticated || user?.type_utilisateur !== "famille") {
       console.warn("Only families can modify cart");
       return;
     }
@@ -129,7 +137,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             item.product.id === productId
               ? { ...item, quantity: item.quantity - 1 }
               : item,
-          )
+          ),
         );
       } else {
         // Remove item completely
@@ -146,7 +154,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const clearItemFromCart = async (productId: number) => {
-    if (!isAuthenticated || user?.type_utilisateur !== 'famille') {
+    if (!isAuthenticated || user?.type_utilisateur !== "famille") {
       console.warn("Only families can modify cart");
       return;
     }
@@ -165,7 +173,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const clearCart = async () => {
-    if (!isAuthenticated || user?.type_utilisateur !== 'famille') {
+    if (!isAuthenticated || user?.type_utilisateur !== "famille") {
       console.warn("Only families can modify cart");
       return;
     }
@@ -205,7 +213,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   // Load cart when user authentication changes
   useEffect(() => {
-    if (isAuthenticated && user?.type_utilisateur === 'famille') {
+    if (isAuthenticated && user?.type_utilisateur === "famille") {
       refreshCart();
     } else {
       setCart([]);

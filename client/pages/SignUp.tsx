@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 interface UserTypeOption {
-  value: 'famille' | 'vendeur' | 'donateur';
+  value: "famille" | "vendeur" | "donateur";
   label: string;
   description: string;
   icon: React.ReactNode;
@@ -47,7 +47,10 @@ export default function SignUp() {
 
   // Pre-select role from URL parameter
   useEffect(() => {
-    const roleParam = searchParams.get("type") as 'famille' | 'vendeur' | 'donateur';
+    const roleParam = searchParams.get("type") as
+      | "famille"
+      | "vendeur"
+      | "donateur";
     if (roleParam && ["famille", "vendeur", "donateur"].includes(roleParam)) {
       setSelectedRole(roleParam);
     }

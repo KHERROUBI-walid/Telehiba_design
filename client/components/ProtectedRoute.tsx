@@ -14,7 +14,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requireAuth = true,
   allowedRoles = [],
-  redirectTo = "/login"
+  redirectTo = "/login",
 }) => {
   const { user, isAuthenticated } = useAuth();
   const location = useLocation();
@@ -26,14 +26,19 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // If user is authenticated but doesn't have the required role
-  if (isAuthenticated && allowedRoles.length > 0 && user && user.type_utilisateur) {
+  if (
+    isAuthenticated &&
+    allowedRoles.length > 0 &&
+    user &&
+    user.type_utilisateur
+  ) {
     const userRole = ROLE_MAPPING[user.type_utilisateur];
     if (!allowedRoles.includes(userRole)) {
       // Redirect to appropriate dashboard based on user role
       const roleRedirects: Record<UserRole, string> = {
         family: "/",
         vendor: "/vendor-dashboard",
-        donator: "/donator-dashboard"
+        donator: "/donator-dashboard",
       };
 
       return <Navigate to={roleRedirects[userRole]} replace />;
@@ -45,33 +50,35 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 };
 
 // Specific role-based protection components for easier use
-export const FamilyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ProtectedRoute allowedRoles={["family"]}>{children}</ProtectedRoute>
-);
+export const FamilyRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => <ProtectedRoute allowedRoles={["family"]}>{children}</ProtectedRoute>;
 
-export const VendorRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ProtectedRoute allowedRoles={["vendor"]}>{children}</ProtectedRoute>
-);
+export const VendorRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => <ProtectedRoute allowedRoles={["vendor"]}>{children}</ProtectedRoute>;
 
-export const DonatorRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ProtectedRoute allowedRoles={["donator"]}>{children}</ProtectedRoute>
-);
+export const DonatorRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => <ProtectedRoute allowedRoles={["donator"]}>{children}</ProtectedRoute>;
 
 // Component for routes that should only be accessible when NOT authenticated
-export const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { user, isAuthenticated } = useAuth();
-  
+
   if (isAuthenticated && user) {
     // Redirect authenticated users to their appropriate dashboard
     const roleRedirects: Record<UserRole, string> = {
       family: "/",
       vendor: "/vendor-dashboard",
-      donator: "/donator-dashboard"
+      donator: "/donator-dashboard",
     };
-    
+
     return <Navigate to={roleRedirects[user.role]} replace />;
   }
-  
+
   return <>{children}</>;
 };
 

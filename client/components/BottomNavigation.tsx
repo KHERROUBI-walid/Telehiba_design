@@ -1,5 +1,15 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, List, ShoppingCart, MessageCircle, User, LogIn, Store, Gift, Package } from "lucide-react";
+import {
+  Home,
+  List,
+  ShoppingCart,
+  MessageCircle,
+  User,
+  LogIn,
+  Store,
+  Gift,
+  Package,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 interface NavigationItem {
@@ -35,9 +45,7 @@ export default function BottomNavigation({
       ];
     }
 
-    const baseItems = [
-      { to: "/", icon: Home, label: "Accueil" },
-    ];
+    const baseItems = [{ to: "/", icon: Home, label: "Accueil" }];
 
     switch (user?.type_utilisateur) {
       case "famille":
@@ -69,34 +77,42 @@ export default function BottomNavigation({
   const navigationItems = getNavigationItems();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40" role="navigation" aria-label="Navigation principale">
+    <nav
+      className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40"
+      role="navigation"
+      aria-label="Navigation principale"
+    >
       <div className="flex items-center justify-around py-3 relative">
         {/* Left side navigation items */}
-        {navigationItems.slice(0, Math.ceil(navigationItems.length / 2)).map((item, index) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className={`flex flex-col items-center gap-1 px-4 transition-colors focus:outline-none focus:ring-2 focus:ring-app-purple/50 rounded-lg ${
-              isActive(item.to)
-                ? "text-app-purple"
-                : "text-gray-400 hover:text-gray-600"
-            }`}
-            aria-label={item.label}
-            aria-current={isActive(item.to) ? "page" : undefined}
-          >
-            <item.icon className="w-6 h-6" aria-hidden="true" />
-            <span className={`text-xs ${isActive(item.to) ? "font-medium" : ""}`}>
-              {item.label}
-            </span>
-          </Link>
-        ))}
+        {navigationItems
+          .slice(0, Math.ceil(navigationItems.length / 2))
+          .map((item, index) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`flex flex-col items-center gap-1 px-4 transition-colors focus:outline-none focus:ring-2 focus:ring-app-purple/50 rounded-lg ${
+                isActive(item.to)
+                  ? "text-app-purple"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+              aria-label={item.label}
+              aria-current={isActive(item.to) ? "page" : undefined}
+            >
+              <item.icon className="w-6 h-6" aria-hidden="true" />
+              <span
+                className={`text-xs ${isActive(item.to) ? "font-medium" : ""}`}
+              >
+                {item.label}
+              </span>
+            </Link>
+          ))}
 
         {/* Cart button in center for families */}
         {isAuthenticated && user?.type_utilisateur === "famille" && (
           <button
             onClick={onCartClick}
             className="bg-app-yellow w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-app-yellow/50 transition-colors relative mx-2"
-            aria-label={`Panier (${cartItemCount} article${cartItemCount > 1 ? 's' : ''})`}
+            aria-label={`Panier (${cartItemCount} article${cartItemCount > 1 ? "s" : ""})`}
           >
             <ShoppingCart className="w-7 h-7 text-white" aria-hidden="true" />
             {cartItemCount > 0 && (
@@ -111,24 +127,28 @@ export default function BottomNavigation({
         )}
 
         {/* Right side navigation items */}
-        {navigationItems.slice(Math.ceil(navigationItems.length / 2)).map((item, index) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className={`flex flex-col items-center gap-1 px-4 transition-colors focus:outline-none focus:ring-2 focus:ring-app-purple/50 rounded-lg ${
-              isActive(item.to)
-                ? "text-app-purple"
-                : "text-gray-400 hover:text-gray-600"
-            }`}
-            aria-label={item.label}
-            aria-current={isActive(item.to) ? "page" : undefined}
-          >
-            <item.icon className="w-6 h-6" aria-hidden="true" />
-            <span className={`text-xs ${isActive(item.to) ? "font-medium" : ""}`}>
-              {item.label}
-            </span>
-          </Link>
-        ))}
+        {navigationItems
+          .slice(Math.ceil(navigationItems.length / 2))
+          .map((item, index) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`flex flex-col items-center gap-1 px-4 transition-colors focus:outline-none focus:ring-2 focus:ring-app-purple/50 rounded-lg ${
+                isActive(item.to)
+                  ? "text-app-purple"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+              aria-label={item.label}
+              aria-current={isActive(item.to) ? "page" : undefined}
+            >
+              <item.icon className="w-6 h-6" aria-hidden="true" />
+              <span
+                className={`text-xs ${isActive(item.to) ? "font-medium" : ""}`}
+              >
+                {item.label}
+              </span>
+            </Link>
+          ))}
       </div>
     </nav>
   );
