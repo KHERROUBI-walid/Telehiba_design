@@ -205,7 +205,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   // Load cart when user authentication changes
   useEffect(() => {
-    if (isAuthenticated && user?.role === 'family') {
+    if (isAuthenticated && user?.type_utilisateur === 'famille') {
       refreshCart();
     } else {
       setCart([]);
