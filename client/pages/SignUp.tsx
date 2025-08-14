@@ -133,7 +133,8 @@ export default function SignUp() {
     const success = await signup(
       formData.email,
       formData.password,
-      formData.name,
+      formData.nom,
+      formData.prenom,
       selectedRole,
     );
 
