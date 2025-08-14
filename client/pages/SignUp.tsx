@@ -25,7 +25,7 @@ export default function SignUp() {
     telephone: "",
     ville: ""
   });
-  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const [selectedRole, setSelectedRole] = useState<'famille' | 'vendeur' | 'donateur' | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { signup, isLoading } = useAuth();
