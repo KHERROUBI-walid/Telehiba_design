@@ -47,8 +47,8 @@ export default function SignUp() {
 
   // Pre-select role from URL parameter
   useEffect(() => {
-    const roleParam = searchParams.get("role") as UserRole;
-    if (roleParam && ["family", "vendor", "donator"].includes(roleParam)) {
+    const roleParam = searchParams.get("type") as 'famille' | 'vendeur' | 'donateur';
+    if (roleParam && ["famille", "vendeur", "donateur"].includes(roleParam)) {
       setSelectedRole(roleParam);
     }
   }, [searchParams]);
