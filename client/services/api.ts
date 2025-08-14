@@ -142,9 +142,9 @@ class ApiService {
 
     console.log("🌐 Requête API:", {
       url,
-      method: config.method || 'GET',
+      method: config.method || "GET",
       headers: config.headers,
-      body: options.body ? JSON.parse(options.body as string) : null
+      body: options.body ? JSON.parse(options.body as string) : null,
     });
 
     try {
@@ -153,7 +153,7 @@ class ApiService {
       console.log("📡 Réponse API:", {
         status: response.status,
         statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries())
+        headers: Object.fromEntries(response.headers.entries()),
       });
 
       let data;
@@ -314,7 +314,7 @@ class ApiService {
       console.log("🔐 Tentative de login avec:", {
         email: loginData.email,
         passwordLength: loginData.password.length,
-        apiUrl: API_BASE_URL + "/login"
+        apiUrl: API_BASE_URL + "/login",
       });
 
       const response = await this.makeRequest<AuthResponse>("/login", {
@@ -339,8 +339,11 @@ class ApiService {
     } catch (error) {
       console.error("❌ Erreur login:", {
         error: error.message,
-        status: error.status || 'N/A',
-        credentials: { email: credentials.email, passwordLength: credentials.password.length }
+        status: error.status || "N/A",
+        credentials: {
+          email: credentials.email,
+          passwordLength: credentials.password.length,
+        },
       });
 
       // Increment failed attempts
