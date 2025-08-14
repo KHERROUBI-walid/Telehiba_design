@@ -527,26 +527,9 @@ class ApiService {
       }
     }
 
-    // Transform API Platform User to frontend user format
+    // L'utilisateur est déjà dans le bon format depuis notre structure API Platform
     const user = response.data;
-    const fullName =
-      user.firstName && user.lastName
-        ? `${user.firstName} ${user.lastName}`
-        : user.firstName || user.lastName || user.email;
-
-    return {
-      id: user.id,
-      email: user.email,
-      name: fullName,
-      role: user.roles.includes("ROLE_VENDOR")
-        ? "vendor"
-        : user.roles.includes("ROLE_DONATOR")
-          ? "donator"
-          : "family",
-      phone: user.phone,
-      address: user.address,
-      city: user.city,
-    };
+    return user;
   }
 
   async updateProfile(
