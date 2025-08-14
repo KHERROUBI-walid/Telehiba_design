@@ -72,21 +72,7 @@ interface RegisterRequest {
 
 interface AuthResponse {
   token: string;
-  user: {
-    id: number;
-    email: string;
-    name: string;
-    role: UserRole;
-    avatar?: string;
-    phone?: string;
-    address?: string;
-    city?: string;
-    businessName?: string;
-    specialty?: string;
-    rating?: number;
-    totalDonations?: number;
-    donationsCount?: number;
-  };
+  user: User;
 }
 
 class ApiService {
