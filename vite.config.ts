@@ -15,14 +15,26 @@ export default defineConfig(({ mode }) => ({
         changeOrigin: true,
         secure: false,
         configure: (proxy, options) => {
-          proxy.on('proxyReq', (proxyReq, req, res) => {
-            console.log('🔄 Proxy request:', req.method, req.url, '→', proxyReq.getHeader('host'));
+          proxy.on("proxyReq", (proxyReq, req, res) => {
+            console.log(
+              "🔄 Proxy request:",
+              req.method,
+              req.url,
+              "→",
+              proxyReq.getHeader("host"),
+            );
           });
-          proxy.on('proxyRes', (proxyRes, req, res) => {
-            console.log('📡 Proxy response:', req.method, req.url, '←', proxyRes.statusCode);
+          proxy.on("proxyRes", (proxyRes, req, res) => {
+            console.log(
+              "📡 Proxy response:",
+              req.method,
+              req.url,
+              "←",
+              proxyRes.statusCode,
+            );
           });
-          proxy.on('error', (err, req, res) => {
-            console.log('❌ Proxy error:', err.message, 'for', req.url);
+          proxy.on("error", (err, req, res) => {
+            console.log("❌ Proxy error:", err.message, "for", req.url);
           });
         },
         rewrite: (path) => path.replace(/^\/api/, "/api"),

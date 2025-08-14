@@ -542,9 +542,7 @@ class ApiService {
     return user;
   }
 
-  async updateProfile(
-    profileData: Partial<User>,
-  ): Promise<User> {
+  async updateProfile(profileData: Partial<User>): Promise<User> {
     const response = await this.makeRequest<User>(`/users/${profileData.id}`, {
       method: "PUT",
       body: JSON.stringify({
