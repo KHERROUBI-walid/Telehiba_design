@@ -408,14 +408,14 @@ class ApiService {
     }
 
     // Name validation
-    if (userData.name.trim().length < 2) {
-      throw new Error("Le nom doit contenir au moins 2 caractères");
+    if (userData.nom.trim().length < 2 || userData.prenom.trim().length < 2) {
+      throw new Error("Le nom et prénom doivent contenir au moins 2 caractères");
     }
 
-    // Role validation
-    const validRoles: UserRole[] = ["family", "vendor", "donator"];
-    if (!validRoles.includes(userData.role)) {
-      throw new Error("Rôle utilisateur invalide");
+    // Type utilisateur validation
+    const validTypes: Array<'famille' | 'vendeur' | 'donateur'> = ['famille', 'vendeur', 'donateur'];
+    if (!validTypes.includes(userData.type_utilisateur)) {
+      throw new Error("Type d'utilisateur invalide");
     }
 
     const response = await this.makeRequest<AuthResponse>("/register", {
