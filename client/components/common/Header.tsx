@@ -44,8 +44,8 @@ const Header: React.FC<HeaderProps> = ({
             {title}
           </h1>
           <p className="text-xs text-white/80">
-            {subtitle || (isAuthenticated && user ? 
-              `Bonjour ${user.name} (${user.role === 'family' ? 'Famille' : user.role === 'vendor' ? 'Vendeur' : 'Donateur'})` :
+            {subtitle || (isAuthenticated && user ?
+              `Bonjour ${user.prenom} (${user.type_utilisateur === 'famille' ? 'Famille' : user.type_utilisateur === 'vendeur' ? 'Vendeur' : 'Donateur'})` :
               "Votre marketplace de confiance"
             )}
           </p>
