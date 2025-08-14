@@ -39,22 +39,22 @@ export default function BottomNavigation({
       { to: "/", icon: Home, label: "Accueil" },
     ];
 
-    switch (user?.role) {
-      case "family":
+    switch (user?.type_utilisateur) {
+      case "famille":
         return [
           ...baseItems,
           { to: "/orders", icon: List, label: "Commandes" },
           { to: "/chat", icon: MessageCircle, label: "Chat" },
           { to: "/profile", icon: User, label: "Profil" },
         ];
-      case "vendor":
+      case "vendeur":
         return [
           ...baseItems,
           { to: "/vendor-dashboard", icon: Store, label: "Boutique" },
           { to: "/vendor-orders", icon: Package, label: "Commandes" },
           { to: "/profile", icon: User, label: "Profil" },
         ];
-      case "donator":
+      case "donateur":
         return [
           ...baseItems,
           { to: "/donator-dashboard", icon: Gift, label: "Donations" },
