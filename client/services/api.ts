@@ -389,10 +389,11 @@ class ApiService {
     if (
       !userData.email ||
       !userData.password ||
-      !userData.name ||
-      !userData.role
+      !userData.nom ||
+      !userData.prenom ||
+      !userData.type_utilisateur
     ) {
-      throw new Error("Tous les champs sont requis");
+      throw new Error("Tous les champs requis doivent être remplis");
     }
 
     // Email validation
