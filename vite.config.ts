@@ -10,13 +10,13 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     proxy: {
       // Proxy API calls to Symfony server
-      '/api': {
-        target: 'http://127.0.0.1:8000',
+      "/api": {
+        target: "http://127.0.0.1:8000",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
-      }
-    }
+        rewrite: (path) => path.replace(/^\/api/, "/api"),
+      },
+    },
   },
   build: {
     outDir: "dist/spa",
