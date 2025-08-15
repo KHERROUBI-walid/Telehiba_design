@@ -635,7 +635,9 @@ class ApiService {
             name:
               vendeurUser?.prenom && vendeurUser?.nom
                 ? `${vendeurUser.prenom} ${vendeurUser.nom}`
-                : vendeurUser?.email || vendeur?.nom_societe || "Vendeur inconnu",
+                : vendeurUser?.email ||
+                  vendeur?.nom_societe ||
+                  "Vendeur inconnu",
             avatar: vendeurUser?.avatar || "/placeholder-avatar.jpg",
             city: vendeurUser?.ville || "Ville inconnue",
           },
@@ -721,15 +723,14 @@ class ApiService {
 
     try {
       const response = await this.makeRequest<Categorie[]>("/categories");
-      return response.data
-        .map((categorie) => ({
-          id: categorie.id,
-          name: categorie.nom_categorie,
-          description: categorie.description || "",
-          isActive: true,
-          icon: this.getCategoryIcon(categorie.nom_categorie),
-          gradient: this.getCategoryGradient(categorie.nom_categorie),
-        }));
+      return response.data.map((categorie) => ({
+        id: categorie.id,
+        name: categorie.nom_categorie,
+        description: categorie.description || "",
+        isActive: true,
+        icon: this.getCategoryIcon(categorie.nom_categorie),
+        gradient: this.getCategoryGradient(categorie.nom_categorie),
+      }));
     } catch (error) {
       console.warn("Failed to fetch categories:", error);
       return [];
