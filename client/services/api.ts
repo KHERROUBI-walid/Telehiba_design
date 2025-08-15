@@ -267,6 +267,13 @@ class ApiService {
         };
       }
     } catch (error) {
+      console.error("❌ Erreur dans makeRequest:", error);
+
+      // Handle abort/timeout errors
+      if (error.name === 'AbortError') {
+        throw new Error("Timeout: La requête a pris trop de temps à répondre");
+      }
+
       // Network or other errors
       if (
         error instanceof TypeError &&
@@ -453,7 +460,7 @@ class ApiService {
     // Name validation
     if (userData.nom.trim().length < 2 || userData.prenom.trim().length < 2) {
       throw new Error(
-        "Le nom et prénom doivent contenir au moins 2 caractères",
+        "Le nom et pr��nom doivent contenir au moins 2 caractères",
       );
     }
 
