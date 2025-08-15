@@ -422,7 +422,6 @@ class ApiService {
       civilite: "M.",
       ville: "Demo City",
       pays: "France",
-      statut: "actif",
       date_creation: new Date().toISOString(),
       date_mise_ajour: new Date().toISOString(),
       is_verified: true,
@@ -1052,8 +1051,6 @@ class ApiService {
     return {
       totalDonated: 0,
       familiesHelped: 0,
-      activeSponsorships: 0,
-      impactScore: 0,
     };
   }
 
