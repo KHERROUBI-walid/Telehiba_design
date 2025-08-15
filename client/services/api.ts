@@ -640,7 +640,7 @@ class ApiService {
             city: vendeurUser?.ville || "Ville inconnue",
           },
           description: produit.description || "",
-          inStock: produit.est_disponible && produit.quantite_dispo > 0
+          inStock: produit.est_disponible && produit.quantite_dispo > 0,
         };
       });
     } catch (error) {
