@@ -638,13 +638,10 @@ class ApiService {
                 : vendeurUser?.email ||
                   vendeur?.nom_societe ||
                   "Vendeur inconnu",
-            avatar: vendeurUser?.avatar || "/placeholder-avatar.jpg",
             city: vendeurUser?.ville || "Ville inconnue",
           },
-          rating: 4.5, // Default rating since not in schema
           description: produit.description || "",
-          inStock: produit.est_disponible && produit.quantite_dispo > 0,
-          unit: "pièce", // Default unit
+          inStock: produit.est_disponible && produit.quantite_dispo > 0
         };
       });
     } catch (error) {
@@ -666,9 +663,6 @@ class ApiService {
       category: produit.categorie.nom_categorie,
       description: produit.description,
       inStock: produit.est_disponible,
-      unit: "pièce",
-      rating: 4.5,
-      sales: 0,
     }));
   }
 
@@ -726,8 +720,6 @@ class ApiService {
       return response.data.map((categorie) => ({
         id: categorie.id,
         name: categorie.nom_categorie,
-        description: categorie.description || "",
-        isActive: true,
         icon: this.getCategoryIcon(categorie.nom_categorie),
         gradient: this.getCategoryGradient(categorie.nom_categorie),
       }));
@@ -824,12 +816,8 @@ class ApiService {
         return {
           id: vendeur.id,
           name: userName,
-          avatar: user?.avatar || "/placeholder-avatar.jpg",
           city: user?.ville || "Ville inconnue",
-          specialty: "Commerce général",
-          rating: 4.5,
           businessName: vendeur.nom_societe,
-          gradient: "from-app-purple to-app-sky", // Default gradient
         };
       });
     } catch (error) {
@@ -873,9 +861,6 @@ class ApiService {
               ? `${familleUser.prenom} ${familleUser.nom}`
               : familleUser?.email || "Client",
           customerPhone: familleUser?.telephone || "",
-          customerAvatar: familleUser?.avatar || "/placeholder-avatar.jpg",
-          donatorName: "Donateur généreux",
-          donatorAvatar: "/placeholder-donator.jpg",
           items:
             commande.ligneProduits?.map((ligne) => {
               const produit =
@@ -885,7 +870,7 @@ class ApiService {
                 name: produit?.nom_produit || "Produit",
                 price: ligne.prix_unitaire,
                 quantity: ligne.quantite,
-                image: produit?.image_url || "/placeholder-product.jpg",
+                image: produit?.image_url || "",
               };
             }) || [],
           total: commande.total_commande_v,
@@ -995,17 +980,10 @@ class ApiService {
         return {
           id: famille.id.toString(),
           name: familyName,
-          avatar: user?.avatar || "/placeholder-family.jpg",
           city: user?.ville || "Ville inconnue",
           memberCount: famille.nombre_membres || 4,
           monthlyNeed: famille.revenu_mensuel || 500,
           currentNeed: Math.floor((famille.revenu_mensuel || 500) * 0.3),
-          story: "Cette famille a besoin de votre aide.",
-          isSponsored: false,
-          urgencyLevel: "medium" as "low" | "medium" | "high",
-          totalReceived: 0,
-          children: Math.max(0, (famille.nombre_membres || 4) - 2),
-          verified: true,
         };
       });
     } catch (error) {
@@ -1046,7 +1024,7 @@ class ApiService {
       familyCity: commande.famille.user.ville,
       vendorName: "Vendeur",
       amount: commande.total || 0,
-      urgency: "medium",
+      urgency: "normal",
       requestDate: commande.date_creation,
     }));
   }
