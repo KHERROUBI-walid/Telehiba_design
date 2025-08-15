@@ -336,24 +336,10 @@ class ApiService {
         apiUrl: API_BASE_URL + "/login_check",
       });
 
-<<<<<<< HEAD
       const response = await this.makeRequest<AuthResponse>("/login_check", {
-=======
-      // Ajout d'un timeout spécifique pour le login
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => {
-        controller.abort();
-        console.log("⏰ Timeout de la requête de login après 10 secondes");
-      }, 10000);
-
-      const response = await this.makeRequest<AuthResponse>("/login", {
->>>>>>> refs/remotes/origin/main
         method: "POST",
         body: JSON.stringify(loginData),
-        signal: controller.signal,
       });
-
-      clearTimeout(timeoutId);
 
       console.log("✅ Réponse login reçue:", response);
 
