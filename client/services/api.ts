@@ -22,7 +22,7 @@ const getApiBaseUrl = (): string => {
   // Always use the environment variable if set, regardless of environment
   if (import.meta.env.VITE_API_BASE_URL) {
     const url = import.meta.env.VITE_API_BASE_URL;
-    console.log("��� Using configured API URL:", url);
+    console.log("🔗 Using configured API URL:", url);
     return url;
   }
 
@@ -804,12 +804,10 @@ class ApiService {
     try {
       const params = new URLSearchParams();
       if (filters?.search) {
-        params.append("storeName", filters.search);
-        // Also search in store description
-        params.append("storeDescription", filters.search);
+        params.append("nom_societe", filters.search);
       }
       if (filters?.city) {
-        params.append("user.city", filters.city);
+        params.append("user.ville", filters.city);
       }
 
       const endpoint = `/vendeurs${params.toString() ? `?${params.toString()}` : ""}`;
@@ -818,18 +816,18 @@ class ApiService {
       return response.data.map((vendeur) => {
         const user = typeof vendeur.user === "object" ? vendeur.user : null;
         const userName =
-          user?.firstName && user?.lastName
-            ? `${user.firstName} ${user.lastName}`
+          user?.prenom && user?.nom
+            ? `${user.prenom} ${user.nom}`
             : user?.email || "Vendeur";
 
         return {
           id: vendeur.id,
           name: userName,
           avatar: user?.avatar || "/placeholder-avatar.jpg",
-          city: user?.city || "Ville inconnue",
-          specialty: vendeur.storeDescription || "Commerce général",
-          rating: vendeur.rating || 4.5,
-          businessName: vendeur.storeName,
+          city: user?.ville || "Ville inconnue",
+          specialty: "Commerce général",
+          rating: 4.5,
+          businessName: vendeur.nom_societe,
           gradient: "from-app-purple to-app-sky", // Default gradient
         };
       });
@@ -868,14 +866,14 @@ class ApiService {
           famille && typeof famille.user === "object" ? famille.user : null;
 
         return {
-          id: commande.orderNumber || commande.id.toString(),
+          id: commande.id.toString(),
           customerName:
-            familleUser?.firstName && familleUser?.lastName
-              ? `${familleUser.firstName} ${familleUser.lastName}`
+            familleUser?.prenom && familleUser?.nom
+              ? `${familleUser.prenom} ${familleUser.nom}`
               : familleUser?.email || "Client",
-          customerPhone: familleUser?.phone || "",
+          customerPhone: familleUser?.telephone || "",
           customerAvatar: familleUser?.avatar || "/placeholder-avatar.jpg",
-          donatorName: "Donateur généreut", // TODO: Get from paiement relation
+          donatorName: "Donateur généreux",
           donatorAvatar: "/placeholder-donator.jpg",
           items:
             commande.ligneProduits?.map((ligne) => {
@@ -883,17 +881,17 @@ class ApiService {
                 typeof ligne.produit === "object" ? ligne.produit : null;
               return {
                 id: produit?.id || 0,
-                name: produit?.name || "Produit",
-                price: ligne.unitPrice,
-                quantity: ligne.quantity,
-                image: produit?.images?.[0] || "/placeholder-product.jpg",
+                name: produit?.nom_produit || "Produit",
+                price: ligne.prix_unitaire,
+                quantity: ligne.quantite,
+                image: produit?.image_url || "/placeholder-product.jpg",
               };
             }) || [],
-          total: commande.totalAmount,
-          status: this.mapApiStatusToFrontend(commande.status),
-          orderDate: commande.createdAt,
-          pickupCode: commande.orderNumber, // Use order number as pickup code
-          notes: commande.notes || "",
+          total: commande.total_commande_v,
+          status: this.mapApiStatusToFrontend(commande.statut),
+          orderDate: commande.date_creation,
+          pickupCode: commande.id.toString(),
+          notes: "",
         };
       });
     } catch (error) {
