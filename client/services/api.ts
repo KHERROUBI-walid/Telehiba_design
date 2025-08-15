@@ -270,7 +270,7 @@ class ApiService {
       console.error("❌ Erreur dans makeRequest:", error);
 
       // Handle abort/timeout errors
-      if (error.name === 'AbortError') {
+      if (error.name === "AbortError") {
         throw new Error("Timeout: La requête a pris trop de temps à répondre");
       }
 
