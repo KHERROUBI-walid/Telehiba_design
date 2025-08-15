@@ -172,8 +172,19 @@ class ApiService {
 
       let data;
       try {
-        data = await response.json();
+        console.log("📖 Lecture du contenu de la réponse...");
+        const responseText = await response.text();
+        console.log("📄 Contenu brut:", responseText);
+
+        if (!responseText.trim()) {
+          console.log("⚠️ Réponse vide");
+          data = {};
+        } else {
+          data = JSON.parse(responseText);
+          console.log("✅ JSON parsé:", data);
+        }
       } catch (jsonError) {
+        console.error("❌ Erreur parsing JSON:", jsonError);
         if (response.status === 204) {
           // No content response is valid
           return {
