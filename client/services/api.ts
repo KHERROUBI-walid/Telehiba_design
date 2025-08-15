@@ -148,9 +148,23 @@ class ApiService {
     });
 
     try {
-      const response = await fetch(url, config);
+      // Ajouter un timeout pour éviter les blocages
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        console.log("⏰ Timeout de la requête API après 10 secondes");
+        controller.abort();
+      }, 10000);
 
-      console.log("📡 Réponse API:", {
+      const configWithTimeout = {
+        ...config,
+        signal: controller.signal,
+      };
+
+      console.log("🚀 Envoi de la requête...");
+      const response = await fetch(url, configWithTimeout);
+
+      clearTimeout(timeoutId);
+      console.log("📡 Réponse API reçue:", {
         status: response.status,
         statusText: response.statusText,
         headers: Object.fromEntries(response.headers.entries()),
