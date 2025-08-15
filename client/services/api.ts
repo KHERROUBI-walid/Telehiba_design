@@ -975,13 +975,11 @@ class ApiService {
       const params = new URLSearchParams();
       if (query) {
         // Search in user's first name, last name, or email
-        params.append("user.firstName", query);
+        params.append("user.prenom", query);
       }
       if (city && city !== "all") {
-        params.append("user.city", city);
+        params.append("user.ville", city);
       }
-      // Only show verified families
-      params.append("isVerified", "true");
 
       const endpoint = `/familles${params.toString() ? `?${params.toString()}` : ""}`;
       const response = await this.makeRequest<Famille[]>(endpoint);
@@ -989,28 +987,24 @@ class ApiService {
       return response.data.map((famille) => {
         const user = typeof famille.user === "object" ? famille.user : null;
         const familyName =
-          user?.firstName && user?.lastName
-            ? `Famille ${user.lastName}`
+          user?.prenom && user?.nom
+            ? `Famille ${user.nom}`
             : `Famille ${user?.email?.split("@")[0] || "Anonyme"}`;
 
         return {
           id: famille.id.toString(),
           name: familyName,
           avatar: user?.avatar || "/placeholder-family.jpg",
-          city: user?.city || "Ville inconnue",
-          memberCount: famille.familySize,
-          monthlyNeed: famille.monthlyIncome || 500,
-          currentNeed: Math.floor((famille.monthlyIncome || 500) * 0.3), // 30% of monthly income
-          story:
-            famille.needsDescription || "Cette famille a besoin de votre aide.",
-          isSponsored: false, // TODO: Check if famille has active donateurs
-          urgencyLevel: famille.priority.toLowerCase() as
-            | "low"
-            | "medium"
-            | "high",
-          totalReceived: 0, // TODO: Calculate from paiements
-          children: Math.max(0, famille.familySize - 2), // Adults assumed to be 2, rest are children
-          verified: famille.isVerified,
+          city: user?.ville || "Ville inconnue",
+          memberCount: famille.nombre_membres || 4,
+          monthlyNeed: famille.revenu_mensuel || 500,
+          currentNeed: Math.floor((famille.revenu_mensuel || 500) * 0.3),
+          story: "Cette famille a besoin de votre aide.",
+          isSponsored: false,
+          urgencyLevel: "medium" as "low" | "medium" | "high",
+          totalReceived: 0,
+          children: Math.max(0, (famille.nombre_membres || 4) - 2),
+          verified: true,
         };
       });
     } catch (error) {
@@ -1039,9 +1033,7 @@ class ApiService {
     const params = new URLSearchParams();
     params.append("status", "pending");
     if (filters?.city && filters.city !== "all")
-      params.append("commandeFamille.famille.user.city", filters.city);
-    if (filters?.urgency && filters.urgency !== "all")
-      params.append("commandeFamille.famille.urgencyLevel", filters.urgency);
+      params.append("famille.user.ville", filters.city);
 
     const endpoint = `/commande_familles${params.toString() ? `?${params.toString()}` : ""}`;
     const response = await this.makeRequest<CommandeFamille[]>(endpoint);
@@ -1049,12 +1041,12 @@ class ApiService {
     return response.data.map((commande) => ({
       id: commande.id.toString(),
       familyId: commande.famille.id.toString(),
-      familyName: commande.famille.user.name,
-      familyCity: commande.famille.user.city,
-      vendorName: "Vendeur", // Need to get from ligneProduits
-      amount: commande.total,
-      urgency: commande.famille.urgencyLevel,
-      requestDate: commande.orderDate,
+      familyName: `${commande.famille.user.prenom} ${commande.famille.user.nom}`,
+      familyCity: commande.famille.user.ville,
+      vendorName: "Vendeur",
+      amount: commande.total || 0,
+      urgency: "medium",
+      requestDate: commande.date_creation,
     }));
   }
 
@@ -1104,10 +1096,10 @@ class ApiService {
     try {
       // Get unique cities from users - API Platform filtering
       const response = await this.makeRequest<User[]>(
-        "/users?exists[city]=true",
+        "/users?exists[ville]=true",
       );
       const cities = [
-        ...new Set(response.data.map((user) => user.city).filter(Boolean)),
+        ...new Set(response.data.map((user) => user.ville).filter(Boolean)),
       ].sort();
       return cities;
     } catch (error) {
@@ -1164,7 +1156,7 @@ class ApiService {
         ...this.getAuthHeaders(),
         "Content-Type": "application/merge-patch+json",
       },
-      body: JSON.stringify({ phone }),
+      body: JSON.stringify({ telephone: phone }),
     });
     return response.data;
   }
