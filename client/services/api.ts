@@ -172,7 +172,7 @@ class ApiService {
 
       let data;
       try {
-        console.log("📖 Lecture du contenu de la réponse...");
+        console.log("���� Lecture du contenu de la réponse...");
         const responseText = await response.text();
         console.log("📄 Contenu brut:", responseText);
 
@@ -586,7 +586,7 @@ class ApiService {
     vendor?: number;
     city?: string;
     search?: string;
-  }): Promise<ProductFrontend[]> {
+  }): Promise<Produit[]> {
     // If API not available, return empty array
     if (!this.isApiAvailable()) {
       console.warn("API not available - returning empty products list");
