@@ -757,7 +757,6 @@ class ApiService {
       method: "POST",
       body: JSON.stringify({
         nom_categorie: categoryData.name,
-        description: categoryData.description,
       }),
     });
     return response.data;
@@ -770,7 +769,6 @@ class ApiService {
         method: "PUT",
         body: JSON.stringify({
           nom_categorie: categoryData.name,
-          description: categoryData.description,
         }),
       },
     );
