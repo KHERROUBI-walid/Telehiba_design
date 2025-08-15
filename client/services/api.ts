@@ -304,7 +304,7 @@ class ApiService {
         apiUrl: API_BASE_URL + "/login",
       });
 
-      const response = await this.makeRequest<AuthResponse>("/login", {
+      const response = await this.makeRequest<AuthResponse>("/login_check", {
         method: "POST",
         body: JSON.stringify(loginData),
       });
