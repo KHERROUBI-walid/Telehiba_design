@@ -674,12 +674,12 @@ class ApiService {
     const response = await this.makeRequest<Produit>("/produits", {
       method: "POST",
       body: JSON.stringify({
-        name: productData.name,
-        price: productData.price,
+        nom_produit: productData.name,
+        prix: productData.price,
         description: productData.description,
-        image: productData.image,
-        inStock: productData.inStock,
-        unit: productData.unit,
+        image_url: productData.image,
+        est_disponible: productData.inStock,
+        quantite_dispo: productData.quantity || 1,
         categorie: `/api/categories/${productData.categoryId}`,
         vendeur: `/api/vendeurs/${productData.vendorId}`,
       }),
@@ -691,12 +691,12 @@ class ApiService {
     const response = await this.makeRequest<Produit>(`/produits/${productId}`, {
       method: "PUT",
       body: JSON.stringify({
-        name: productData.name,
-        price: productData.price,
+        nom_produit: productData.name,
+        prix: productData.price,
         description: productData.description,
-        image: productData.image,
-        inStock: productData.inStock,
-        unit: productData.unit,
+        image_url: productData.image,
+        est_disponible: productData.inStock,
+        quantite_dispo: productData.quantity || 1,
         categorie: productData.categoryId
           ? `/api/categories/${productData.categoryId}`
           : undefined,
@@ -830,7 +830,7 @@ class ApiService {
           name: userName,
           avatar: user?.avatar || "/placeholder-avatar.jpg",
           city: user?.city || "Ville inconnue",
-          specialty: vendeur.storeDescription || "Commerce g��néral",
+          specialty: vendeur.storeDescription || "Commerce général",
           rating: vendeur.rating || 4.5,
           businessName: vendeur.storeName,
           gradient: "from-app-purple to-app-sky", // Default gradient
