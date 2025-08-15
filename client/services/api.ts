@@ -301,7 +301,7 @@ class ApiService {
       console.log("🔐 Tentative de login avec:", {
         email: loginData.email,
         passwordLength: loginData.password.length,
-        apiUrl: API_BASE_URL + "/login",
+        apiUrl: API_BASE_URL + "/login_check",
       });
 
       const response = await this.makeRequest<AuthResponse>("/login_check", {
