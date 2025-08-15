@@ -336,10 +336,24 @@ class ApiService {
         apiUrl: API_BASE_URL + "/login_check",
       });
 
+<<<<<<< HEAD
       const response = await this.makeRequest<AuthResponse>("/login_check", {
+=======
+      // Ajout d'un timeout spécifique pour le login
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+        console.log("⏰ Timeout de la requête de login après 10 secondes");
+      }, 10000);
+
+      const response = await this.makeRequest<AuthResponse>("/login", {
+>>>>>>> refs/remotes/origin/main
         method: "POST",
         body: JSON.stringify(loginData),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       console.log("✅ Réponse login reçue:", response);
 
@@ -559,57 +573,26 @@ class ApiService {
       }
     }
 
-    // Transform API Platform User to frontend user format
+    // L'utilisateur est déjà dans le bon format depuis notre structure API Platform
     const user = response.data;
-    const fullName =
-      user.firstName && user.lastName
-        ? `${user.firstName} ${user.lastName}`
-        : user.firstName || user.lastName || user.email;
-
-    return {
-      id: user.id,
-      email: user.email,
-      name: fullName,
-      role: user.roles.includes("ROLE_VENDOR")
-        ? "vendor"
-        : user.roles.includes("ROLE_DONATOR")
-          ? "donator"
-          : "family",
-      phone: user.phone,
-      address: user.address,
-      city: user.city,
-    };
+    return user;
   }
 
-  async updateProfile(
-    profileData: Partial<AuthResponse["user"]>,
-  ): Promise<AuthResponse["user"]> {
+  async updateProfile(profileData: Partial<User>): Promise<User> {
     const response = await this.makeRequest<User>(`/users/${profileData.id}`, {
       method: "PUT",
       body: JSON.stringify({
-        name: profileData.name,
-        phone: profileData.phone,
-        address: profileData.address,
-        city: profileData.city,
-        avatar: profileData.avatar,
+        nom: profileData.nom,
+        prenom: profileData.prenom,
+        telephone: profileData.telephone,
+        adresse: profileData.adresse,
+        ville: profileData.ville,
+        code_postal: profileData.code_postal,
+        pays: profileData.pays,
       }),
     });
 
-    const user = response.data;
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.roles.includes("ROLE_VENDOR")
-        ? "vendor"
-        : user.roles.includes("ROLE_DONATOR")
-          ? "donator"
-          : "family",
-      avatar: user.avatar,
-      phone: user.phone,
-      address: user.address,
-      city: user.city,
-    };
+    return response.data;
   }
 
   // Product endpoints
