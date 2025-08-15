@@ -599,12 +599,12 @@ class ApiService {
 
       // API Platform filtering - check if these exact parameter names work
       if (filters?.search) {
-        params.append("name", filters.search);
+        params.append("nom_produit", filters.search);
         // Also try searching in description
         params.append("description", filters.search);
       }
       if (filters?.category && filters.category !== "all") {
-        params.append("categorie.name", filters.category);
+        params.append("categorie.nom_categorie", filters.category);
       }
       if (filters?.vendor) {
         params.append("vendeur", filters.vendor.toString());
@@ -626,22 +626,22 @@ class ApiService {
 
         return {
           id: produit.id,
-          name: produit.name,
-          price: produit.price,
-          image: produit.images?.[0] || "/placeholder-product.jpg",
-          category: categorie?.name?.toLowerCase() || "unknown",
+          name: produit.nom_produit,
+          price: produit.prix,
+          image: produit.image_url || "/placeholder-product.jpg",
+          category: categorie?.nom_categorie?.toLowerCase() || "unknown",
           vendor: {
             id: vendeur?.id || 0,
             name:
-              vendeurUser?.firstName && vendeurUser?.lastName
-                ? `${vendeurUser.firstName} ${vendeurUser.lastName}`
-                : vendeurUser?.email || vendeur?.storeName || "Vendeur inconnu",
+              vendeurUser?.prenom && vendeurUser?.nom
+                ? `${vendeurUser.prenom} ${vendeurUser.nom}`
+                : vendeurUser?.email || vendeur?.nom_societe || "Vendeur inconnu",
             avatar: vendeurUser?.avatar || "/placeholder-avatar.jpg",
-            city: vendeurUser?.city || "Ville inconnue",
+            city: vendeurUser?.ville || "Ville inconnue",
           },
           rating: 4.5, // Default rating since not in schema
           description: produit.description || "",
-          inStock: produit.isActive && produit.stockQuantity > 0,
+          inStock: produit.est_disponible && produit.quantite_dispo > 0,
           unit: "pièce", // Default unit
         };
       });
@@ -658,15 +658,15 @@ class ApiService {
 
     return response.data.map((produit) => ({
       id: produit.id,
-      name: produit.name,
-      price: produit.price,
-      image: produit.image,
-      category: produit.categorie.name,
+      name: produit.nom_produit,
+      price: produit.prix,
+      image: produit.image_url,
+      category: produit.categorie.nom_categorie,
       description: produit.description,
-      inStock: produit.inStock,
-      unit: produit.unit,
-      rating: produit.rating || 4.5,
-      sales: produit.sales || 0,
+      inStock: produit.est_disponible,
+      unit: "pièce",
+      rating: 4.5,
+      sales: 0,
     }));
   }
 
@@ -830,7 +830,7 @@ class ApiService {
           name: userName,
           avatar: user?.avatar || "/placeholder-avatar.jpg",
           city: user?.city || "Ville inconnue",
-          specialty: vendeur.storeDescription || "Commerce général",
+          specialty: vendeur.storeDescription || "Commerce g��néral",
           rating: vendeur.rating || 4.5,
           businessName: vendeur.storeName,
           gradient: "from-app-purple to-app-sky", // Default gradient
