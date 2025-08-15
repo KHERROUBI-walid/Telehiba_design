@@ -22,7 +22,7 @@ const getApiBaseUrl = (): string => {
   // Always use the environment variable if set, regardless of environment
   if (import.meta.env.VITE_API_BASE_URL) {
     const url = import.meta.env.VITE_API_BASE_URL;
-    console.log("🔗 Using configured API URL:", url);
+    console.log("��� Using configured API URL:", url);
     return url;
   }
 
@@ -722,14 +722,13 @@ class ApiService {
     try {
       const response = await this.makeRequest<Categorie[]>("/categories");
       return response.data
-        .filter((categorie) => categorie.isActive)
         .map((categorie) => ({
           id: categorie.id,
-          name: categorie.name,
-          description: categorie.description,
-          isActive: categorie.isActive,
-          icon: this.getCategoryIcon(categorie.name),
-          gradient: this.getCategoryGradient(categorie.name),
+          name: categorie.nom_categorie,
+          description: categorie.description || "",
+          isActive: true,
+          icon: this.getCategoryIcon(categorie.nom_categorie),
+          gradient: this.getCategoryGradient(categorie.nom_categorie),
         }));
     } catch (error) {
       console.warn("Failed to fetch categories:", error);
@@ -764,9 +763,8 @@ class ApiService {
     const response = await this.makeRequest<Categorie>("/categories", {
       method: "POST",
       body: JSON.stringify({
-        name: categoryData.name,
+        nom_categorie: categoryData.name,
         description: categoryData.description,
-        isActive: categoryData.isActive,
       }),
     });
     return response.data;
@@ -778,9 +776,8 @@ class ApiService {
       {
         method: "PUT",
         body: JSON.stringify({
-          name: categoryData.name,
+          nom_categorie: categoryData.name,
           description: categoryData.description,
-          isActive: categoryData.isActive,
         }),
       },
     );
