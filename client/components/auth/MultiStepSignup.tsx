@@ -7,12 +7,12 @@ import { Label } from "../ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Progress } from "../ui/progress";
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  User, 
-  MapPin, 
-  Building, 
+import {
+  ArrowLeft,
+  ArrowRight,
+  User,
+  MapPin,
+  Building,
   Heart,
   Check,
   Mail,
@@ -20,7 +20,7 @@ import {
   Shield,
   UserCheck,
   Home,
-  Store
+  Store,
 } from "lucide-react";
 import { RegisterRequest } from "../../types/api";
 
@@ -93,7 +93,7 @@ export const MultiStepSignup: React.FC = () => {
   });
 
   const updateFormData = useCallback((updates: Partial<RegisterRequest>) => {
-    setFormData(prev => ({ ...prev, ...updates }));
+    setFormData((prev) => ({ ...prev, ...updates }));
     setError("");
   }, []);
 
@@ -104,10 +104,10 @@ export const MultiStepSignup: React.FC = () => {
       case 2:
         return Boolean(
           formData.email &&
-          formData.password &&
-          formData.nom &&
-          formData.prenom &&
-          formData.civilite
+            formData.password &&
+            formData.nom &&
+            formData.prenom &&
+            formData.civilite,
         );
       case 3:
         return Boolean(formData.ville);
@@ -116,7 +116,9 @@ export const MultiStepSignup: React.FC = () => {
           return Boolean(formData.nom_societe);
         }
         if (formData.type_utilisateur === "famille") {
-          return Boolean(formData.nombre_membres && formData.nombre_membres > 0);
+          return Boolean(
+            formData.nombre_membres && formData.nombre_membres > 0,
+          );
         }
         return true;
       default:
@@ -155,11 +157,13 @@ export const MultiStepSignup: React.FC = () => {
         formData.password,
         formData.nom,
         formData.prenom,
-        formData.type_utilisateur
+        formData.type_utilisateur,
       );
       setIsComplete(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur lors de l'inscription");
+      setError(
+        err instanceof Error ? err.message : "Erreur lors de l'inscription",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -168,20 +172,18 @@ export const MultiStepSignup: React.FC = () => {
   // Success component for account activation
   const SuccessContent = () => {
     const isDonator = formData.type_utilisateur === "donateur";
-    
+
     return (
       <div className="text-center space-y-6">
         <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto shadow-xl">
           <Check className="w-12 h-12 text-white" />
         </div>
-        
+
         <div>
           <h3 className="text-2xl font-bold text-gray-800 mb-2">
             🎉 Inscription réussie !
           </h3>
-          <p className="text-gray-600">
-            Votre compte a été créé avec succès
-          </p>
+          <p className="text-gray-600">Votre compte a été créé avec succès</p>
         </div>
 
         {isDonator ? (
@@ -193,10 +195,11 @@ export const MultiStepSignup: React.FC = () => {
               </h4>
             </div>
             <p className="text-green-700 text-sm leading-relaxed">
-              En tant que <strong>donateur</strong>, vous pouvez commencer à aider les familles 
-              immédiatement ! Votre compte est activé et vous pouvez faire des dons sans attendre.
+              En tant que <strong>donateur</strong>, vous pouvez commencer à
+              aider les familles immédiatement ! Votre compte est activé et vous
+              pouvez faire des dons sans attendre.
             </p>
-            <Button 
+            <Button
               onClick={() => navigate("/donator-dashboard")}
               className="w-full mt-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
             >
@@ -216,15 +219,20 @@ export const MultiStepSignup: React.FC = () => {
               <div className="flex items-start">
                 <Shield className="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
                 <p className="text-blue-700">
-                  <strong>Votre compte sera activé par un administrateur</strong> dans les plus brefs délais 
-                  pour garantir la sécurité de notre plateforme.
+                  <strong>
+                    Votre compte sera activé par un administrateur
+                  </strong>{" "}
+                  dans les plus brefs délais pour garantir la sécurité de notre
+                  plateforme.
                 </p>
               </div>
               <div className="flex items-start">
                 <Mail className="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
                 <p className="text-blue-700">
-                  <strong>Vous recevrez un email de confirmation</strong> à l'adresse{" "}
-                  <span className="font-medium">{formData.email}</span> dès l'activation.
+                  <strong>Vous recevrez un email de confirmation</strong> à
+                  l'adresse{" "}
+                  <span className="font-medium">{formData.email}</span> dès
+                  l'activation.
                 </p>
               </div>
             </div>
@@ -232,15 +240,15 @@ export const MultiStepSignup: React.FC = () => {
         )}
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => navigate("/")}
             className="flex items-center"
           >
             <Home className="w-4 h-4 mr-2" />
             Retour à l'accueil
           </Button>
-          <Button 
+          <Button
             onClick={() => navigate("/login")}
             className="bg-gradient-to-r from-app-purple to-app-pink hover:shadow-lg transform hover:scale-105 transition-all duration-300"
           >
@@ -262,12 +270,14 @@ export const MultiStepSignup: React.FC = () => {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Quel est votre rôle ?</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                Quel est votre rôle ?
+              </h3>
               <p className="text-gray-600 text-sm">
                 Sélectionnez le type de compte qui vous correspond
               </p>
             </div>
-            
+
             <div className="grid gap-4">
               {[
                 {
@@ -302,9 +312,10 @@ export const MultiStepSignup: React.FC = () => {
                   key={option.value}
                   className={`
                     relative overflow-hidden flex items-center p-6 border-2 rounded-2xl cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-lg
-                    ${formData.type_utilisateur === option.value
-                      ? `${option.borderColor} bg-gradient-to-r ${option.bgGradient} shadow-lg scale-105`
-                      : "border-gray-200 hover:border-gray-300 bg-white"
+                    ${
+                      formData.type_utilisateur === option.value
+                        ? `${option.borderColor} bg-gradient-to-r ${option.bgGradient} shadow-lg scale-105`
+                        : "border-gray-200 hover:border-gray-300 bg-white"
                     }
                   `}
                 >
@@ -313,21 +324,31 @@ export const MultiStepSignup: React.FC = () => {
                     name="type_utilisateur"
                     value={option.value}
                     checked={formData.type_utilisateur === option.value}
-                    onChange={(e) => updateFormData({ type_utilisateur: e.target.value as any })}
+                    onChange={(e) =>
+                      updateFormData({
+                        type_utilisateur: e.target.value as any,
+                      })
+                    }
                     className="sr-only"
                   />
-                  
+
                   {/* Background decoration */}
                   <div className="absolute top-0 right-0 w-20 h-20 opacity-10">
-                    <div className={`w-full h-full bg-gradient-to-br ${option.gradient} rounded-full transform translate-x-6 -translate-y-6`}></div>
+                    <div
+                      className={`w-full h-full bg-gradient-to-br ${option.gradient} rounded-full transform translate-x-6 -translate-y-6`}
+                    ></div>
                   </div>
-                  
+
                   <span className="text-3xl mr-4 z-10">{option.icon}</span>
                   <div className="z-10">
-                    <div className="font-semibold text-lg text-gray-800">{option.title}</div>
-                    <div className="text-sm text-gray-600 mt-1">{option.description}</div>
+                    <div className="font-semibold text-lg text-gray-800">
+                      {option.title}
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      {option.description}
+                    </div>
                   </div>
-                  
+
                   {formData.type_utilisateur === option.value && (
                     <div className="absolute top-3 right-3 w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
                       <Check className="w-4 h-4 text-white" />
@@ -343,7 +364,9 @@ export const MultiStepSignup: React.FC = () => {
         return (
           <div className="space-y-6">
             <div className="text-center mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Informations personnelles</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                Informations personnelles
+              </h3>
               <p className="text-gray-600 text-sm">
                 Renseignez vos coordonnées de base
               </p>
@@ -351,11 +374,15 @@ export const MultiStepSignup: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="civilite" className="text-gray-700 font-medium">Civilité *</Label>
+                <Label htmlFor="civilite" className="text-gray-700 font-medium">
+                  Civilité *
+                </Label>
                 <select
                   id="civilite"
                   value={formData.civilite}
-                  onChange={(e) => updateFormData({ civilite: e.target.value as any })}
+                  onChange={(e) =>
+                    updateFormData({ civilite: e.target.value as any })
+                  }
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-app-purple focus:border-transparent bg-gray-50 transition-all duration-200"
                   required
                 >
@@ -366,7 +393,9 @@ export const MultiStepSignup: React.FC = () => {
               </div>
 
               <div>
-                <Label htmlFor="prenom" className="text-gray-700 font-medium">Prénom *</Label>
+                <Label htmlFor="prenom" className="text-gray-700 font-medium">
+                  Prénom *
+                </Label>
                 <Input
                   id="prenom"
                   type="text"
@@ -379,7 +408,9 @@ export const MultiStepSignup: React.FC = () => {
               </div>
 
               <div>
-                <Label htmlFor="nom" className="text-gray-700 font-medium">Nom *</Label>
+                <Label htmlFor="nom" className="text-gray-700 font-medium">
+                  Nom *
+                </Label>
                 <Input
                   id="nom"
                   type="text"
@@ -393,7 +424,9 @@ export const MultiStepSignup: React.FC = () => {
             </div>
 
             <div>
-              <Label htmlFor="email" className="text-gray-700 font-medium">Email *</Label>
+              <Label htmlFor="email" className="text-gray-700 font-medium">
+                Email *
+              </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
@@ -409,7 +442,9 @@ export const MultiStepSignup: React.FC = () => {
             </div>
 
             <div>
-              <Label htmlFor="password" className="text-gray-700 font-medium">Mot de passe *</Label>
+              <Label htmlFor="password" className="text-gray-700 font-medium">
+                Mot de passe *
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -427,7 +462,9 @@ export const MultiStepSignup: React.FC = () => {
             </div>
 
             <div>
-              <Label htmlFor="telephone" className="text-gray-700 font-medium">Téléphone</Label>
+              <Label htmlFor="telephone" className="text-gray-700 font-medium">
+                Téléphone
+              </Label>
               <Input
                 id="telephone"
                 type="tel"
@@ -445,13 +482,13 @@ export const MultiStepSignup: React.FC = () => {
           <div className="space-y-6">
             <div className="text-center mb-6">
               <h3 className="text-xl font-bold text-gray-800 mb-2">Adresse</h3>
-              <p className="text-gray-600 text-sm">
-                Où êtes-vous situé(e) ?
-              </p>
+              <p className="text-gray-600 text-sm">Où êtes-vous situé(e) ?</p>
             </div>
 
             <div>
-              <Label htmlFor="adresse" className="text-gray-700 font-medium">Adresse</Label>
+              <Label htmlFor="adresse" className="text-gray-700 font-medium">
+                Adresse
+              </Label>
               <Input
                 id="adresse"
                 type="text"
@@ -463,12 +500,19 @@ export const MultiStepSignup: React.FC = () => {
             </div>
 
             <div>
-              <Label htmlFor="compl_adresse" className="text-gray-700 font-medium">Complément d'adresse</Label>
+              <Label
+                htmlFor="compl_adresse"
+                className="text-gray-700 font-medium"
+              >
+                Complément d'adresse
+              </Label>
               <Input
                 id="compl_adresse"
                 type="text"
                 value={formData.compl_adresse || ""}
-                onChange={(e) => updateFormData({ compl_adresse: e.target.value })}
+                onChange={(e) =>
+                  updateFormData({ compl_adresse: e.target.value })
+                }
                 placeholder="Appartement, étage, etc."
                 className="h-12 bg-gray-50 border-gray-200 focus:border-app-purple focus:ring-app-purple rounded-xl"
               />
@@ -476,12 +520,19 @@ export const MultiStepSignup: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="code_postal" className="text-gray-700 font-medium">Code postal</Label>
+                <Label
+                  htmlFor="code_postal"
+                  className="text-gray-700 font-medium"
+                >
+                  Code postal
+                </Label>
                 <Input
                   id="code_postal"
                   type="text"
                   value={formData.code_postal || ""}
-                  onChange={(e) => updateFormData({ code_postal: e.target.value })}
+                  onChange={(e) =>
+                    updateFormData({ code_postal: e.target.value })
+                  }
                   placeholder="75001"
                   className="h-12 bg-gray-50 border-gray-200 focus:border-app-purple focus:ring-app-purple rounded-xl"
                   maxLength={5}
@@ -489,7 +540,9 @@ export const MultiStepSignup: React.FC = () => {
               </div>
 
               <div>
-                <Label htmlFor="ville" className="text-gray-700 font-medium">Ville *</Label>
+                <Label htmlFor="ville" className="text-gray-700 font-medium">
+                  Ville *
+                </Label>
                 <Input
                   id="ville"
                   type="text"
@@ -503,7 +556,9 @@ export const MultiStepSignup: React.FC = () => {
             </div>
 
             <div>
-              <Label htmlFor="pays" className="text-gray-700 font-medium">Pays</Label>
+              <Label htmlFor="pays" className="text-gray-700 font-medium">
+                Pays
+              </Label>
               <Input
                 id="pays"
                 type="text"
@@ -535,31 +590,49 @@ export const MultiStepSignup: React.FC = () => {
                     <Home className="w-5 h-5 mr-2" />
                     Informations du foyer
                   </h4>
-                  
+
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="nombre_membres" className="text-gray-700 font-medium">Nombre de membres dans le foyer *</Label>
+                      <Label
+                        htmlFor="nombre_membres"
+                        className="text-gray-700 font-medium"
+                      >
+                        Nombre de membres dans le foyer *
+                      </Label>
                       <Input
                         id="nombre_membres"
                         type="number"
                         min="1"
                         max="20"
                         value={formData.nombre_membres || 1}
-                        onChange={(e) => updateFormData({ nombre_membres: parseInt(e.target.value) || 1 })}
+                        onChange={(e) =>
+                          updateFormData({
+                            nombre_membres: parseInt(e.target.value) || 1,
+                          })
+                        }
                         className="h-12 bg-white border-blue-200 focus:border-blue-400 focus:ring-blue-400 rounded-xl"
                         required
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="revenu_mensuel" className="text-gray-700 font-medium">Revenu mensuel du foyer (€)</Label>
+                      <Label
+                        htmlFor="revenu_mensuel"
+                        className="text-gray-700 font-medium"
+                      >
+                        Revenu mensuel du foyer (€)
+                      </Label>
                       <Input
                         id="revenu_mensuel"
                         type="number"
                         min="0"
                         step="0.01"
                         value={formData.revenu_mensuel || ""}
-                        onChange={(e) => updateFormData({ revenu_mensuel: parseFloat(e.target.value) || 0 })}
+                        onChange={(e) =>
+                          updateFormData({
+                            revenu_mensuel: parseFloat(e.target.value) || 0,
+                          })
+                        }
                         placeholder="Montant en euros"
                         className="h-12 bg-white border-blue-200 focus:border-blue-400 focus:ring-blue-400 rounded-xl"
                       />
@@ -580,15 +653,22 @@ export const MultiStepSignup: React.FC = () => {
                     <Store className="w-5 h-5 mr-2" />
                     Informations de l'entreprise
                   </h4>
-                  
+
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="nom_societe" className="text-gray-700 font-medium">Nom de l'entreprise *</Label>
+                      <Label
+                        htmlFor="nom_societe"
+                        className="text-gray-700 font-medium"
+                      >
+                        Nom de l'entreprise *
+                      </Label>
                       <Input
                         id="nom_societe"
                         type="text"
                         value={formData.nom_societe || ""}
-                        onChange={(e) => updateFormData({ nom_societe: e.target.value })}
+                        onChange={(e) =>
+                          updateFormData({ nom_societe: e.target.value })
+                        }
                         placeholder="Nom de votre commerce"
                         className="h-12 bg-white border-purple-200 focus:border-purple-400 focus:ring-purple-400 rounded-xl"
                         required
@@ -596,12 +676,21 @@ export const MultiStepSignup: React.FC = () => {
                     </div>
 
                     <div>
-                      <Label htmlFor="siren" className="text-gray-700 font-medium">Numéro SIREN</Label>
+                      <Label
+                        htmlFor="siren"
+                        className="text-gray-700 font-medium"
+                      >
+                        Numéro SIREN
+                      </Label>
                       <Input
                         id="siren"
                         type="number"
                         value={formData.siren || ""}
-                        onChange={(e) => updateFormData({ siren: parseInt(e.target.value) || 0 })}
+                        onChange={(e) =>
+                          updateFormData({
+                            siren: parseInt(e.target.value) || 0,
+                          })
+                        }
                         placeholder="123456789"
                         className="h-12 bg-white border-purple-200 focus:border-purple-400 focus:ring-purple-400 rounded-xl"
                       />
@@ -622,22 +711,28 @@ export const MultiStepSignup: React.FC = () => {
                     <Heart className="w-5 h-5 mr-2" />
                     Préférences de don
                   </h4>
-                  
+
                   <div className="space-y-4">
                     <div className="flex items-start space-x-3">
                       <input
                         id="est_anonyme"
                         type="checkbox"
                         checked={formData.est_anonyme || false}
-                        onChange={(e) => updateFormData({ est_anonyme: e.target.checked })}
+                        onChange={(e) =>
+                          updateFormData({ est_anonyme: e.target.checked })
+                        }
                         className="mt-1 w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
                       />
                       <div>
-                        <Label htmlFor="est_anonyme" className="text-gray-700 font-medium cursor-pointer">
+                        <Label
+                          htmlFor="est_anonyme"
+                          className="text-gray-700 font-medium cursor-pointer"
+                        >
                           Je souhaite rester anonyme dans mes dons
                         </Label>
                         <p className="text-sm text-pink-600 mt-1">
-                          Si coché, votre nom ne sera pas visible par les familles aidées
+                          Si coché, votre nom ne sera pas visible par les
+                          familles aidées
                         </p>
                       </div>
                     </div>
@@ -649,8 +744,8 @@ export const MultiStepSignup: React.FC = () => {
             <div className="bg-gradient-to-r from-green-50 to-teal-50 p-6 rounded-2xl border border-green-100">
               <p className="text-sm text-green-800 flex items-start">
                 <Shield className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" />
-                Toutes vos informations sont sécurisées et ne seront utilisées que pour
-                améliorer votre expérience sur la plateforme TeleHiba.
+                Toutes vos informations sont sécurisées et ne seront utilisées
+                que pour améliorer votre expérience sur la plateforme TeleHiba.
               </p>
             </div>
           </div>
@@ -699,29 +794,32 @@ export const MultiStepSignup: React.FC = () => {
             </CardTitle>
             <p className="text-gray-600 text-sm mt-1">Marketplace solidaire</p>
           </div>
-          
+
           {/* Modern Step Indicator */}
           <div className="space-y-4">
             {/* Step numbers with lines */}
             <div className="flex justify-between items-center relative">
               {/* Connection line */}
               <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2">
-                <div 
+                <div
                   className="h-full bg-gradient-to-r from-app-pink to-app-purple transition-all duration-500 ease-out"
-                  style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
+                  style={{
+                    width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
+                  }}
                 ></div>
               </div>
-              
+
               {steps.map((step, index) => (
                 <div key={step.id} className="relative z-10">
                   <div
                     className={`
                       w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-lg
-                      ${currentStep > step.id
-                        ? `bg-gradient-to-r ${step.color} text-white scale-110`
-                        : currentStep === step.id
-                        ? `bg-gradient-to-r ${step.color} text-white scale-110 ring-4 ring-white`
-                        : "bg-white text-gray-400 border-2 border-gray-200"
+                      ${
+                        currentStep > step.id
+                          ? `bg-gradient-to-r ${step.color} text-white scale-110`
+                          : currentStep === step.id
+                            ? `bg-gradient-to-r ${step.color} text-white scale-110 ring-4 ring-white`
+                            : "bg-white text-gray-400 border-2 border-gray-200"
                       }
                     `}
                   >
@@ -734,14 +832,16 @@ export const MultiStepSignup: React.FC = () => {
                 </div>
               ))}
             </div>
-            
+
             {/* Step titles */}
             <div className="flex justify-between text-xs">
               {steps.map((step) => (
                 <div
                   key={step.id}
                   className={`text-center max-w-[80px] ${
-                    currentStep >= step.id ? "text-gray-800 font-medium" : "text-gray-500"
+                    currentStep >= step.id
+                      ? "text-gray-800 font-medium"
+                      : "text-gray-500"
                   }`}
                 >
                   <div className="truncate">{step.title}</div>

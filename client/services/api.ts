@@ -32,7 +32,7 @@ import {
   schemas,
   Sanitizer,
   SecurityUtils,
-  RateLimiter
+  RateLimiter,
 } from "../utils/validation";
 
 // Configuration API
@@ -177,9 +177,7 @@ class ApiService {
             throw new Error("Erreur serveur. Réessayez plus tard.");
 
           default:
-            throw new Error(
-              data.message || `Erreur HTTP ${response.status}`,
-            );
+            throw new Error(data.message || `Erreur HTTP ${response.status}`);
         }
       }
 
@@ -209,16 +207,24 @@ class ApiService {
     // Validation avec Zod
     const validation = validateData(schemas.login, credentials);
     if (!validation.success) {
-      const errorMessage = validation.errors?.map(e => e.message).join(", ") || "Données invalides";
+      const errorMessage =
+        validation.errors?.map((e) => e.message).join(", ") ||
+        "Données invalides";
       throw new Error(errorMessage);
     }
 
     // Rate limiting
     const rateLimitKey = `login:${credentials.email}`;
-    const rateLimit = RateLimiter.checkRateLimit(rateLimitKey, 5, 15 * 60 * 1000);
+    const rateLimit = RateLimiter.checkRateLimit(
+      rateLimitKey,
+      5,
+      15 * 60 * 1000,
+    );
     if (!rateLimit.allowed) {
       const minutes = Math.ceil((rateLimit.remainingTime || 0) / 60000);
-      throw new Error(`Trop de tentatives de connexion. Réessayez dans ${minutes} minutes.`);
+      throw new Error(
+        `Trop de tentatives de connexion. Réessayez dans ${minutes} minutes.`,
+      );
     }
 
     // Sanitisation
@@ -241,8 +247,13 @@ class ApiService {
       RateLimiter.resetRateLimit(rateLimitKey);
 
       // Validation et stockage sécurisé du token
-      if (response.data.token && SecurityUtils.isValidJWT(response.data.token)) {
-        const sanitizedUser = SecurityUtils.sanitizeForStorage(response.data.user);
+      if (
+        response.data.token &&
+        SecurityUtils.isValidJWT(response.data.token)
+      ) {
+        const sanitizedUser = SecurityUtils.sanitizeForStorage(
+          response.data.user,
+        );
         localStorage.setItem("auth_token", response.data.token);
         localStorage.setItem("user", JSON.stringify(sanitizedUser));
       } else {
@@ -313,13 +324,19 @@ class ApiService {
     // Validation avec Zod
     const validation = validateData(schemas.register, userData);
     if (!validation.success) {
-      const errorMessage = validation.errors?.map(e => `${e.field}: ${e.message}`).join(", ") || "Données invalides";
+      const errorMessage =
+        validation.errors?.map((e) => `${e.field}: ${e.message}`).join(", ") ||
+        "Données invalides";
       throw new Error(errorMessage);
     }
 
     // Rate limiting pour l'inscription
     const rateLimitKey = `register:${userData.email}`;
-    const rateLimit = RateLimiter.checkRateLimit(rateLimitKey, 3, 60 * 60 * 1000); // 3 tentatives par heure
+    const rateLimit = RateLimiter.checkRateLimit(
+      rateLimitKey,
+      3,
+      60 * 60 * 1000,
+    ); // 3 tentatives par heure
     if (!rateLimit.allowed) {
       throw new Error("Trop de tentatives d'inscription. Réessayez plus tard.");
     }
@@ -330,10 +347,18 @@ class ApiService {
       email: Sanitizer.sanitizeEmail(userData.email),
       nom: Sanitizer.sanitizeString(userData.nom),
       prenom: Sanitizer.sanitizeString(userData.prenom),
-      telephone: userData.telephone ? Sanitizer.sanitizePhone(userData.telephone) : undefined,
-      adresse: userData.adresse ? Sanitizer.sanitizeString(userData.adresse) : undefined,
-      ville: userData.ville ? Sanitizer.sanitizeString(userData.ville) : undefined,
-      nom_societe: userData.nom_societe ? Sanitizer.sanitizeString(userData.nom_societe) : undefined,
+      telephone: userData.telephone
+        ? Sanitizer.sanitizePhone(userData.telephone)
+        : undefined,
+      adresse: userData.adresse
+        ? Sanitizer.sanitizeString(userData.adresse)
+        : undefined,
+      ville: userData.ville
+        ? Sanitizer.sanitizeString(userData.ville)
+        : undefined,
+      nom_societe: userData.nom_societe
+        ? Sanitizer.sanitizeString(userData.nom_societe)
+        : undefined,
     };
 
     const response = await this.makeRequest<AuthResponse>("/users", {
@@ -358,7 +383,9 @@ class ApiService {
     RateLimiter.resetRateLimit(rateLimitKey);
 
     if (response.data.token && SecurityUtils.isValidJWT(response.data.token)) {
-      const sanitizedUser = SecurityUtils.sanitizeForStorage(response.data.user);
+      const sanitizedUser = SecurityUtils.sanitizeForStorage(
+        response.data.user,
+      );
       localStorage.setItem("auth_token", response.data.token);
       localStorage.setItem("user", JSON.stringify(sanitizedUser));
     } else {
@@ -396,7 +423,10 @@ class ApiService {
   }
 
   // ===== USER ENDPOINTS =====
-  async updateProfile(userId: number, profileData: Partial<User>): Promise<User> {
+  async updateProfile(
+    userId: number,
+    profileData: Partial<User>,
+  ): Promise<User> {
     const response = await this.makeRequest<User>(`/users/${userId}`, {
       method: "PUT",
       body: JSON.stringify({
@@ -472,7 +502,10 @@ class ApiService {
     return response.data;
   }
 
-  async updateProduct(id: number, productData: Partial<Produit>): Promise<Produit> {
+  async updateProduct(
+    id: number,
+    productData: Partial<Produit>,
+  ): Promise<Produit> {
     const response = await this.makeRequest<Produit>(`/produits/${id}`, {
       method: "PUT",
       body: JSON.stringify({
@@ -565,7 +598,9 @@ class ApiService {
   }
 
   // ===== COMMANDE ENDPOINTS =====
-  async getCommandesFamille(filters?: OrderFilters): Promise<CommandeFamille[]> {
+  async getCommandesFamille(
+    filters?: OrderFilters,
+  ): Promise<CommandeFamille[]> {
     const params = new URLSearchParams();
     if (filters?.status) {
       params.append("statut", filters.status);
@@ -583,7 +618,9 @@ class ApiService {
     return response.data;
   }
 
-  async getCommandesVendeur(filters?: OrderFilters): Promise<CommandeVendeur[]> {
+  async getCommandesVendeur(
+    filters?: OrderFilters,
+  ): Promise<CommandeVendeur[]> {
     const params = new URLSearchParams();
     if (filters?.status) {
       params.append("statut", filters.status);
@@ -595,7 +632,10 @@ class ApiService {
     return response.data;
   }
 
-  async updateOrderStatus(orderId: number, status: string): Promise<CommandeVendeur> {
+  async updateOrderStatus(
+    orderId: number,
+    status: string,
+  ): Promise<CommandeVendeur> {
     const response = await this.makeRequest<CommandeVendeur>(
       `/commande_vendeurs/${orderId}`,
       {
@@ -629,15 +669,20 @@ class ApiService {
   }
 
   async markNotificationAsRead(id: number): Promise<Notification> {
-    const response = await this.makeRequest<Notification>(`/notifications/${id}`, {
-      method: "PUT",
-      body: JSON.stringify({ vue: true }),
-    });
+    const response = await this.makeRequest<Notification>(
+      `/notifications/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ vue: true }),
+      },
+    );
     return response.data;
   }
 
   // ===== EVALUATION ENDPOINTS =====
-  async createEvaluation(evaluationData: Partial<Evaluation>): Promise<Evaluation> {
+  async createEvaluation(
+    evaluationData: Partial<Evaluation>,
+  ): Promise<Evaluation> {
     const response = await this.makeRequest<Evaluation>("/evaluations", {
       method: "POST",
       body: JSON.stringify({
@@ -657,7 +702,9 @@ class ApiService {
     }
 
     try {
-      const response = await this.makeRequest<User[]>("/users?exists[ville]=true");
+      const response = await this.makeRequest<User[]>(
+        "/users?exists[ville]=true",
+      );
       const cities = [
         ...new Set(response.data.map((user) => user.ville).filter(Boolean)),
       ].sort();
@@ -769,7 +816,9 @@ class ApiService {
   }
 
   async searchFamilies(search: string): Promise<Famille[]> {
-    const response = await this.makeRequest(`/familles?search=${encodeURIComponent(search)}`);
+    const response = await this.makeRequest(
+      `/familles?search=${encodeURIComponent(search)}`,
+    );
     return response.data;
   }
 

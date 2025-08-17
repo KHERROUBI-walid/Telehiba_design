@@ -27,7 +27,7 @@ export class AppError extends Error {
     public type: ErrorType,
     message: string,
     public code?: string | number,
-    public context?: Record<string, any>
+    public context?: Record<string, any>,
   ) {
     super(message);
     this.name = "AppError";
@@ -85,7 +85,7 @@ export class ErrorHandler {
         ErrorType.UNKNOWN,
         "Une erreur inconnue s'est produite",
         undefined,
-        { originalError: String(error), ...context }
+        { originalError: String(error), ...context },
       );
     }
 
@@ -93,12 +93,20 @@ export class ErrorHandler {
     return appError;
   }
 
-  private mapErrorToAppError(error: Error, context?: Record<string, any>): AppError {
+  private mapErrorToAppError(
+    error: Error,
+    context?: Record<string, any>,
+  ): AppError {
     const message = error.message.toLowerCase();
 
     // Erreurs de validation
     if (message.includes("validation") || message.includes("invalid")) {
-      return new AppError(ErrorType.VALIDATION, error.message, undefined, context);
+      return new AppError(
+        ErrorType.VALIDATION,
+        error.message,
+        undefined,
+        context,
+      );
     }
 
     // Erreurs d'authentification
@@ -107,12 +115,22 @@ export class ErrorHandler {
       message.includes("token") ||
       message.includes("session")
     ) {
-      return new AppError(ErrorType.AUTHENTICATION, error.message, undefined, context);
+      return new AppError(
+        ErrorType.AUTHENTICATION,
+        error.message,
+        undefined,
+        context,
+      );
     }
 
     // Erreurs d'autorisation
     if (message.includes("forbidden") || message.includes("permission")) {
-      return new AppError(ErrorType.AUTHORIZATION, error.message, undefined, context);
+      return new AppError(
+        ErrorType.AUTHORIZATION,
+        error.message,
+        undefined,
+        context,
+      );
     }
 
     // Erreurs réseau
@@ -126,12 +144,22 @@ export class ErrorHandler {
 
     // Erreurs de rate limiting
     if (message.includes("rate") || message.includes("too many")) {
-      return new AppError(ErrorType.RATE_LIMIT, error.message, undefined, context);
+      return new AppError(
+        ErrorType.RATE_LIMIT,
+        error.message,
+        undefined,
+        context,
+      );
     }
 
     // Erreurs 404
     if (message.includes("not found") || message.includes("404")) {
-      return new AppError(ErrorType.NOT_FOUND, error.message, undefined, context);
+      return new AppError(
+        ErrorType.NOT_FOUND,
+        error.message,
+        undefined,
+        context,
+      );
     }
 
     // Erreurs serveur (5xx)
@@ -165,7 +193,7 @@ export class ErrorHandler {
 
   private addToQueue(errorInfo: ErrorInfo): void {
     this.errorQueue.push(errorInfo);
-    
+
     // Limiter la taille de la queue
     if (this.errorQueue.length > this.maxQueueSize) {
       this.errorQueue.shift();
@@ -183,7 +211,7 @@ export class ErrorHandler {
     try {
       // Ici vous pouvez intégrer avec des services comme Sentry, LogRocket, etc.
       // Pour l'instant, on log juste l'erreur
-      
+
       // Exemple d'intégration Sentry :
       // if (window.Sentry) {
       //   window.Sentry.captureException(new Error(errorInfo.message), {
@@ -222,25 +250,25 @@ export class ErrorHandler {
     switch (error.type) {
       case ErrorType.VALIDATION:
         return "Les informations saisies ne sont pas valides. Veuillez vérifier vos données.";
-      
+
       case ErrorType.AUTHENTICATION:
         return "Votre session a expiré. Veuillez vous reconnecter.";
-      
+
       case ErrorType.AUTHORIZATION:
         return "Vous n'avez pas les permissions nécessaires pour cette action.";
-      
+
       case ErrorType.NETWORK:
         return "Problème de connexion. Vérifiez votre connexion internet.";
-      
+
       case ErrorType.SERVER:
         return "Erreur du serveur. Veuillez réessayer plus tard.";
-      
+
       case ErrorType.NOT_FOUND:
         return "La ressource demandée n'a pas été trouvée.";
-      
+
       case ErrorType.RATE_LIMIT:
         return "Trop de tentatives. Veuillez patienter avant de réessayer.";
-      
+
       default:
         return "Une erreur inattendue s'est produite. Veuillez réessayer.";
     }
@@ -250,35 +278,29 @@ export class ErrorHandler {
 // Fonctions utilitaires
 export const errorHandler = ErrorHandler.getInstance();
 
-export function handleApiError(error: unknown, context?: Record<string, any>): never {
+export function handleApiError(
+  error: unknown,
+  context?: Record<string, any>,
+): never {
   const appError = errorHandler.handleError(error, context);
   throw appError;
 }
 
-export function createValidationError(message: string, field?: string): AppError {
-  return new AppError(
-    ErrorType.VALIDATION,
-    message,
-    "VALIDATION_ERROR",
-    { field }
-  );
+export function createValidationError(
+  message: string,
+  field?: string,
+): AppError {
+  return new AppError(ErrorType.VALIDATION, message, "VALIDATION_ERROR", {
+    field,
+  });
 }
 
 export function createNetworkError(message: string, url?: string): AppError {
-  return new AppError(
-    ErrorType.NETWORK,
-    message,
-    "NETWORK_ERROR",
-    { url }
-  );
+  return new AppError(ErrorType.NETWORK, message, "NETWORK_ERROR", { url });
 }
 
 export function createAuthError(message: string): AppError {
-  return new AppError(
-    ErrorType.AUTHENTICATION,
-    message,
-    "AUTH_ERROR"
-  );
+  return new AppError(ErrorType.AUTHENTICATION, message, "AUTH_ERROR");
 }
 
 // Hook React pour la gestion d'erreurs
@@ -286,10 +308,10 @@ export function useErrorHandler() {
   const handleError = (error: unknown, context?: Record<string, any>) => {
     const appError = errorHandler.handleError(error, context);
     const userMessage = errorHandler.getUserFriendlyMessage(appError);
-    
+
     // Ici vous pouvez intégrer avec votre système de notifications
     // toast.error(userMessage);
-    
+
     return { error: appError, userMessage };
   };
 

@@ -15,7 +15,7 @@ export const passwordSchema = z
   .max(100, "Mot de passe trop long")
   .regex(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-    "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre"
+    "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre",
   );
 
 export const nameSchema = z
@@ -63,19 +63,37 @@ export const registerSchema = z.object({
   civilite: z.enum(["M.", "Mme", "Mlle"]).optional(),
   telephone: phoneSchema,
   adresse: z.string().max(150, "Adresse trop longue").optional(),
-  compl_adresse: z.string().max(50, "Complément d'adresse trop long").optional(),
+  compl_adresse: z
+    .string()
+    .max(50, "Complément d'adresse trop long")
+    .optional(),
   code_postal: postalCodeSchema,
-  ville: z.string().min(2, "Ville requise").max(70, "Nom de ville trop long").optional(),
+  ville: z
+    .string()
+    .min(2, "Ville requise")
+    .max(70, "Nom de ville trop long")
+    .optional(),
   pays: z.string().max(70, "Nom de pays trop long").optional(),
-  
+
   // Champs spécifiques famille
-  nombre_membres: z.number().min(1, "Au moins 1 membre").max(20, "Maximum 20 membres").optional(),
-  revenu_mensuel: z.number().min(0, "Revenu ne peut pas être négatif").optional(),
-  
+  nombre_membres: z
+    .number()
+    .min(1, "Au moins 1 membre")
+    .max(20, "Maximum 20 membres")
+    .optional(),
+  revenu_mensuel: z
+    .number()
+    .min(0, "Revenu ne peut pas être négatif")
+    .optional(),
+
   // Champs spécifiques vendeur
-  nom_societe: z.string().min(2, "Nom de société requis").max(50, "Nom trop long").optional(),
+  nom_societe: z
+    .string()
+    .min(2, "Nom de société requis")
+    .max(50, "Nom trop long")
+    .optional(),
   siren: sirenSchema,
-  
+
   // Champs spécifiques donateur
   est_anonyme: z.boolean().optional(),
 });
@@ -89,7 +107,10 @@ export const productSchema = z.object({
     .max(70, "Nom trop long")
     .regex(/^[a-zA-ZÀ-ÿ0-9\s'-]+$/, "Caractères invalides"),
   description: z.string().max(200, "Description trop longue").optional(),
-  prix: z.number().min(0.01, "Prix doit être positif").max(9999.99, "Prix trop élevé"),
+  prix: z
+    .number()
+    .min(0.01, "Prix doit être positif")
+    .max(9999.99, "Prix trop élevé"),
   quantite_dispo: z.number().min(0, "Quantité ne peut pas être négative"),
   est_disponible: z.boolean(),
   image_url: z.string().url("URL d'image invalide").optional(),
@@ -109,11 +130,18 @@ export const categorySchema = z.object({
 
 export const orderSchema = z.object({
   famille_id: z.number().positive("Famille requise"),
-  items: z.array(z.object({
-    produit_id: z.number().positive("Produit requis"),
-    quantite: z.number().min(1, "Quantité minimum 1").max(100, "Quantité maximum 100"),
-    prix_unitaire: z.number().min(0.01, "Prix unitaire requis"),
-  })).min(1, "Au moins un produit requis"),
+  items: z
+    .array(
+      z.object({
+        produit_id: z.number().positive("Produit requis"),
+        quantite: z
+          .number()
+          .min(1, "Quantité minimum 1")
+          .max(100, "Quantité maximum 100"),
+        prix_unitaire: z.number().min(0.01, "Prix unitaire requis"),
+      }),
+    )
+    .min(1, "Au moins un produit requis"),
 });
 
 // ===== EVALUATION SCHEMAS =====
@@ -164,7 +192,7 @@ export class ValidationResult<T> {
   constructor(
     public success: boolean,
     public data?: T,
-    public errors?: ValidationError[]
+    public errors?: ValidationError[],
   ) {}
 
   static success<T>(data: T): ValidationResult<T> {
@@ -178,7 +206,7 @@ export class ValidationResult<T> {
 
 export function validateData<T>(
   schema: z.ZodSchema<T>,
-  data: unknown
+  data: unknown,
 ): ValidationResult<T> {
   try {
     const validData = schema.parse(data);
@@ -186,13 +214,13 @@ export function validateData<T>(
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errors: ValidationError[] = error.issues.map((issue) => ({
-        field: issue.path.join('.'),
+        field: issue.path.join("."),
         message: issue.message,
       }));
       return ValidationResult.error(errors);
     }
     return ValidationResult.error([
-      { field: 'unknown', message: 'Erreur de validation inconnue' }
+      { field: "unknown", message: "Erreur de validation inconnue" },
     ]);
   }
 }
@@ -203,8 +231,8 @@ export class Sanitizer {
   static sanitizeString(input: string): string {
     return input
       .trim()
-      .replace(/[<>'"]/g, '') // Remove potential XSS characters
-      .replace(/\s+/g, ' '); // Normalize whitespace
+      .replace(/[<>'"]/g, "") // Remove potential XSS characters
+      .replace(/\s+/g, " "); // Normalize whitespace
   }
 
   static sanitizeEmail(email: string): string {
@@ -212,13 +240,13 @@ export class Sanitizer {
   }
 
   static sanitizePhone(phone: string): string {
-    return phone.replace(/\s/g, '').replace(/[^\d+]/g, '');
+    return phone.replace(/\s/g, "").replace(/[^\d+]/g, "");
   }
 
   static sanitizeNumber(value: unknown): number | null {
-    if (typeof value === 'number') return value;
-    if (typeof value === 'string') {
-      const parsed = parseFloat(value.replace(',', '.'));
+    if (typeof value === "number") return value;
+    if (typeof value === "string") {
+      const parsed = parseFloat(value.replace(",", "."));
       return isNaN(parsed) ? null : parsed;
     }
     return null;
@@ -228,7 +256,7 @@ export class Sanitizer {
     try {
       const parsed = new URL(url);
       // Only allow http/https protocols
-      if (!['http:', 'https:'].includes(parsed.protocol)) {
+      if (!["http:", "https:"].includes(parsed.protocol)) {
         return null;
       }
       return parsed.toString();
@@ -243,12 +271,12 @@ export class Sanitizer {
 export class SecurityUtils {
   static isValidJWT(token: string): boolean {
     try {
-      const parts = token.split('.');
+      const parts = token.split(".");
       if (parts.length !== 3) return false;
-      
+
       const payload = JSON.parse(atob(parts[1]));
       const now = Math.floor(Date.now() / 1000);
-      
+
       return payload.exp > now;
     } catch {
       return false;
@@ -256,10 +284,10 @@ export class SecurityUtils {
   }
 
   static sanitizeForStorage(data: any): any {
-    if (typeof data === 'string') {
+    if (typeof data === "string") {
       return Sanitizer.sanitizeString(data);
     }
-    if (typeof data === 'object' && data !== null) {
+    if (typeof data === "object" && data !== null) {
       const sanitized: any = {};
       for (const [key, value] of Object.entries(data)) {
         sanitized[key] = this.sanitizeForStorage(value);
@@ -272,7 +300,9 @@ export class SecurityUtils {
   static generateCSRFToken(): string {
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join(
+      "",
+    );
   }
 
   static validateCSRFToken(token: string, expectedToken: string): boolean {
@@ -284,12 +314,13 @@ export class SecurityUtils {
 // ===== RATE LIMITING =====
 
 export class RateLimiter {
-  private static attempts: Map<string, { count: number; lastAttempt: number }> = new Map();
+  private static attempts: Map<string, { count: number; lastAttempt: number }> =
+    new Map();
 
   static checkRateLimit(
-    key: string, 
-    maxAttempts: number = 5, 
-    windowMs: number = 15 * 60 * 1000
+    key: string,
+    maxAttempts: number = 5,
+    windowMs: number = 15 * 60 * 1000,
   ): { allowed: boolean; remainingTime?: number } {
     const now = Date.now();
     const attempt = this.attempts.get(key);

@@ -7,6 +7,7 @@
 ## 📋 Vue d'ensemble
 
 TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types d'utilisateurs :
+
 - **Familles** dans le besoin qui recherchent de l'aide alimentaire
 - **Vendeurs** locaux qui proposent leurs produits
 - **Donateurs** généreux qui financent les achats des familles
@@ -14,6 +15,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ## 🛠️ Stack Technique
 
 ### Frontend
+
 - **React 18** avec TypeScript
 - **Vite** pour le build et dev server
 - **Tailwind CSS** pour le styling
@@ -23,6 +25,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 - **TanStack Query** pour la gestion des données
 
 ### Backend
+
 - **Symfony 6+** avec API Platform
 - **MySQL 8.2** base de données
 - **JWT** pour l'authentification
@@ -33,6 +36,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ### Tables Principales
 
 #### 1. **user** (Utilisateurs)
+
 ```sql
 - id (PK)
 - email (UNIQUE)
@@ -48,6 +52,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### 2. **famille** (Familles)
+
 ```sql
 - id (PK)
 - user_id (FK → user)
@@ -57,6 +62,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### 3. **vendeur** (Vendeurs)
+
 ```sql
 - id (PK)
 - user_id (FK → user)
@@ -65,6 +71,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### 4. **donateur** (Donateurs)
+
 ```sql
 - id (PK)
 - user_id (FK → user)
@@ -73,6 +80,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### 5. **produit** (Produits)
+
 ```sql
 - id (PK)
 - vendeur_id (FK → vendeur)
@@ -87,6 +95,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### 6. **categorie** (Catégories)
+
 ```sql
 - id (PK)
 - nom_categorie
@@ -94,6 +103,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### 7. **commande_famille** (Commandes des familles)
+
 ```sql
 - id (PK)
 - famille_id (FK → famille)
@@ -103,6 +113,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### 8. **commande_vendeur** (Commandes par vendeur)
+
 ```sql
 - id (PK)
 - commande_famille_id (FK → commande_famille)
@@ -113,6 +124,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### 9. **ligne_produit** (Lignes de commande)
+
 ```sql
 - id (PK)
 - produit_id (FK → produit)
@@ -125,6 +137,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### 10. **paiement** (Paiements)
+
 ```sql
 - id (PK)
 - donateur_id (FK → donateur)
@@ -136,6 +149,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### 11. **cagnotte** (Cagnottes)
+
 ```sql
 - id (PK)
 - commande_famille_id (FK → commande_famille)
@@ -145,6 +159,7 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ```
 
 #### Autres tables
+
 - **notification** - Notifications utilisateurs
 - **evaluation** - Évaluations vendeurs
 - **probleme** - Signalements
@@ -155,11 +170,13 @@ TeleHiba est une plateforme de solidarité alimentaire qui connecte trois types 
 ## 🚀 Installation et Configuration
 
 ### Prérequis
+
 - Node.js 18+
 - npm ou yarn
 - Backend Symfony API Platform configuré
 
 ### Installation Frontend
+
 ```bash
 # Cloner le projet
 git clone https://github.com/your-repo/telehiba.git
@@ -177,26 +194,28 @@ npm run dev
 ```
 
 ### Configuration Environment
+
 ```env
 # .env
 VITE_API_BASE_URL=/api
 ```
 
 ### Configuration Vite (CORS Proxy)
+
 ```typescript
 // vite.config.ts
 export default defineConfig({
   server: {
     proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:8000',
+      "/api": {
+        target: "http://127.0.0.1:8000",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
-      }
-    }
-  }
-})
+        rewrite: (path) => path.replace(/^\/api/, "/api"),
+      },
+    },
+  },
+});
 ```
 
 ## 📡 Endpoints API Disponibles
@@ -204,9 +223,11 @@ export default defineConfig({
 ### ✅ Endpoints Confirmés (selon votre liste)
 
 #### **Authentification**
+
 - `POST /api/login_check` - Connexion utilisateur
 
 #### **Utilisateurs**
+
 - `POST /api/users` - Création utilisateur (inscription)
 - `GET /api/users/{id}` - Récupération utilisateur
 - `PUT /api/users/{id}` - Modification utilisateur
@@ -214,12 +235,14 @@ export default defineConfig({
 - `DELETE /api/users/{id}` - Suppression utilisateur
 
 #### **Familles**
+
 - `POST /api/familles` - Création famille
 - `GET /api/familles/{id}` - Récupération famille
 - `PUT /api/familles/{id}` - Modification famille
 - `DELETE /api/familles/{id}` - Suppression famille
 
 #### **Vendeurs**
+
 - `GET /api/vendeurs` - Liste des vendeurs
 - `POST /api/vendeurs` - Création vendeur
 - `GET /api/vendeurs/{id}` - Récupération vendeur
@@ -227,6 +250,7 @@ export default defineConfig({
 - `DELETE /api/vendeurs/{id}` - Suppression vendeur
 
 #### **Donateurs**
+
 - `GET /api/donateurs` - Liste des donateurs
 - `POST /api/donateurs` - Création donateur
 - `GET /api/donateurs/{id}` - Récupération donateur
@@ -234,12 +258,14 @@ export default defineConfig({
 - `DELETE /api/donateurs/{id}` - Suppression donateur
 
 #### **Produits**
+
 - `POST /api/produits` - Création produit
 - `GET /api/produits/{id}` - Récupération produit
 - `PUT /api/produits/{id}` - Modification produit
 - `DELETE /api/produits/{id}` - Suppression produit
 
 #### **Catégories**
+
 - `GET /api/categories` - Liste des catégories
 - `POST /api/categories` - Création catégorie
 - `GET /api/categories/{id}` - Récupération catégorie
@@ -247,6 +273,7 @@ export default defineConfig({
 - `DELETE /api/categories/{id}` - Suppression catégorie
 
 #### **Commandes**
+
 - `GET /api/commande_familles` - Liste commandes familles
 - `POST /api/commande_familles` - Création commande famille
 - `GET /api/commande_familles/{id}` - Récupération commande famille
@@ -259,6 +286,7 @@ export default defineConfig({
 - `DELETE /api/commande_vendeurs/{id}` - Suppression commande vendeur
 
 #### **Autres Endpoints**
+
 - `POST /api/ligne_produits` - Gestion lignes produits
 - `POST /api/paiements` - Gestion paiements
 - `GET /api/cagnottes` - Gestion cagnottes
@@ -269,6 +297,7 @@ export default defineConfig({
 ### ❌ Endpoints Manquants (Recommandés)
 
 #### **Collections et Filtres**
+
 ```http
 # Produits avec filtres
 GET /api/produits?categorie.nom_categorie=Légume
@@ -280,7 +309,7 @@ GET /api/produits?est_disponible=true
 GET /api/familles?user.ville=Lyon
 GET /api/familles?nombre_membres[gte]=3
 
-# Vendeurs avec filtres  
+# Vendeurs avec filtres
 GET /api/vendeurs?user.ville=Marseille
 GET /api/vendeurs?nom_societe=boulangerie
 
@@ -290,6 +319,7 @@ GET /api/commande_vendeurs?date_creation[gte]=2025-01-01
 ```
 
 #### **Endpoints Utilitaires**
+
 ```http
 # Statistiques
 GET /api/stats/public
@@ -316,6 +346,7 @@ GET /api/dashboard/donateur/{id}
 ```
 
 #### **Endpoints Workflow**
+
 ```http
 # Validation commandes
 PUT /api/commande_vendeurs/{id}/status
@@ -333,6 +364,7 @@ PUT /api/notifications/{id}/mark-read
 ## 🔧 Configuration Recommandée
 
 ### 1. **Filtres API Platform**
+
 Ajouter dans vos entités Symfony :
 
 ```php
@@ -348,6 +380,7 @@ Ajouter dans vos entités Symfony :
 ```
 
 ### 2. **Groupes de Sérialisation**
+
 ```php
 // src/Entity/User.php
 #[Groups(['user:read', 'user:write'])]
@@ -361,9 +394,11 @@ private string $password;
 ```
 
 ### 3. **Relations Lazy Loading**
+
 Optimiser les performances avec des IRIs au lieu de l'embed complet.
 
 ### 4. **Validation**
+
 ```php
 // src/Entity/User.php
 #[Assert\Email]
@@ -378,6 +413,7 @@ private string $password;
 ## 🎨 Composants Frontend
 
 ### Structure des Composants
+
 ```
 client/
 ├── components/
@@ -419,6 +455,7 @@ client/
 ## 🔐 Sécurité et Bonnes Pratiques
 
 ### ✅ Implémenté
+
 - Validation JWT côté client
 - Headers de sécurité (CSP, XSS Protection)
 - Sanitisation des inputs
@@ -426,6 +463,7 @@ client/
 - CORS configuration via Vite proxy
 
 ### 🔄 À Implémenter
+
 - CSRF Protection
 - Input validation avec Zod
 - Error boundary global
@@ -435,6 +473,7 @@ client/
 ## 📱 PWA et Performance
 
 ### ✅ Implémenté
+
 - Manifest.json configuré
 - Meta tags optimisés pour mobile
 - Service worker ready
@@ -444,6 +483,7 @@ client/
 ### 📊 SEO et Accessibilité
 
 ### ✅ Implémenté
+
 - Meta tags complets (Open Graph, Twitter Card)
 - Structured Data (JSON-LD)
 - Robots.txt optimisé
@@ -453,6 +493,7 @@ client/
 ## 🧪 Tests et Déploiement
 
 ### Tests Recommandés
+
 ```bash
 # Tests unitaires
 npm run test
@@ -465,6 +506,7 @@ npm run test:e2e
 ```
 
 ### Déploiement
+
 ```bash
 # Build de production
 npm run build
@@ -476,6 +518,7 @@ npm run preview
 ## 🚀 Roadmap
 
 ### Phase 1 (Complété ✅)
+
 - [x] Nettoyage architecture
 - [x] Types TypeScript exacts
 - [x] Service API optimisé
@@ -483,12 +526,14 @@ npm run preview
 - [x] SEO et PWA
 
 ### Phase 2 (En cours)
+
 - [ ] Validation et sécurité
 - [ ] Gestion d'erreurs robuste
 - [ ] Tests automatisés
 - [ ] Optimisation performance
 
 ### Phase 3 (Planifié)
+
 - [ ] Notifications push
 - [ ] Paiements intégrés
 - [ ] Chat en temps réel
