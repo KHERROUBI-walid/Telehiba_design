@@ -7,27 +7,10 @@ import React, {
 } from "react";
 import { apiService } from "../services/api";
 import { useAuth } from "./AuthContext";
-
-export interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  vendor: {
-    id?: number;
-    name: string;
-    avatar: string;
-    city: string;
-  };
-  rating: number;
-  description?: string;
-  inStock?: boolean;
-  unit?: string; // e.g., "Kg", "L", "unité"
-}
+import { Produit } from "../types/api";
 
 export interface CartItem {
-  product: Product;
+  product: Produit;
   quantity: number;
 }
 
