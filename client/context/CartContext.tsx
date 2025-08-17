@@ -69,7 +69,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     }
   };
 
-  const addToCart = async (product: Product) => {
+  const addToCart = async (product: Produit) => {
     if (!isAuthenticated || user?.type_utilisateur !== "famille") {
       console.warn("Only families can add items to cart");
       return;
