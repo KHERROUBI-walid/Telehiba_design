@@ -16,23 +16,10 @@ import {
 } from "lucide-react";
 import BottomNavigation from "../components/BottomNavigation";
 import { useCart } from "../context/CartContext";
+import { Produit, Categorie } from "../types/api";
+import { apiService } from "../services/api";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  vendor: {
-    id: number;
-    name: string;
-    avatar: string;
-    city: string;
-  };
-  rating: number;
-  description: string;
-  inStock: boolean;
-}
+// Using Produit from API types
 
 interface Vendor {
   id: number;
