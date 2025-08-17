@@ -206,17 +206,29 @@ class ApiService {
 
   // ===== AUTH ENDPOINTS =====
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    if (!credentials.email || !credentials.password) {
-      throw new Error("Email et mot de passe requis");
+    // Validation avec Zod
+    const validation = validateData(schemas.login, credentials);
+    if (!validation.success) {
+      const errorMessage = validation.errors?.map(e => e.message).join(", ") || "Données invalides";
+      throw new Error(errorMessage);
     }
 
-    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-    if (!emailRegex.test(credentials.email)) {
-      throw new Error("Format d'email invalide");
+    // Rate limiting
+    const rateLimitKey = `login:${credentials.email}`;
+    const rateLimit = RateLimiter.checkRateLimit(rateLimitKey, 5, 15 * 60 * 1000);
+    if (!rateLimit.allowed) {
+      const minutes = Math.ceil((rateLimit.remainingTime || 0) / 60000);
+      throw new Error(`Trop de tentatives de connexion. Réessayez dans ${minutes} minutes.`);
     }
+
+    // Sanitisation
+    const sanitizedCredentials = {
+      email: Sanitizer.sanitizeEmail(credentials.email),
+      password: credentials.password, // Ne pas sanitiser le mot de passe
+    };
 
     if (!this.isApiAvailable()) {
-      return this.handleDemoLogin(credentials);
+      return this.handleDemoLogin(sanitizedCredentials);
     }
 
     try {
