@@ -130,7 +130,13 @@ export const MultiStepSignup: React.FC = () => {
     setError("");
 
     try {
-      await signup(formData);
+      await signup(
+        formData.email,
+        formData.password,
+        formData.nom,
+        formData.prenom,
+        formData.type_utilisateur
+      );
       navigate("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur lors de l'inscription");
