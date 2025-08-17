@@ -339,24 +339,30 @@ class ApiService {
     const response = await this.makeRequest<AuthResponse>("/users", {
       method: "POST",
       body: JSON.stringify({
-        email: userData.email.trim().toLowerCase(),
-        password: userData.password,
-        nom: userData.nom.trim(),
-        prenom: userData.prenom.trim(),
-        type_utilisateur: userData.type_utilisateur,
-        civilite: userData.civilite,
-        telephone: userData.telephone,
-        adresse: userData.adresse,
-        compl_adresse: userData.compl_adresse,
-        code_postal: userData.code_postal,
-        ville: userData.ville,
-        pays: userData.pays || "France",
+        email: sanitizedData.email,
+        password: sanitizedData.password,
+        nom: sanitizedData.nom,
+        prenom: sanitizedData.prenom,
+        type_utilisateur: sanitizedData.type_utilisateur,
+        civilite: sanitizedData.civilite,
+        telephone: sanitizedData.telephone,
+        adresse: sanitizedData.adresse,
+        compl_adresse: sanitizedData.compl_adresse,
+        code_postal: sanitizedData.code_postal,
+        ville: sanitizedData.ville,
+        pays: sanitizedData.pays || "France",
       }),
     });
 
-    if (response.data.token && this.validateToken(response.data.token)) {
+    // Réinitialiser rate limiting en cas de succès
+    RateLimiter.resetRateLimit(rateLimitKey);
+
+    if (response.data.token && SecurityUtils.isValidJWT(response.data.token)) {
+      const sanitizedUser = SecurityUtils.sanitizeForStorage(response.data.user);
       localStorage.setItem("auth_token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("user", JSON.stringify(sanitizedUser));
+    } else {
+      throw new Error("Token d'authentification invalide");
     }
 
     return response.data;
