@@ -201,7 +201,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     } else {
       setCart([]);
     }
-  }, [isAuthenticated, user?.role]);
+  }, [isAuthenticated, user?.type_utilisateur]);
 
   const value: CartContextType = {
     cart,
