@@ -310,25 +310,31 @@ class ApiService {
   }
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
-    // Validation des données
-    if (
-      !userData.email ||
-      !userData.password ||
-      !userData.nom ||
-      !userData.prenom ||
-      !userData.type_utilisateur
-    ) {
-      throw new Error("Tous les champs requis doivent être remplis");
+    // Validation avec Zod
+    const validation = validateData(schemas.register, userData);
+    if (!validation.success) {
+      const errorMessage = validation.errors?.map(e => `${e.field}: ${e.message}`).join(", ") || "Données invalides";
+      throw new Error(errorMessage);
     }
 
-    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-    if (!emailRegex.test(userData.email)) {
-      throw new Error("Format d'email invalide");
+    // Rate limiting pour l'inscription
+    const rateLimitKey = `register:${userData.email}`;
+    const rateLimit = RateLimiter.checkRateLimit(rateLimitKey, 3, 60 * 60 * 1000); // 3 tentatives par heure
+    if (!rateLimit.allowed) {
+      throw new Error("Trop de tentatives d'inscription. Réessayez plus tard.");
     }
 
-    if (userData.password.length < 8) {
-      throw new Error("Le mot de passe doit contenir au moins 8 caractères");
-    }
+    // Sanitisation des données
+    const sanitizedData = {
+      ...userData,
+      email: Sanitizer.sanitizeEmail(userData.email),
+      nom: Sanitizer.sanitizeString(userData.nom),
+      prenom: Sanitizer.sanitizeString(userData.prenom),
+      telephone: userData.telephone ? Sanitizer.sanitizePhone(userData.telephone) : undefined,
+      adresse: userData.adresse ? Sanitizer.sanitizeString(userData.adresse) : undefined,
+      ville: userData.ville ? Sanitizer.sanitizeString(userData.ville) : undefined,
+      nom_societe: userData.nom_societe ? Sanitizer.sanitizeString(userData.nom_societe) : undefined,
+    };
 
     const response = await this.makeRequest<AuthResponse>("/users", {
       method: "POST",
