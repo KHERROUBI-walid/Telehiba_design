@@ -65,7 +65,8 @@ console.log("🏗️  Environment:", {
 
 const App = () => (
   <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CartProvider>
           <TooltipProvider>
@@ -255,7 +256,8 @@ const App = () => (
           </TooltipProvider>
         </CartProvider>
       </AuthProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   </ErrorBoundary>
 );
 
