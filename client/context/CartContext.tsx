@@ -185,7 +185,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const getTotalPrice = () => {
     return cart.reduce(
-      (total, item) => total + item.product.price * item.quantity,
+      (total, item) => total + item.product.prix * item.quantity,
       0,
     );
   };
