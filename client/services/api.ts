@@ -234,23 +234,25 @@ class ApiService {
     try {
       const response = await this.makeRequest<AuthResponse>("/login_check", {
         method: "POST",
-        body: JSON.stringify({
-          email: credentials.email.trim().toLowerCase(),
-          password: credentials.password,
-        }),
+        body: JSON.stringify(sanitizedCredentials),
       });
 
-      if (response.data.token && this.validateToken(response.data.token)) {
+      // Réinitialiser rate limiting en cas de succès
+      RateLimiter.resetRateLimit(rateLimitKey);
+
+      // Validation et stockage sécurisé du token
+      if (response.data.token && SecurityUtils.isValidJWT(response.data.token)) {
+        const sanitizedUser = SecurityUtils.sanitizeForStorage(response.data.user);
         localStorage.setItem("auth_token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("user", JSON.stringify(sanitizedUser));
       } else {
         throw new Error("Token d'authentification invalide");
       }
 
       return response.data;
     } catch (error) {
-      if (this.isDemoCredentials(credentials)) {
-        return this.handleDemoLogin(credentials);
+      if (this.isDemoCredentials(sanitizedCredentials)) {
+        return this.handleDemoLogin(sanitizedCredentials);
       }
       throw error;
     }
