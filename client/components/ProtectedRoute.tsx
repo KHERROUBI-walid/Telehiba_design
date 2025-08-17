@@ -76,7 +76,7 @@ export const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({
       donator: "/donator-dashboard",
     };
 
-    return <Navigate to={roleRedirects[user.role]} replace />;
+    return <Navigate to={roleRedirects[user.type_utilisateur]} replace />;
   }
 
   return <>{children}</>;
