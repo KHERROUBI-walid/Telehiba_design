@@ -1,4 +1,4 @@
-import { UserRole } from "../context/AuthContext";
+// Service API optimisé pour hiba_db - Révision complète 2025
 import {
   User,
   Vendeur,
@@ -10,23 +10,30 @@ import {
   CommandeVendeur,
   LigneProduit,
   Paiement,
+  Cagnotte,
+  Notification,
+  Evaluation,
+  Probleme,
   ApiCollection,
   ApiError,
-  VendorOrderFrontend,
-  ProductFrontend,
-  FamilyFrontend,
+  AuthResponse,
+  LoginRequest,
+  RegisterRequest,
+  ApiResponse,
+  ProductFilters,
+  VendorFilters,
+  FamilyFilters,
+  OrderFilters,
+  OrderStatus,
+  PaymentStatus,
 } from "../types/api";
 
-// Detect environment and set appropriate API URL
+// Configuration API
 const getApiBaseUrl = (): string => {
-  // Always use the environment variable if set, regardless of environment
   if (import.meta.env.VITE_API_BASE_URL) {
-    const url = import.meta.env.VITE_API_BASE_URL;
-    console.log("🔗 Using configured API URL:", url);
-    return url;
+    return import.meta.env.VITE_API_BASE_URL;
   }
 
-  // Detect if running in development or production
   const isLocalhost =
     window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1" ||
@@ -36,44 +43,11 @@ const getApiBaseUrl = (): string => {
     return "http://127.0.0.1:8000/api";
   }
 
-  // For production/cloud environments without explicit API URL, use demo mode
-  console.warn(
-    "🌐 No API URL configured for cloud environment - Running in demo mode",
-  );
+  console.warn("🌐 No API URL configured for cloud environment - Demo mode");
   return "";
 };
 
 const API_BASE_URL = getApiBaseUrl();
-
-interface ApiResponse<T> {
-  data: T;
-  message?: string;
-  success: boolean;
-}
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface RegisterRequest {
-  email: string;
-  password: string;
-  nom: string;
-  prenom: string;
-  type_utilisateur: "famille" | "vendeur" | "donateur";
-  telephone?: string;
-  ville?: string;
-  civilite?: "M." | "Mme" | "Mlle";
-  adresse?: string;
-  code_postal?: string;
-  pays?: string;
-}
-
-interface AuthResponse {
-  token: string;
-  user: User;
-}
 
 class ApiService {
   private isApiAvailable(): boolean {
@@ -88,7 +62,6 @@ class ApiService {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user");
     localStorage.removeItem("refresh_token");
-    // Clear any sensitive data from sessionStorage as well
     sessionStorage.clear();
   }
 
@@ -96,11 +69,9 @@ class ApiService {
     if (!token) return false;
 
     try {
-      // Basic JWT structure validation
       const parts = token.split(".");
       if (parts.length !== 3) return false;
 
-      // Decode payload to check expiration
       const payload = JSON.parse(atob(parts[1]));
       const now = Math.floor(Date.now() / 1000);
 
@@ -129,7 +100,6 @@ class ApiService {
     endpoint: string,
     options: RequestInit = {},
   ): Promise<ApiResponse<T>> {
-    // Check if API is available
     if (!this.isApiAvailable()) {
       throw new Error("API non configurée - Mode démonstration actif");
     }
@@ -140,68 +110,38 @@ class ApiService {
       ...options,
     };
 
-    console.log("🌐 Requête API:", {
-      url,
-      method: config.method || "GET",
-      headers: config.headers,
-      body: options.body ? JSON.parse(options.body as string) : null,
-    });
+    console.log("🌐 API Request:", { url, method: config.method || "GET" });
 
     try {
-      // Ajouter un timeout pour éviter les blocages
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => {
-        console.log("⏰ Timeout de la requête API après 10 secondes");
-        controller.abort();
-      }, 10000);
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-      const configWithTimeout = {
+      const response = await fetch(url, {
         ...config,
         signal: controller.signal,
-      };
-
-      console.log("🚀 Envoi de la requête...");
-      const response = await fetch(url, configWithTimeout);
+      });
 
       clearTimeout(timeoutId);
-      console.log("📡 Réponse API reçue:", {
-        status: response.status,
-        statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries()),
-      });
 
       let data;
       try {
-        console.log("���� Lecture du contenu de la réponse...");
         const responseText = await response.text();
-        console.log("📄 Contenu brut:", responseText);
-
         if (!responseText.trim()) {
-          console.log("⚠️ Réponse vide");
           data = {};
         } else {
           data = JSON.parse(responseText);
-          console.log("✅ JSON parsé:", data);
         }
       } catch (jsonError) {
-        console.error("❌ Erreur parsing JSON:", jsonError);
         if (response.status === 204) {
-          // No content response is valid
-          return {
-            success: true,
-            data: {} as T,
-          };
+          return { success: true, data: {} as T };
         }
         throw new Error("Invalid JSON response from server");
       }
 
       if (!response.ok) {
-        // Handle specific HTTP errors
         switch (response.status) {
           case 401:
-            // Unauthorized - clear auth tokens and redirect securely
             this.clearAuthData();
-            // Use history API instead of direct location change for better security
             if (window.location.pathname !== "/login") {
               window.history.replaceState({}, "", "/login");
               window.location.reload();
@@ -209,15 +149,12 @@ class ApiService {
             throw new Error("Session expirée. Veuillez vous reconnecter.");
 
           case 403:
-            throw new Error(
-              "Accès refusé. Vous n'avez pas les permissions nécessaires.",
-            );
+            throw new Error("Accès refusé. Permissions insuffisantes.");
 
           case 404:
             throw new Error("Ressource non trouvée.");
 
           case 422:
-            // Validation errors from API Platform
             if (data.violations) {
               const violations = data.violations
                 .map((v: any) => v.message)
@@ -227,153 +164,75 @@ class ApiService {
             throw new Error("Données invalides.");
 
           case 429:
-            throw new Error("Trop de requêtes. Veuillez réessayer plus tard.");
+            throw new Error("Trop de requêtes. Réessayez plus tard.");
 
           case 500:
-            throw new Error("Erreur serveur. Veuillez réessayer plus tard.");
+            throw new Error("Erreur serveur. Réessayez plus tard.");
 
           default:
             throw new Error(
-              data.message ||
-                `Erreur HTTP ${response.status}: ${response.statusText}`,
+              data.message || `Erreur HTTP ${response.status}`,
             );
         }
       }
 
-      // For API Platform responses, handle collections and single entities
+      // Handle API Platform responses
       if (data["hydra:member"]) {
-        // API Platform collection response
-        return {
-          success: true,
-          data: data["hydra:member"] as T,
-        };
+        return { success: true, data: data["hydra:member"] as T };
       } else if (data["@type"]) {
-        // Single API Platform entity
-        return {
-          success: true,
-          data: data as T,
-        };
-      } else if (Array.isArray(data)) {
-        // Regular array response
-        return {
-          success: true,
-          data: data as T,
-        };
+        return { success: true, data: data as T };
       } else {
-        // Other response formats
-        return {
-          success: true,
-          data: data as T,
-        };
+        return { success: true, data: data as T };
       }
     } catch (error) {
-      console.error("❌ Erreur dans makeRequest:", error);
-
-      // Handle abort/timeout errors
       if (error.name === "AbortError") {
-        throw new Error("Timeout: La requête a pris trop de temps à répondre");
+        throw new Error("Timeout: Requête trop lente");
       }
 
-      // Network or other errors
-      if (
-        error instanceof TypeError &&
-        (error.message.includes("fetch") ||
-          error.message.includes("Failed to fetch"))
-      ) {
-        // Check if it's a CORS issue or network connectivity issue
-        if (
-          window.location.hostname !== "localhost" &&
-          API_BASE_URL.includes("127.0.0.1")
-        ) {
-          throw new Error(
-            "Serveur API non accessible depuis cet environnement. Configuration requise.",
-          );
-        }
-        throw new Error(
-          "Impossible de contacter le serveur. Vérifiez que l'API est démarrée et accessible.",
-        );
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        throw new Error("Impossible de contacter le serveur API");
       }
 
-      console.error(`API request failed [${endpoint}]:`, error.message);
       throw error;
     }
   }
 
-  // Authentication endpoints
+  // ===== AUTH ENDPOINTS =====
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    // Input validation
     if (!credentials.email || !credentials.password) {
       throw new Error("Email et mot de passe requis");
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
     if (!emailRegex.test(credentials.email)) {
       throw new Error("Format d'email invalide");
     }
 
-    // Check for rate limiting (TEMPORAIREMENT DÉSACTIVÉ POUR LES TESTS)
-    // Nettoyage du rate limiting existant
-    localStorage.removeItem("login_attempts");
-    localStorage.removeItem("last_login_attempt");
-
-    console.log("🧹 Rate limiting nettoyé pour les tests");
-
-    // If API is not available, provide demo authentication
     if (!this.isApiAvailable()) {
       return this.handleDemoLogin(credentials);
     }
 
     try {
-      const loginData = {
-        email: credentials.email.trim().toLowerCase(),
-        password: credentials.password,
-      };
-
-      console.log("🔐 Tentative de login avec:", {
-        email: loginData.email,
-        passwordLength: loginData.password.length,
-        apiUrl: API_BASE_URL + "/login_check",
-      });
-
       const response = await this.makeRequest<AuthResponse>("/login_check", {
         method: "POST",
-        body: JSON.stringify(loginData),
+        body: JSON.stringify({
+          email: credentials.email.trim().toLowerCase(),
+          password: credentials.password,
+        }),
       });
 
-      console.log("✅ Réponse login reçue:", response);
-
-      // Clear failed attempts on success
-      localStorage.removeItem("login_attempts");
-      localStorage.removeItem("last_login_attempt");
-
-      // Validate token before storing
       if (response.data.token && this.validateToken(response.data.token)) {
         localStorage.setItem("auth_token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
       } else {
         throw new Error("Token d'authentification invalide");
       }
 
       return response.data;
     } catch (error) {
-      console.error("❌ Erreur login:", {
-        error: error.message,
-        status: error.status || "N/A",
-        credentials: {
-          email: credentials.email,
-          passwordLength: credentials.password.length,
-        },
-      });
-
-      // Rate limiting temporairement désactivé pour les tests
-      console.log("🔄 Tentative de login échouée - rate limiting désactivé");
-
-      // If API error and we have demo credentials, try demo login
       if (this.isDemoCredentials(credentials)) {
-        console.log("🎭 Utilisation des identifiants de démo");
         return this.handleDemoLogin(credentials);
       }
-
       throw error;
     }
   }
@@ -383,7 +242,6 @@ class ApiService {
       "family@demo.com",
       "vendor@demo.com",
       "donator@demo.com",
-      "admin@demo.com",
     ];
     return (
       demoAccounts.includes(credentials.email.toLowerCase()) &&
@@ -405,10 +263,6 @@ class ApiService {
       type_utilisateur = "donateur";
       prenom = "Donateur";
       nom = "Demo";
-    } else if (email.includes("family")) {
-      type_utilisateur = "famille";
-      prenom = "Famille";
-      nom = "Demo";
     }
 
     const user: User = {
@@ -429,12 +283,13 @@ class ApiService {
 
     const token = `demo_token_${Date.now()}`;
     localStorage.setItem("auth_token", token);
+    localStorage.setItem("user", JSON.stringify(user));
 
     return { token, user };
   }
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
-    // Input validation
+    // Validation des données
     if (
       !userData.email ||
       !userData.password ||
@@ -445,35 +300,16 @@ class ApiService {
       throw new Error("Tous les champs requis doivent être remplis");
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
     if (!emailRegex.test(userData.email)) {
       throw new Error("Format d'email invalide");
     }
 
-    // Password strength validation
     if (userData.password.length < 8) {
       throw new Error("Le mot de passe doit contenir au moins 8 caractères");
     }
 
-    // Name validation
-    if (userData.nom.trim().length < 2 || userData.prenom.trim().length < 2) {
-      throw new Error(
-        "Le nom et pr��nom doivent contenir au moins 2 caractères",
-      );
-    }
-
-    // Type utilisateur validation
-    const validTypes: Array<"famille" | "vendeur" | "donateur"> = [
-      "famille",
-      "vendeur",
-      "donateur",
-    ];
-    if (!validTypes.includes(userData.type_utilisateur)) {
-      throw new Error("Type d'utilisateur invalide");
-    }
-
-    const response = await this.makeRequest<AuthResponse>("/register", {
+    const response = await this.makeRequest<AuthResponse>("/users", {
       method: "POST",
       body: JSON.stringify({
         email: userData.email.trim().toLowerCase(),
@@ -481,48 +317,35 @@ class ApiService {
         nom: userData.nom.trim(),
         prenom: userData.prenom.trim(),
         type_utilisateur: userData.type_utilisateur,
-        telephone: userData.telephone,
-        ville: userData.ville,
         civilite: userData.civilite,
+        telephone: userData.telephone,
         adresse: userData.adresse,
+        compl_adresse: userData.compl_adresse,
         code_postal: userData.code_postal,
+        ville: userData.ville,
         pays: userData.pays || "France",
       }),
     });
 
-    // Validate token before storing
     if (response.data.token && this.validateToken(response.data.token)) {
       localStorage.setItem("auth_token", response.data.token);
-    } else {
-      throw new Error("Token d'authentification invalide");
+      localStorage.setItem("user", JSON.stringify(response.data.user));
     }
 
     return response.data;
   }
 
   async logout(): Promise<void> {
-    try {
-      await this.makeRequest("/auth/logout", {
-        method: "POST",
-      });
-    } catch (error) {
-      // Even if logout fails on server, clear local data
-      console.warn("Logout request failed:", error);
-    } finally {
-      this.clearAuthData();
-    }
+    this.clearAuthData();
   }
 
-  async getCurrentUser(): Promise<AuthResponse["user"]> {
+  async getCurrentUser(): Promise<User> {
     const token = this.getAuthToken();
 
-    // Validate token exists
     if (!token) {
-      this.clearAuthData();
-      throw new Error("Token d'authentification invalide ou expiré");
+      throw new Error("Non authentifié");
     }
 
-    // For demo tokens, return stored user
     if (token.startsWith("demo_token_")) {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -530,49 +353,27 @@ class ApiService {
       }
     }
 
-    // Validate real token
     if (!this.validateToken(token)) {
       this.clearAuthData();
-      throw new Error("Token d'authentification invalide ou expiré");
+      throw new Error("Token expiré");
     }
 
-    // If API not available, return stored user
-    if (!this.isApiAvailable()) {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        return JSON.parse(storedUser);
-      }
-      throw new Error("Aucun utilisateur connecté en mode déconnecté");
-    }
-
-    // Try different endpoints to get current user
-    let response: any;
-    try {
-      response = await this.makeRequest<User>("/users/me");
-    } catch (error) {
-      // Fallback to /me endpoint if /users/me doesn't exist
-      try {
-        response = await this.makeRequest<User>("/me");
-      } catch (fallbackError) {
-        throw new Error("Impossible de récupérer les informations utilisateur");
-      }
-    }
-
-    // L'utilisateur est déjà dans le bon format depuis notre structure API Platform
-    const user = response.data;
-    return user;
+    const response = await this.makeRequest<User>("/users/me");
+    return response.data;
   }
 
-  async updateProfile(profileData: Partial<User>): Promise<User> {
-    const response = await this.makeRequest<User>(`/users/${profileData.id}`, {
+  // ===== USER ENDPOINTS =====
+  async updateProfile(userId: number, profileData: Partial<User>): Promise<User> {
+    const response = await this.makeRequest<User>(`/users/${userId}`, {
       method: "PUT",
       body: JSON.stringify({
         nom: profileData.nom,
         prenom: profileData.prenom,
         telephone: profileData.telephone,
         adresse: profileData.adresse,
-        ville: profileData.ville,
+        compl_adresse: profileData.compl_adresse,
         code_postal: profileData.code_postal,
+        ville: profileData.ville,
         pays: profileData.pays,
       }),
     });
@@ -580,510 +381,260 @@ class ApiService {
     return response.data;
   }
 
-  // Product endpoints
-  async getProducts(filters?: {
-    category?: string;
-    vendor?: number;
-    city?: string;
-    search?: string;
-  }): Promise<Produit[]> {
-    // If API not available, return empty array
+  // ===== PRODUIT ENDPOINTS =====
+  async getProducts(filters?: ProductFilters): Promise<Produit[]> {
     if (!this.isApiAvailable()) {
-      console.warn("API not available - returning empty products list");
       return [];
     }
 
-    try {
-      const params = new URLSearchParams();
+    const params = new URLSearchParams();
 
-      // API Platform filtering - check if these exact parameter names work
-      if (filters?.search) {
-        params.append("nom_produit", filters.search);
-        // Also try searching in description
-        params.append("description", filters.search);
-      }
-      if (filters?.category && filters.category !== "all") {
-        params.append("categorie.nom_categorie", filters.category);
-      }
-      if (filters?.vendor) {
-        params.append("vendeur", filters.vendor.toString());
-      }
-      // For city filtering, we might need to join through vendeur.user.city
-
-      const endpoint = `/produits${params.toString() ? `?${params.toString()}` : ""}`;
-      const response = await this.makeRequest<Produit[]>(endpoint);
-
-      // Transform API Platform data to frontend format
-      return response.data.map((produit) => {
-        // Handle nested relationships - might be IRI strings or objects
-        const vendeur =
-          typeof produit.vendeur === "string" ? null : produit.vendeur;
-        const categorie =
-          typeof produit.categorie === "string" ? null : produit.categorie;
-        const vendeurUser =
-          vendeur && typeof vendeur.user === "object" ? vendeur.user : null;
-
-        return {
-          id: produit.id,
-          name: produit.nom_produit,
-          price: produit.prix,
-          image: produit.image_url || "/placeholder-product.jpg",
-          category: categorie?.nom_categorie?.toLowerCase() || "unknown",
-          vendor: {
-            id: vendeur?.id || 0,
-            name:
-              vendeurUser?.prenom && vendeurUser?.nom
-                ? `${vendeurUser.prenom} ${vendeurUser.nom}`
-                : vendeurUser?.email ||
-                  vendeur?.nom_societe ||
-                  "Vendeur inconnu",
-            city: vendeurUser?.ville || "Ville inconnue",
-          },
-          description: produit.description || "",
-          inStock: produit.est_disponible && produit.quantite_dispo > 0,
-        };
-      });
-    } catch (error) {
-      console.warn("Failed to fetch products:", error);
-      return [];
+    if (filters?.search) {
+      params.append("nom_produit", filters.search);
     }
+    if (filters?.category && filters.category !== "all") {
+      params.append("categorie.nom_categorie", filters.category);
+    }
+    if (filters?.vendor) {
+      params.append("vendeur.id", filters.vendor.toString());
+    }
+    if (filters?.city) {
+      params.append("vendeur.user.ville", filters.city);
+    }
+    if (filters?.minPrice) {
+      params.append("prix[gte]", filters.minPrice.toString());
+    }
+    if (filters?.maxPrice) {
+      params.append("prix[lte]", filters.maxPrice.toString());
+    }
+    if (filters?.available !== undefined) {
+      params.append("est_disponible", filters.available.toString());
+    }
+
+    const endpoint = `/produits${params.toString() ? `?${params.toString()}` : ""}`;
+    const response = await this.makeRequest<Produit[]>(endpoint);
+
+    return response.data;
   }
 
-  async getVendorProducts(vendorId: number): Promise<any[]> {
-    const response = await this.makeRequest<Produit[]>(
-      `/produits?vendeur.id=${vendorId}`,
-    );
-
-    return response.data.map((produit) => ({
-      id: produit.id,
-      name: produit.nom_produit,
-      price: produit.prix,
-      image: produit.image_url,
-      category: produit.categorie.nom_categorie,
-      description: produit.description,
-      inStock: produit.est_disponible,
-    }));
+  async getProduct(id: number): Promise<Produit> {
+    const response = await this.makeRequest<Produit>(`/produits/${id}`);
+    return response.data;
   }
 
-  async createProduct(productData: any): Promise<any> {
+  async createProduct(productData: Partial<Produit>): Promise<Produit> {
     const response = await this.makeRequest<Produit>("/produits", {
       method: "POST",
       body: JSON.stringify({
-        nom_produit: productData.name,
-        prix: productData.price,
+        nom_produit: productData.nom_produit,
         description: productData.description,
-        image_url: productData.image,
-        est_disponible: productData.inStock,
-        quantite_dispo: productData.quantity || 1,
-        categorie: `/api/categories/${productData.categoryId}`,
-        vendeur: `/api/vendeurs/${productData.vendorId}`,
+        prix: productData.prix,
+        quantite_dispo: productData.quantite_dispo,
+        est_disponible: productData.est_disponible,
+        image_url: productData.image_url,
+        categorie: `/api/categories/${productData.categorie_id}`,
+        vendeur: `/api/vendeurs/${productData.vendeur_id}`,
       }),
     });
     return response.data;
   }
 
-  async updateProduct(productId: number, productData: any): Promise<any> {
-    const response = await this.makeRequest<Produit>(`/produits/${productId}`, {
+  async updateProduct(id: number, productData: Partial<Produit>): Promise<Produit> {
+    const response = await this.makeRequest<Produit>(`/produits/${id}`, {
       method: "PUT",
       body: JSON.stringify({
-        nom_produit: productData.name,
-        prix: productData.price,
+        nom_produit: productData.nom_produit,
         description: productData.description,
-        image_url: productData.image,
-        est_disponible: productData.inStock,
-        quantite_dispo: productData.quantity || 1,
-        categorie: productData.categoryId
-          ? `/api/categories/${productData.categoryId}`
-          : undefined,
+        prix: productData.prix,
+        quantite_dispo: productData.quantite_dispo,
+        est_disponible: productData.est_disponible,
+        image_url: productData.image_url,
       }),
     });
     return response.data;
   }
 
-  async deleteProduct(productId: number): Promise<void> {
-    await this.makeRequest(`/produits/${productId}`, {
+  async deleteProduct(id: number): Promise<void> {
+    await this.makeRequest(`/produits/${id}`, {
       method: "DELETE",
     });
   }
 
-  // Category endpoints
-  async getCategories(): Promise<any[]> {
-    // If API not available, return empty array
+  // ===== CATEGORIE ENDPOINTS =====
+  async getCategories(): Promise<Categorie[]> {
     if (!this.isApiAvailable()) {
-      console.warn("API not available - returning empty categories list");
       return [];
     }
 
-    try {
-      const response = await this.makeRequest<Categorie[]>("/categories");
-      return response.data.map((categorie) => ({
-        id: categorie.id,
-        name: categorie.nom_categorie,
-        icon: this.getCategoryIcon(categorie.nom_categorie),
-        gradient: this.getCategoryGradient(categorie.nom_categorie),
-      }));
-    } catch (error) {
-      console.warn("Failed to fetch categories:", error);
-      return [];
-    }
+    const response = await this.makeRequest<Categorie[]>("/categories");
+    return response.data;
   }
 
-  private getCategoryIcon(categoryName: string): string {
-    const name = categoryName.toLowerCase();
-    if (name.includes("légume") || name.includes("vegetable")) return "🥬";
-    if (name.includes("fruit")) return "🍎";
-    if (name.includes("viande") || name.includes("meat")) return "🥩";
-    if (name.includes("poisson") || name.includes("fish")) return "🐟";
-    if (name.includes("boulangerie") || name.includes("bread")) return "🍞";
-    if (name.includes("laitier") || name.includes("dairy")) return "🥛";
-    if (name.includes("épicerie") || name.includes("grocery")) return "🛒";
-    return "🏪"; // Default store icon
-  }
-
-  private getCategoryGradient(categoryName: string): string {
-    const name = categoryName.toLowerCase();
-    if (name.includes("légume")) return "from-green-400 to-green-600";
-    if (name.includes("fruit")) return "from-red-400 to-orange-500";
-    if (name.includes("viande")) return "from-red-500 to-red-700";
-    if (name.includes("poisson")) return "from-blue-400 to-blue-600";
-    if (name.includes("boulangerie")) return "from-yellow-400 to-orange-500";
-    if (name.includes("laitier")) return "from-blue-200 to-blue-400";
-    return "from-app-purple to-app-pink"; // Default gradient
-  }
-
-  async createCategory(categoryData: any): Promise<any> {
+  async createCategory(categoryData: Partial<Categorie>): Promise<Categorie> {
     const response = await this.makeRequest<Categorie>("/categories", {
       method: "POST",
       body: JSON.stringify({
-        nom_categorie: categoryData.name,
+        nom_categorie: categoryData.nom_categorie,
       }),
     });
     return response.data;
   }
 
-  async updateCategory(categoryId: number, categoryData: any): Promise<any> {
-    const response = await this.makeRequest<Categorie>(
-      `/categories/${categoryId}`,
-      {
-        method: "PUT",
-        body: JSON.stringify({
-          nom_categorie: categoryData.name,
-        }),
-      },
-    );
-    return response.data;
-  }
-
-  async deleteCategory(categoryId: number): Promise<void> {
-    await this.makeRequest(`/categories/${categoryId}`, {
-      method: "DELETE",
-    });
-  }
-
-  // Vendor endpoints
-  async getVendors(filters?: {
-    search?: string;
-    city?: string;
-  }): Promise<any[]> {
-    // If API not available, return empty array
+  // ===== VENDEUR ENDPOINTS =====
+  async getVendors(filters?: VendorFilters): Promise<Vendeur[]> {
     if (!this.isApiAvailable()) {
-      console.warn("API not available - returning empty vendors list");
       return [];
     }
 
-    try {
-      const params = new URLSearchParams();
-      if (filters?.search) {
-        params.append("nom_societe", filters.search);
-      }
-      if (filters?.city) {
-        params.append("user.ville", filters.city);
-      }
-
-      const endpoint = `/vendeurs${params.toString() ? `?${params.toString()}` : ""}`;
-      const response = await this.makeRequest<Vendeur[]>(endpoint);
-
-      return response.data.map((vendeur) => {
-        const user = typeof vendeur.user === "object" ? vendeur.user : null;
-        const userName =
-          user?.prenom && user?.nom
-            ? `${user.prenom} ${user.nom}`
-            : user?.email || "Vendeur";
-
-        return {
-          id: vendeur.id,
-          name: userName,
-          city: user?.ville || "Ville inconnue",
-          businessName: vendeur.nom_societe,
-        };
-      });
-    } catch (error) {
-      console.warn("Failed to fetch vendors:", error);
-      return [];
-    }
-  }
-
-  // Vendor Orders endpoints
-  async getVendorOrders(filters?: {
-    status?: string;
-  }): Promise<VendorOrderFrontend[]> {
-    // If API not available, return empty array
-    if (!this.isApiAvailable()) {
-      console.warn("API not available - returning empty orders list");
-      return [];
-    }
-
-    try {
-      const params = new URLSearchParams();
-      if (filters?.status) {
-        // Map frontend status to API status
-        const apiStatus = this.mapFrontendStatusToApi(filters.status);
-        params.append("status", apiStatus);
-      }
-
-      const endpoint = `/commande_vendeurs${params.toString() ? `?${params.toString()}` : ""}`;
-      const response = await this.makeRequest<CommandeVendeur[]>(endpoint);
-
-      return response.data.map((commande) => {
-        // Handle potentially nested or IRI references
-        const famille =
-          typeof commande.famille === "object" ? commande.famille : null;
-        const familleUser =
-          famille && typeof famille.user === "object" ? famille.user : null;
-
-        return {
-          id: commande.id.toString(),
-          customerName:
-            familleUser?.prenom && familleUser?.nom
-              ? `${familleUser.prenom} ${familleUser.nom}`
-              : familleUser?.email || "Client",
-          customerPhone: familleUser?.telephone || "",
-          items:
-            commande.ligneProduits?.map((ligne) => {
-              const produit =
-                typeof ligne.produit === "object" ? ligne.produit : null;
-              return {
-                id: produit?.id || 0,
-                name: produit?.nom_produit || "Produit",
-                price: ligne.prix_unitaire,
-                quantity: ligne.quantite,
-                image: produit?.image_url || "",
-              };
-            }) || [],
-          total: commande.total_commande_v,
-          status: this.mapApiStatusToFrontend(commande.statut),
-          orderDate: commande.date_creation,
-          pickupCode: commande.id.toString(),
-          notes: "",
-        };
-      });
-    } catch (error) {
-      console.warn("Failed to fetch vendor orders:", error);
-      return [];
-    }
-  }
-
-  private mapFrontendStatusToApi(frontendStatus: string): string {
-    switch (frontendStatus) {
-      case "paid_by_donator":
-        return "PENDING";
-      case "preparing":
-        return "PROCESSING";
-      case "ready_for_pickup":
-        return "SHIPPED";
-      default:
-        return frontendStatus.toUpperCase();
-    }
-  }
-
-  private mapApiStatusToFrontend(
-    apiStatus: string,
-  ): "paid_by_donator" | "preparing" | "ready_for_pickup" {
-    switch (apiStatus.toUpperCase()) {
-      case "PENDING":
-      case "ACCEPTED":
-        return "paid_by_donator";
-      case "PROCESSING":
-        return "preparing";
-      case "SHIPPED":
-      case "COMPLETED":
-        return "ready_for_pickup";
-      default:
-        return "paid_by_donator";
-    }
-  }
-
-  async updateOrderStatus(orderId: string, status: string): Promise<any> {
-    const apiStatus =
-      status === "preparing"
-        ? "preparing"
-        : status === "ready_for_pickup"
-          ? "ready"
-          : "paid";
-
-    const response = await this.makeRequest<CommandeVendeur>(
-      `/commande_vendeurs/${orderId}`,
-      {
-        method: "PUT",
-        body: JSON.stringify({ status: apiStatus }),
-      },
-    );
-    return response.data;
-  }
-
-  async verifyPickupCode(orderId: string, code: string): Promise<any> {
-    // This might need a custom endpoint or be handled in the order update
-    const response = await this.makeRequest<any>(
-      `/commande_vendeurs/${orderId}/verify`,
-      {
-        method: "POST",
-        body: JSON.stringify({ pickupCode: code }),
-      },
-    );
-    return response.data;
-  }
-
-  // Family/Donator endpoints
-  async searchFamilies(
-    query: string,
-    city?: string,
-  ): Promise<FamilyFrontend[]> {
-    // If API not available, return empty array
-    if (!this.isApiAvailable()) {
-      console.warn("API not available - returning empty families list");
-      return [];
-    }
-
-    try {
-      const params = new URLSearchParams();
-      if (query) {
-        // Search in user's first name, last name, or email
-        params.append("user.prenom", query);
-      }
-      if (city && city !== "all") {
-        params.append("user.ville", city);
-      }
-
-      const endpoint = `/familles${params.toString() ? `?${params.toString()}` : ""}`;
-      const response = await this.makeRequest<Famille[]>(endpoint);
-
-      return response.data.map((famille) => {
-        const user = typeof famille.user === "object" ? famille.user : null;
-        const familyName =
-          user?.prenom && user?.nom
-            ? `Famille ${user.nom}`
-            : `Famille ${user?.email?.split("@")[0] || "Anonyme"}`;
-
-        return {
-          id: famille.id.toString(),
-          name: familyName,
-          city: user?.ville || "Ville inconnue",
-          memberCount: famille.nombre_membres || 4,
-          monthlyNeed: famille.revenu_mensuel || 500,
-          currentNeed: Math.floor((famille.revenu_mensuel || 500) * 0.3),
-        };
-      });
-    } catch (error) {
-      console.warn("Failed to fetch families:", error);
-      return [];
-    }
-  }
-
-  async sponsorFamily(familyId: string, sponsorshipData: any): Promise<any> {
-    // This would need custom logic - might create a sponsorship relationship
-    const response = await this.makeRequest<any>(
-      `/familles/${familyId}/sponsor`,
-      {
-        method: "POST",
-        body: JSON.stringify(sponsorshipData),
-      },
-    );
-    return response.data;
-  }
-
-  async getPendingPayments(filters?: {
-    city?: string;
-    urgency?: string;
-    search?: string;
-  }): Promise<any[]> {
     const params = new URLSearchParams();
-    params.append("status", "pending");
-    if (filters?.city && filters.city !== "all")
-      params.append("famille.user.ville", filters.city);
+    if (filters?.search) {
+      params.append("nom_societe", filters.search);
+    }
+    if (filters?.city) {
+      params.append("user.ville", filters.city);
+    }
+
+    const endpoint = `/vendeurs${params.toString() ? `?${params.toString()}` : ""}`;
+    const response = await this.makeRequest<Vendeur[]>(endpoint);
+
+    return response.data;
+  }
+
+  async getVendor(id: number): Promise<Vendeur> {
+    const response = await this.makeRequest<Vendeur>(`/vendeurs/${id}`);
+    return response.data;
+  }
+
+  // ===== FAMILLE ENDPOINTS =====
+  async getFamilies(filters?: FamilyFilters): Promise<Famille[]> {
+    if (!this.isApiAvailable()) {
+      return [];
+    }
+
+    const params = new URLSearchParams();
+    if (filters?.search) {
+      params.append("user.prenom", filters.search);
+    }
+    if (filters?.city) {
+      params.append("user.ville", filters.city);
+    }
+    if (filters?.minMembers) {
+      params.append("nombre_membres[gte]", filters.minMembers.toString());
+    }
+    if (filters?.maxMembers) {
+      params.append("nombre_membres[lte]", filters.maxMembers.toString());
+    }
+
+    const endpoint = `/familles${params.toString() ? `?${params.toString()}` : ""}`;
+    const response = await this.makeRequest<Famille[]>(endpoint);
+
+    return response.data;
+  }
+
+  // ===== COMMANDE ENDPOINTS =====
+  async getCommandesFamille(filters?: OrderFilters): Promise<CommandeFamille[]> {
+    const params = new URLSearchParams();
+    if (filters?.status) {
+      params.append("statut", filters.status);
+    }
+    if (filters?.dateFrom) {
+      params.append("date_creation[gte]", filters.dateFrom);
+    }
+    if (filters?.dateTo) {
+      params.append("date_creation[lte]", filters.dateTo);
+    }
 
     const endpoint = `/commande_familles${params.toString() ? `?${params.toString()}` : ""}`;
     const response = await this.makeRequest<CommandeFamille[]>(endpoint);
 
-    return response.data.map((commande) => ({
-      id: commande.id.toString(),
-      familyId: commande.famille.id.toString(),
-      familyName: `${commande.famille.user.prenom} ${commande.famille.user.nom}`,
-      familyCity: commande.famille.user.ville,
-      vendorName: "Vendeur",
-      amount: commande.total || 0,
-      urgency: "normal",
-      requestDate: commande.date_creation,
-    }));
+    return response.data;
   }
 
-  async processPayment(paymentData: {
-    paymentId: string;
-    amount: number;
-    paymentMethodId: string;
-    familyId: string;
-  }): Promise<any> {
+  async getCommandesVendeur(filters?: OrderFilters): Promise<CommandeVendeur[]> {
+    const params = new URLSearchParams();
+    if (filters?.status) {
+      params.append("statut", filters.status);
+    }
+
+    const endpoint = `/commande_vendeurs${params.toString() ? `?${params.toString()}` : ""}`;
+    const response = await this.makeRequest<CommandeVendeur[]>(endpoint);
+
+    return response.data;
+  }
+
+  async updateOrderStatus(orderId: number, status: string): Promise<CommandeVendeur> {
+    const response = await this.makeRequest<CommandeVendeur>(
+      `/commande_vendeurs/${orderId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ statut: status }),
+      },
+    );
+    return response.data;
+  }
+
+  // ===== PAIEMENT ENDPOINTS =====
+  async createPaiement(paiementData: Partial<Paiement>): Promise<Paiement> {
     const response = await this.makeRequest<Paiement>("/paiements", {
       method: "POST",
       body: JSON.stringify({
-        amount: paymentData.amount,
-        status: "completed",
-        paymentMethodId: paymentData.paymentMethodId,
-        commandeFamille: `/api/commande_familles/${paymentData.paymentId}`,
-        donateur: `/api/donateurs/${paymentData.familyId}`, // This should be the current donator ID
+        montant_total: paiementData.montant_total,
+        moyen_paiement: paiementData.moyen_paiement,
+        statut: paiementData.statut || PaymentStatus.PENDING,
+        donateur: `/api/donateurs/${paiementData.donateur_id}`,
       }),
     });
     return response.data;
   }
 
-  // Stats endpoints
-  async getDonatorStats(): Promise<any> {
-    // This would need custom endpoints for aggregated stats
-    return {
-      totalDonated: 0,
-      familiesHelped: 0,
-    };
+  // ===== NOTIFICATION ENDPOINTS =====
+  async getNotifications(userId: number): Promise<Notification[]> {
+    const response = await this.makeRequest<Notification[]>(
+      `/notifications?user.id=${userId}`,
+    );
+    return response.data;
   }
 
-  async getCityStats(): Promise<any[]> {
-    // This would need custom endpoints for city statistics
-    return [];
+  async markNotificationAsRead(id: number): Promise<Notification> {
+    const response = await this.makeRequest<Notification>(`/notifications/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({ vue: true }),
+    });
+    return response.data;
   }
 
-  // Utility endpoints
+  // ===== EVALUATION ENDPOINTS =====
+  async createEvaluation(evaluationData: Partial<Evaluation>): Promise<Evaluation> {
+    const response = await this.makeRequest<Evaluation>("/evaluations", {
+      method: "POST",
+      body: JSON.stringify({
+        note: evaluationData.note,
+        commentaire: evaluationData.commentaire,
+        famille: `/api/familles/${evaluationData.famille_id}`,
+        vendeur: `/api/vendeurs/${evaluationData.vendeur_id}`,
+      }),
+    });
+    return response.data;
+  }
+
+  // ===== UTILITY ENDPOINTS =====
   async getCities(): Promise<string[]> {
-    // If API not available, return empty array
     if (!this.isApiAvailable()) {
-      console.warn("API not available - returning empty cities list");
       return [];
     }
 
     try {
-      // Get unique cities from users - API Platform filtering
-      const response = await this.makeRequest<User[]>(
-        "/users?exists[ville]=true",
-      );
+      const response = await this.makeRequest<User[]>("/users?exists[ville]=true");
       const cities = [
         ...new Set(response.data.map((user) => user.ville).filter(Boolean)),
       ].sort();
       return cities;
-    } catch (error) {
-      console.warn("Failed to fetch cities:", error);
+    } catch {
       return [];
     }
   }
 
-  async getPublicStats(): Promise<any> {
-    // If API not available, return demo stats
+  async getStats(): Promise<any> {
     if (!this.isApiAvailable()) {
       return {
         familiesHelped: 150,
@@ -1096,9 +647,7 @@ class ApiService {
     try {
       const response = await this.makeRequest<any>("/stats/public");
       return response.data;
-    } catch (error) {
-      // Return demo stats on API error
-      console.warn("Public stats not available, using demo values");
+    } catch {
       return {
         familiesHelped: 150,
         vendorsCount: 25,
@@ -1108,50 +657,8 @@ class ApiService {
     }
   }
 
-  // Profile update endpoints
-  async updateEmail(email: string): Promise<any> {
-    const userId = JSON.parse(localStorage.getItem("user") || "{}").id;
-    const response = await this.makeRequest<User>(`/users/${userId}`, {
-      method: "PATCH",
-      headers: {
-        ...this.getAuthHeaders(),
-        "Content-Type": "application/merge-patch+json",
-      },
-      body: JSON.stringify({ email }),
-    });
-    return response.data;
-  }
-
-  async updatePhone(phone: string): Promise<any> {
-    const userId = JSON.parse(localStorage.getItem("user") || "{}").id;
-    const response = await this.makeRequest<User>(`/users/${userId}`, {
-      method: "PATCH",
-      headers: {
-        ...this.getAuthHeaders(),
-        "Content-Type": "application/merge-patch+json",
-      },
-      body: JSON.stringify({ telephone: phone }),
-    });
-    return response.data;
-  }
-
-  // Cart and Order endpoints (these might need custom implementation)
-  async getCart(): Promise<any> {
-    return { items: [] };
-  }
-
-  async addToCart(productId: number, quantity: number = 1): Promise<any> {
-    // Cart logic would need to be implemented
-    return {};
-  }
-
-  async getOrders(): Promise<any[]> {
-    // Get orders for current user
-    return [];
-  }
-
-  // File upload
-  async uploadImage(file: File): Promise<string> {
+  // ===== FILE UPLOAD =====
+  async uploadFile(file: File): Promise<string> {
     const formData = new FormData();
     formData.append("file", file);
 
