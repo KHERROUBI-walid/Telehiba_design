@@ -18,7 +18,7 @@ interface CartContextType {
   cart: CartItem[];
   isCartOpen: boolean;
   isLoading: boolean;
-  addToCart: (product: Product) => Promise<void>;
+  addToCart: (product: Produit) => Promise<void>;
   removeFromCart: (productId: number) => Promise<void>;
   clearItemFromCart: (productId: number) => Promise<void>;
   clearCart: () => Promise<void>;
