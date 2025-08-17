@@ -710,6 +710,94 @@ class ApiService {
     const data = await response.json();
     return data.contentUrl;
   }
+
+  // ===== CART ENDPOINTS =====
+  async getCart(): Promise<any> {
+    const response = await this.makeRequest("/panier");
+    return response.data;
+  }
+
+  async addToCart(productId: number, quantity: number): Promise<any> {
+    const response = await this.makeRequest("/panier/ajouter", {
+      method: "POST",
+      body: JSON.stringify({ produit_id: productId, quantite: quantity }),
+    });
+    return response.data;
+  }
+
+  async updateCartItem(itemId: number, quantity: number): Promise<any> {
+    const response = await this.makeRequest(`/panier/item/${itemId}`, {
+      method: "PUT",
+      body: JSON.stringify({ quantite: quantity }),
+    });
+    return response.data;
+  }
+
+  async removeFromCart(itemId: number): Promise<void> {
+    await this.makeRequest(`/panier/item/${itemId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async clearCart(): Promise<void> {
+    await this.makeRequest("/panier/vider", {
+      method: "DELETE",
+    });
+  }
+
+  // ===== CONTACT ENDPOINTS =====
+  async updateEmail(email: string): Promise<User> {
+    const response = await this.makeRequest("/utilisateurs/email", {
+      method: "PUT",
+      body: JSON.stringify({ email }),
+    });
+    return response.data;
+  }
+
+  async updatePhone(telephone: string): Promise<User> {
+    const response = await this.makeRequest("/utilisateurs/telephone", {
+      method: "PUT",
+      body: JSON.stringify({ telephone }),
+    });
+    return response.data;
+  }
+
+  // ===== DONATOR SPECIFIC ENDPOINTS =====
+  async getPendingPayments(): Promise<any[]> {
+    const response = await this.makeRequest("/donateur/paiements-en-attente");
+    return response.data;
+  }
+
+  async searchFamilies(search: string): Promise<Famille[]> {
+    const response = await this.makeRequest(`/familles?search=${encodeURIComponent(search)}`);
+    return response.data;
+  }
+
+  async getDonatorStats(): Promise<any> {
+    const response = await this.makeRequest("/donateur/statistiques");
+    return response.data;
+  }
+
+  async processPayment(paymentData: any): Promise<any> {
+    const response = await this.makeRequest("/donateur/traiter-paiement", {
+      method: "POST",
+      body: JSON.stringify(paymentData),
+    });
+    return response.data;
+  }
+
+  async sponsorFamily(familyId: number): Promise<any> {
+    const response = await this.makeRequest("/donateur/parrainer-famille", {
+      method: "POST",
+      body: JSON.stringify({ famille_id: familyId }),
+    });
+    return response.data;
+  }
+
+  async getPublicStats(): Promise<any> {
+    const response = await this.makeRequest("/statistiques/publiques");
+    return response.data;
+  }
 }
 
 export const apiService = new ApiService();
