@@ -239,10 +239,14 @@ class ApiService {
     }
 
     try {
-      const response = await this.makeRequest<AuthResponse>("/login_check", {
-        method: "POST",
-        body: JSON.stringify(sanitizedCredentials),
-      });
+      const response = await this.makeRequest<AuthResponse>(
+        "/login_check",
+        {
+          method: "POST",
+          body: JSON.stringify(sanitizedCredentials),
+        },
+        30000 // 30 secondes pour le login qui peut être plus lent
+      );
 
       // Réinitialiser rate limiting en cas de succès
       RateLimiter.resetRateLimit(rateLimitKey);
