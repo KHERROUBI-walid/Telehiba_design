@@ -125,6 +125,8 @@ class ApiService {
       url,
       method: config.method || "GET",
       timeout: timeoutMs,
+      headers: config.headers,
+      hasBody: !!config.body,
     });
 
     try {
