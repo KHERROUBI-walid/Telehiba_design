@@ -134,15 +134,8 @@ class ApiService {
     });
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-      const response = await fetch(url, {
-        ...config,
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
+      // Pas de timeout - laisser la requête s'exécuter jusqu'au bout
+      const response = await fetch(url, config);
 
       console.log("📡 API Response:", {
         url,
