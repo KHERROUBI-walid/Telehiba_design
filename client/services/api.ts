@@ -118,7 +118,11 @@ class ApiService {
       ...options,
     };
 
-    console.log("🌐 API Request:", { url, method: config.method || "GET", timeout: timeoutMs });
+    console.log("🌐 API Request:", {
+      url,
+      method: config.method || "GET",
+      timeout: timeoutMs,
+    });
 
     try {
       const controller = new AbortController();
@@ -245,7 +249,7 @@ class ApiService {
           method: "POST",
           body: JSON.stringify(sanitizedCredentials),
         },
-        30000 // 30 secondes pour le login qui peut être plus lent
+        30000, // 30 secondes pour le login qui peut être plus lent
       );
 
       // Réinitialiser rate limiting en cas de succès
@@ -371,21 +375,21 @@ class ApiService {
       {
         method: "POST",
         body: JSON.stringify({
-        email: sanitizedData.email,
-        password: sanitizedData.password,
-        nom: sanitizedData.nom,
-        prenom: sanitizedData.prenom,
-        type_utilisateur: sanitizedData.type_utilisateur,
-        civilite: sanitizedData.civilite,
-        telephone: sanitizedData.telephone,
-        adresse: sanitizedData.adresse,
-        compl_adresse: sanitizedData.compl_adresse,
-        code_postal: sanitizedData.code_postal,
-        ville: sanitizedData.ville,
-        pays: sanitizedData.pays || "France",
-      }),
+          email: sanitizedData.email,
+          password: sanitizedData.password,
+          nom: sanitizedData.nom,
+          prenom: sanitizedData.prenom,
+          type_utilisateur: sanitizedData.type_utilisateur,
+          civilite: sanitizedData.civilite,
+          telephone: sanitizedData.telephone,
+          adresse: sanitizedData.adresse,
+          compl_adresse: sanitizedData.compl_adresse,
+          code_postal: sanitizedData.code_postal,
+          ville: sanitizedData.ville,
+          pays: sanitizedData.pays || "France",
+        }),
       },
-      30000 // 30 secondes pour l'inscription
+      30000, // 30 secondes pour l'inscription
     );
 
     // Réinitialiser rate limiting en cas de succès
