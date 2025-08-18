@@ -366,9 +366,11 @@ class ApiService {
         : undefined,
     };
 
-    const response = await this.makeRequest<AuthResponse>("/users", {
-      method: "POST",
-      body: JSON.stringify({
+    const response = await this.makeRequest<AuthResponse>(
+      "/users",
+      {
+        method: "POST",
+        body: JSON.stringify({
         email: sanitizedData.email,
         password: sanitizedData.password,
         nom: sanitizedData.nom,
