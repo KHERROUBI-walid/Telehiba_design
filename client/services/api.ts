@@ -106,6 +106,7 @@ class ApiService {
   private async makeRequest<T>(
     endpoint: string,
     options: RequestInit = {},
+    timeoutMs: number = 20000, // Augmenté à 20 secondes par défaut
   ): Promise<ApiResponse<T>> {
     if (!this.isApiAvailable()) {
       throw new Error("API non configurée - Mode démonstration actif");
@@ -117,11 +118,11 @@ class ApiService {
       ...options,
     };
 
-    console.log("🌐 API Request:", { url, method: config.method || "GET" });
+    console.log("🌐 API Request:", { url, method: config.method || "GET", timeout: timeoutMs });
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
       const response = await fetch(url, {
         ...config,
