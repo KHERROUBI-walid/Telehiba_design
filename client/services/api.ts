@@ -794,7 +794,10 @@ class ApiService {
 
   // ===== CONTACT ENDPOINTS =====
   async updateEmail(email: string): Promise<User> {
-    const response = await this.makeRequest("/utilisateurs/email", {
+    if (!this.isApiAvailable()) {
+      throw new Error("API non disponible en mode démonstration");
+    }
+    const response = await this.makeRequest<User>("/utilisateurs/email", {
       method: "PUT",
       body: JSON.stringify({ email }),
     });
@@ -802,7 +805,10 @@ class ApiService {
   }
 
   async updatePhone(telephone: string): Promise<User> {
-    const response = await this.makeRequest("/utilisateurs/telephone", {
+    if (!this.isApiAvailable()) {
+      throw new Error("API non disponible en mode démonstration");
+    }
+    const response = await this.makeRequest<User>("/utilisateurs/telephone", {
       method: "PUT",
       body: JSON.stringify({ telephone }),
     });
@@ -811,24 +817,41 @@ class ApiService {
 
   // ===== DONATOR SPECIFIC ENDPOINTS =====
   async getPendingPayments(): Promise<any[]> {
-    const response = await this.makeRequest("/donateur/paiements-en-attente");
+    if (!this.isApiAvailable()) {
+      return [];
+    }
+    const response = await this.makeRequest<any[]>("/donateur/paiements-en-attente");
     return response.data;
   }
 
   async searchFamilies(search: string): Promise<Famille[]> {
-    const response = await this.makeRequest(
+    if (!this.isApiAvailable()) {
+      return [];
+    }
+    const response = await this.makeRequest<Famille[]>(
       `/familles?search=${encodeURIComponent(search)}`,
     );
     return response.data;
   }
 
   async getDonatorStats(): Promise<any> {
-    const response = await this.makeRequest("/donateur/statistiques");
+    if (!this.isApiAvailable()) {
+      return {
+        totalDonations: 0,
+        familiesHelped: 0,
+        monthlyDonation: 0,
+        impactScore: 0
+      };
+    }
+    const response = await this.makeRequest<any>("/donateur/statistiques");
     return response.data;
   }
 
   async processPayment(paymentData: any): Promise<any> {
-    const response = await this.makeRequest("/donateur/traiter-paiement", {
+    if (!this.isApiAvailable()) {
+      throw new Error("API non disponible en mode démonstration");
+    }
+    const response = await this.makeRequest<any>("/donateur/traiter-paiement", {
       method: "POST",
       body: JSON.stringify(paymentData),
     });
@@ -836,7 +859,10 @@ class ApiService {
   }
 
   async sponsorFamily(familyId: number): Promise<any> {
-    const response = await this.makeRequest("/donateur/parrainer-famille", {
+    if (!this.isApiAvailable()) {
+      throw new Error("API non disponible en mode démonstration");
+    }
+    const response = await this.makeRequest<any>("/donateur/parrainer-famille", {
       method: "POST",
       body: JSON.stringify({ famille_id: familyId }),
     });
@@ -844,7 +870,15 @@ class ApiService {
   }
 
   async getPublicStats(): Promise<any> {
-    const response = await this.makeRequest("/statistiques/publiques");
+    if (!this.isApiAvailable()) {
+      return {
+        totalFamilies: 0,
+        totalVendors: 0,
+        totalDonors: 0,
+        totalProducts: 0
+      };
+    }
+    const response = await this.makeRequest<any>("/statistiques/publiques");
     return response.data;
   }
 }
