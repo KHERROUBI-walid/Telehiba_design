@@ -47,7 +47,8 @@ const getApiBaseUrl = (): string => {
     window.location.hostname === "0.0.0.0";
 
   if (isLocalhost) {
-    return "http://127.0.0.1:8000/api";
+    // Utiliser le proxy Vite au lieu de l'URL directe
+    return "/api";
   }
 
   console.warn("🌐 No API URL configured for cloud environment - Demo mode");
