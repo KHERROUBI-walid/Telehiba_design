@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Performance optimizations for TeleHiba
 // Révision complète 2025
 
@@ -10,9 +12,11 @@ export const lazyLoad = <T extends React.ComponentType<any>>(
   const LazyComponent = React.lazy(importFunc);
   
   return (props: React.ComponentProps<T>) => (
-    <React.Suspense fallback={<div className="flex items-center justify-center p-8">
-      <div className="w-8 h-8 border-2 border-app-purple border-t-transparent rounded-full animate-spin"></div>
-    </div>}>
+    <React.Suspense fallback={
+      <div className="flex items-center justify-center p-8">
+        <div className="w-8 h-8 border-2 border-app-purple border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
       <LazyComponent {...props} />
     </React.Suspense>
   );
@@ -133,5 +137,3 @@ export const logMemoryUsage = () => {
     console.log(`💾 Memory: ${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB used`);
   }
 };
-
-import React from 'react';
