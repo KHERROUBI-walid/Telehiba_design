@@ -820,7 +820,9 @@ class ApiService {
     if (!this.isApiAvailable()) {
       return [];
     }
-    const response = await this.makeRequest<any[]>("/donateur/paiements-en-attente");
+    const response = await this.makeRequest<any[]>(
+      "/donateur/paiements-en-attente",
+    );
     return response.data;
   }
 
@@ -840,7 +842,7 @@ class ApiService {
         totalDonations: 0,
         familiesHelped: 0,
         monthlyDonation: 0,
-        impactScore: 0
+        impactScore: 0,
       };
     }
     const response = await this.makeRequest<any>("/donateur/statistiques");
@@ -862,10 +864,13 @@ class ApiService {
     if (!this.isApiAvailable()) {
       throw new Error("API non disponible en mode démonstration");
     }
-    const response = await this.makeRequest<any>("/donateur/parrainer-famille", {
-      method: "POST",
-      body: JSON.stringify({ famille_id: familyId }),
-    });
+    const response = await this.makeRequest<any>(
+      "/donateur/parrainer-famille",
+      {
+        method: "POST",
+        body: JSON.stringify({ famille_id: familyId }),
+      },
+    );
     return response.data;
   }
 
@@ -875,7 +880,7 @@ class ApiService {
         totalFamilies: 0,
         totalVendors: 0,
         totalDonors: 0,
-        totalProducts: 0
+        totalProducts: 0,
       };
     }
     const response = await this.makeRequest<any>("/statistiques/publiques");

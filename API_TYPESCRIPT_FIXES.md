@@ -5,7 +5,9 @@
 Les erreurs TypeScript dans `client/services/api.ts` ont été résolues :
 
 ### **Ligne 801 & 809** - `updateEmail` & `updatePhone`
+
 **Erreur** : `Type '{}' is missing properties from type 'User'`
+
 ```typescript
 // ❌ Avant
 async updateEmail(email: string): Promise<User> {
@@ -30,7 +32,9 @@ async updateEmail(email: string): Promise<User> {
 ```
 
 ### **Ligne 815** - `getPendingPayments`
+
 **Erreur** : `Type '{}' is missing properties from type 'any[]'`
+
 ```typescript
 // ❌ Avant
 async getPendingPayments(): Promise<any[]> {
@@ -49,7 +53,9 @@ async getPendingPayments(): Promise<any[]> {
 ```
 
 ### **Ligne 822** - `searchFamilies`
+
 **Erreur** : `Type '{}' is missing properties from type 'Famille[]'`
+
 ```typescript
 // ❌ Avant
 async searchFamilies(search: string): Promise<Famille[]> {
@@ -70,16 +76,19 @@ async searchFamilies(search: string): Promise<Famille[]> {
 ## 🔧 Améliorations Apportées
 
 ### 1. **Types Génériques Ajoutés**
+
 - ✅ `makeRequest<User>` au lieu de `makeRequest`
 - ✅ `makeRequest<any[]>` pour les arrays
 - ✅ `makeRequest<Famille[]>` pour les types spécifiques
 
 ### 2. **Gestion Mode Démo**
+
 - ✅ Vérification `isApiAvailable()` avant chaque appel
 - ✅ Retours par défaut appropriés selon le type attendu
 - ✅ Messages d'erreur clairs pour les utilisateurs
 
 ### 3. **Retours Valides par Type**
+
 ```typescript
 // Arrays
 return []; // Au lieu de {}
@@ -89,7 +98,7 @@ return {
   totalDonations: 0,
   familiesHelped: 0,
   monthlyDonation: 0,
-  impactScore: 0
+  impactScore: 0,
 }; // Au lieu de {}
 
 // Errors pour actions critiques
@@ -97,24 +106,28 @@ throw new Error("API non disponible en mode démonstration");
 ```
 
 ### 4. **Méthodes Supplémentaires Corrigées**
+
 - ✅ `getDonatorStats()` - Retourne un objet stats par défaut
 - ✅ `processPayment()` - Lance une erreur appropriée
-- ✅ `sponsorFamily()` - Lance une erreur appropriée  
+- ✅ `sponsorFamily()` - Lance une erreur appropriée
 - ✅ `getPublicStats()` - Retourne des stats publiques par défaut
 
 ## 🎯 Résultat
 
 ### ✅ **TypeScript Clean**
+
 - Toutes les erreurs `Type '{}' is missing properties` corrigées
 - Types génériques appropriés utilisés
 - Compilation réussie sans erreurs dans api.ts
 
 ### ✅ **Mode Démo Robuste**
+
 - Retours cohérents même sans API backend
 - Messages d'erreur informatifs
 - Pas de crash de l'application
 
 ### ✅ **Production Ready**
+
 - Build réussi ✨
 - Types strict respectés
 - Code maintenable et extensible
