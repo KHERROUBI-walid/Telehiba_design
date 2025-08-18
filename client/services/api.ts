@@ -384,7 +384,9 @@ class ApiService {
         ville: sanitizedData.ville,
         pays: sanitizedData.pays || "France",
       }),
-    });
+      },
+      30000 // 30 secondes pour l'inscription
+    );
 
     // Réinitialiser rate limiting en cas de succès
     RateLimiter.resetRateLimit(rateLimitKey);
