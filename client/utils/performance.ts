@@ -6,7 +6,7 @@
  */
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
-  wait: number
+  wait: number,
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout;
   return (...args: Parameters<T>) => {
@@ -26,7 +26,7 @@ export const safeLocalStorage = {
       return null;
     }
   },
-  
+
   setItem: (key: string, value: string): boolean => {
     try {
       localStorage.setItem(key, value);
@@ -35,7 +35,7 @@ export const safeLocalStorage = {
       return false;
     }
   },
-  
+
   removeItem: (key: string): boolean => {
     try {
       localStorage.removeItem(key);
@@ -43,7 +43,7 @@ export const safeLocalStorage = {
     } catch {
       return false;
     }
-  }
+  },
 };
 
 /**
@@ -53,11 +53,11 @@ export const measurePerformance = (name: string, fn: () => any) => {
   const start = performance.now();
   const result = fn();
   const end = performance.now();
-  
-  if (process.env.NODE_ENV === 'development') {
+
+  if (process.env.NODE_ENV === "development") {
     console.log(`⚡ ${name}: ${(end - start).toFixed(2)}ms`);
   }
-  
+
   return result;
 };
 
@@ -65,9 +65,11 @@ export const measurePerformance = (name: string, fn: () => any) => {
  * Memory usage monitoring (development only)
  */
 export const logMemoryUsage = () => {
-  if (process.env.NODE_ENV === 'development' && 'memory' in performance) {
+  if (process.env.NODE_ENV === "development" && "memory" in performance) {
     const memory = (performance as any).memory;
-    console.log(`💾 Memory: ${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB used`);
+    console.log(
+      `💾 Memory: ${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB used`,
+    );
   }
 };
 
@@ -76,14 +78,14 @@ export const logMemoryUsage = () => {
  */
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
-  limit: number
+  limit: number,
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
   return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 }
@@ -92,10 +94,10 @@ export function throttle<T extends (...args: any[]) => any>(
  * Format file size
  */
 export const formatFileSize = (bytes: number): string => {
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  if (bytes === 0) return '0 Bytes';
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  if (bytes === 0) return "0 Bytes";
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+  return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
 };
 
 /**
@@ -114,7 +116,7 @@ export const scrollToElement = (elementId: string, offset = 0): void => {
     const elementPosition = element.offsetTop - offset;
     window.scrollTo({
       top: elementPosition,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   }
 };

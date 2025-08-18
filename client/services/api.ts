@@ -128,7 +128,9 @@ class ApiService {
       timeout: timeoutMs,
       headers: config.headers,
       hasBody: !!config.body,
-      bodyPreview: config.body ? String(config.body).substring(0, 100) + "..." : null,
+      bodyPreview: config.body
+        ? String(config.body).substring(0, 100) + "..."
+        : null,
     });
 
     try {
