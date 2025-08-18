@@ -114,8 +114,11 @@ class ApiService {
 
     const url = `${API_BASE_URL}${endpoint}`;
     const config: RequestInit = {
-      headers: this.getAuthHeaders(),
       ...options,
+      headers: {
+        ...this.getAuthHeaders(),
+        ...(options.headers || {}),
+      },
     };
 
     console.log("🌐 API Request:", {
