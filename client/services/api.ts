@@ -107,7 +107,6 @@ class ApiService {
   private async makeRequest<T>(
     endpoint: string,
     options: RequestInit = {},
-    timeoutMs: number = 20000, // Augmenté à 20 secondes par défaut
   ): Promise<ApiResponse<T>> {
     if (!this.isApiAvailable()) {
       throw new Error("API non configurée - Mode démonstration actif");
