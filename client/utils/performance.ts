@@ -1,86 +1,19 @@
-import React from 'react';
-
 // Performance optimizations for TeleHiba
 // Révision complète 2025
 
 /**
- * Lazy loading helper for dynamic imports
+ * Debounce function for search and API calls
  */
-export const lazyLoad = <T extends React.ComponentType<any>>(
-  importFunc: () => Promise<{ default: T }>
-) => {
-  const LazyComponent = React.lazy(importFunc);
-  
-  return (props: React.ComponentProps<T>) => (
-    <React.Suspense fallback={
-      <div className="flex items-center justify-center p-8">
-        <div className="w-8 h-8 border-2 border-app-purple border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    }>
-      <LazyComponent {...props} />
-    </React.Suspense>
-  );
-};
-
-/**
- * Image optimization with lazy loading
- */
-export const OptimizedImage: React.FC<{
-  src: string;
-  alt: string;
-  className?: string;
-  width?: number;
-  height?: number;
-}> = ({ src, alt, className, width, height }) => {
-  const [isLoaded, setIsLoaded] = React.useState(false);
-  const [error, setError] = React.useState(false);
-
-  return (
-    <div className={`relative overflow-hidden ${className}`}>
-      {!isLoaded && !error && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded"></div>
-      )}
-      {error ? (
-        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400">
-          <span className="text-sm">Image non disponible</span>
-        </div>
-      ) : (
-        <img
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
-          loading="lazy"
-          decoding="async"
-          className={`transition-opacity duration-300 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          onLoad={() => setIsLoaded(true)}
-          onError={() => setError(true)}
-        />
-      )}
-    </div>
-  );
-};
-
-/**
- * Debounce hook for search and API calls
- */
-export const useDebounce = <T>(value: T, delay: number): T => {
-  const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
-
-  React.useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 /**
  * Local storage with error handling
@@ -135,5 +68,53 @@ export const logMemoryUsage = () => {
   if (process.env.NODE_ENV === 'development' && 'memory' in performance) {
     const memory = (performance as any).memory;
     console.log(`💾 Memory: ${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB used`);
+  }
+};
+
+/**
+ * Throttle function
+ */
+export function throttle<T extends (...args: any[]) => any>(
+  func: T,
+  limit: number
+): (...args: Parameters<T>) => void {
+  let inThrottle: boolean;
+  return (...args: Parameters<T>) => {
+    if (!inThrottle) {
+      func(...args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+/**
+ * Format file size
+ */
+export const formatFileSize = (bytes: number): string => {
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  if (bytes === 0) return '0 Bytes';
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+};
+
+/**
+ * Check if device is mobile
+ */
+export const isMobile = (): boolean => {
+  return window.innerWidth <= 768;
+};
+
+/**
+ * Smooth scroll to element
+ */
+export const scrollToElement = (elementId: string, offset = 0): void => {
+  const element = document.getElementById(elementId);
+  if (element) {
+    const elementPosition = element.offsetTop - offset;
+    window.scrollTo({
+      top: elementPosition,
+      behavior: 'smooth'
+    });
   }
 };
