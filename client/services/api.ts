@@ -142,6 +142,13 @@ class ApiService {
 
       clearTimeout(timeoutId);
 
+      console.log("📡 API Response:", {
+        url,
+        status: response.status,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries()),
+      });
+
       let data;
       try {
         const responseText = await response.text();
