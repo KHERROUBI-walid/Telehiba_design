@@ -124,12 +124,12 @@ class ApiService {
     console.log("🌐 API Request:", {
       url,
       method: config.method || "GET",
-      timeout: timeoutMs,
       headers: config.headers,
       hasBody: !!config.body,
       bodyPreview: config.body
         ? String(config.body).substring(0, 100) + "..."
         : null,
+      note: "NO TIMEOUT - Waiting indefinitely",
     });
 
     try {
