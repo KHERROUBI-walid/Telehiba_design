@@ -158,101 +158,25 @@ class ApiService {
 
   private async makeRequest<T>(
     endpoint: string,
-    options: RequestInit = {},
-    timeoutMs: number = 20000, // Augmenté à 20 secondes par défaut
+    options: {
+      method?: string;
+      data?: any;
+      params?: any;
+    } = {}
   ): Promise<ApiResponse<T>> {
     if (!this.isApiAvailable()) {
       throw new Error("API non configurée - Mode démonstration actif");
     }
 
-    const url = `${API_BASE_URL}${endpoint}`;
-    const config: RequestInit = {
-      ...options,
-      headers: {
-        ...this.getAuthHeaders(),
-        ...(options.headers || {}),
-      },
-    };
-
-    console.log("🌐 API Request:", {
-      url,
-      method: config.method || "GET",
-      timeout: timeoutMs,
-      headers: config.headers,
-      hasBody: !!config.body,
-      bodyPreview: config.body
-        ? String(config.body).substring(0, 100) + "..."
-        : null,
-    });
-
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-      const response = await fetch(url, {
-        ...config,
-        signal: controller.signal,
+      const response: AxiosResponse<any> = await this.axiosInstance({
+        url: endpoint,
+        method: options.method || 'GET',
+        data: options.data,
+        params: options.params,
       });
 
-      clearTimeout(timeoutId);
-
-      console.log("📡 API Response:", {
-        url,
-        status: response.status,
-        ok: response.ok,
-        headers: Object.fromEntries(response.headers.entries()),
-      });
-
-      let data;
-      try {
-        const responseText = await response.text();
-        if (!responseText.trim()) {
-          data = {};
-        } else {
-          data = JSON.parse(responseText);
-        }
-      } catch (jsonError) {
-        if (response.status === 204) {
-          return { success: true, data: {} as T };
-        }
-        throw new Error("Invalid JSON response from server");
-      }
-
-      if (!response.ok) {
-        switch (response.status) {
-          case 401:
-            this.clearAuthData();
-            if (window.location.pathname !== "/login") {
-              window.history.replaceState({}, "", "/login");
-              window.location.reload();
-            }
-            throw new Error("Session expirée. Veuillez vous reconnecter.");
-
-          case 403:
-            throw new Error("Accès refusé. Permissions insuffisantes.");
-
-          case 404:
-            throw new Error("Ressource non trouvée.");
-
-          case 422:
-            if (data.violations) {
-              const violations = data.violations
-                .map((v: any) => v.message)
-                .join(", ");
-              throw new Error(`Erreurs de validation: ${violations}`);
-            }
-            throw new Error("Données invalides.");
-
-          case 429:
-            throw new Error("Trop de requêtes. Réessayez plus tard.");
-
-          case 500:
-            throw new Error("Erreur serveur. Réessayez plus tard.");
-
-          default:
-            throw new Error(data.message || `Erreur HTTP ${response.status}`);
-        }
-      }
+      const data = response.data;
 
       // Handle API Platform responses
       if (data["hydra:member"]) {
@@ -263,15 +187,40 @@ class ApiService {
         return { success: true, data: data as T };
       }
     } catch (error) {
-      if (error.name === "AbortError") {
-        throw new Error("Timeout: Requête trop lente");
-      }
+      const axiosError = error as AxiosError;
 
-      if (error instanceof TypeError && error.message.includes("fetch")) {
+      if (axiosError.response) {
+        // Erreur de réponse du serveur
+        const status = axiosError.response.status;
+        const data = axiosError.response.data as any;
+
+        switch (status) {
+          case 403:
+            throw new Error("Accès refusé. Permissions insuffisantes.");
+          case 404:
+            throw new Error("Ressource non trouvée.");
+          case 422:
+            if (data.violations) {
+              const violations = data.violations
+                .map((v: any) => v.message)
+                .join(", ");
+              throw new Error(`Erreurs de validation: ${violations}`);
+            }
+            throw new Error("Données invalides.");
+          case 429:
+            throw new Error("Trop de requêtes. Réessayez plus tard.");
+          case 500:
+            throw new Error("Erreur serveur. Réessayez plus tard.");
+          default:
+            throw new Error(data?.message || `Erreur HTTP ${status}`);
+        }
+      } else if (axiosError.request) {
+        // Erreur de réseau
         throw new Error("Impossible de contacter le serveur API");
+      } else {
+        // Autre erreur
+        throw new Error(axiosError.message || "Erreur inconnue");
       }
-
-      throw error;
     }
   }
 
