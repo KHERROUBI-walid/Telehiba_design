@@ -1,4 +1,5 @@
 // Service API optimisé pour hiba_db - Révision complète 2025
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import {
   User,
   Vendeur,
