@@ -1,5 +1,5 @@
 // Service API optimisé pour hiba_db - Révision complète 2025
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 import {
   User,
   Vendeur,
@@ -67,7 +67,7 @@ class ApiService {
       baseURL: API_BASE_URL,
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json",
+        Accept: "application/json",
         "X-Requested-With": "XMLHttpRequest",
       },
       // Pas de timeout - laisser jusqu'à ce que ça réponde
@@ -90,7 +90,7 @@ class ApiService {
         });
         return config;
       },
-      (error) => Promise.reject(error)
+      (error) => Promise.reject(error),
     );
 
     // Intercepteur pour gérer les réponses et erreurs
@@ -121,7 +121,7 @@ class ApiService {
         }
 
         return Promise.reject(error);
-      }
+      },
     );
   }
 
@@ -162,7 +162,7 @@ class ApiService {
       method?: string;
       data?: any;
       params?: any;
-    } = {}
+    } = {},
   ): Promise<ApiResponse<T>> {
     if (!this.isApiAvailable()) {
       throw new Error("API non configurée - Mode démonstration actif");
@@ -171,7 +171,7 @@ class ApiService {
     try {
       const response: AxiosResponse<any> = await this.axiosInstance({
         url: endpoint,
-        method: options.method || 'GET',
+        method: options.method || "GET",
         data: options.data,
         params: options.params,
       });
@@ -260,13 +260,10 @@ class ApiService {
     }
 
     try {
-      const response = await this.makeRequest<AuthResponse>(
-        "/login_check",
-        {
-          method: "POST",
-          data: sanitizedCredentials,
-        }
-      );
+      const response = await this.makeRequest<AuthResponse>("/login_check", {
+        method: "POST",
+        data: sanitizedCredentials,
+      });
 
       // Réinitialiser rate limiting en cas de succès
       RateLimiter.resetRateLimit(rateLimitKey);
