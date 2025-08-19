@@ -59,6 +59,72 @@ const getApiBaseUrl = (): string => {
 const API_BASE_URL = getApiBaseUrl();
 
 class ApiService {
+  private axiosInstance: AxiosInstance;
+
+  constructor() {
+    // Configuration axios sans timeout
+    this.axiosInstance = axios.create({
+      baseURL: API_BASE_URL,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      // Pas de timeout - laisser jusqu'à ce que ça réponde
+      timeout: 0,
+    });
+
+    // Intercepteur pour ajouter le token automatiquement
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        const token = this.getAuthToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        console.log("🌐 Axios Request:", {
+          url: config.url,
+          method: config.method?.toUpperCase(),
+          baseURL: config.baseURL,
+          headers: config.headers,
+          hasData: !!config.data,
+        });
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    // Intercepteur pour gérer les réponses et erreurs
+    this.axiosInstance.interceptors.response.use(
+      (response) => {
+        console.log("📡 Axios Response:", {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.config.url,
+        });
+        return response;
+      },
+      (error: AxiosError) => {
+        console.log("❌ Axios Error:", {
+          message: error.message,
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          url: error.config?.url,
+        });
+
+        // Gestion des erreurs d'authentification
+        if (error.response?.status === 401) {
+          this.clearAuthData();
+          if (window.location.pathname !== "/login") {
+            window.history.replaceState({}, "", "/login");
+            window.location.reload();
+          }
+        }
+
+        return Promise.reject(error);
+      }
+    );
+  }
+
   private isApiAvailable(): boolean {
     return Boolean(API_BASE_URL);
   }
@@ -88,21 +154,6 @@ class ApiService {
     } catch {
       return false;
     }
-  }
-
-  private getAuthHeaders(): HeadersInit {
-    const token = this.getAuthToken();
-    const headers: HeadersInit = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "X-Requested-With": "XMLHttpRequest",
-    };
-
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-
-    return headers;
   }
 
   private async makeRequest<T>(
