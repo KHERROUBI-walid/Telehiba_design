@@ -264,9 +264,8 @@ class ApiService {
         "/login_check",
         {
           method: "POST",
-          body: JSON.stringify(sanitizedCredentials),
-        },
-        30000, // 30 secondes pour le login qui peut être plus lent
+          data: sanitizedCredentials,
+        }
       );
 
       // Réinitialiser rate limiting en cas de succès
