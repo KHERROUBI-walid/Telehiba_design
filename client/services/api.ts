@@ -387,7 +387,7 @@ class ApiService {
       "/users",
       {
         method: "POST",
-        body: JSON.stringify({
+        data: {
           email: sanitizedData.email,
           password: sanitizedData.password,
           nom: sanitizedData.nom,
@@ -400,9 +400,8 @@ class ApiService {
           code_postal: sanitizedData.code_postal,
           ville: sanitizedData.ville,
           pays: sanitizedData.pays || "France",
-        }),
-      },
-      30000, // 30 secondes pour l'inscription
+        },
+      }
     );
 
     // Réinitialiser rate limiting en cas de succès
