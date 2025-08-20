@@ -162,7 +162,7 @@ class ApiService {
       method?: string;
       data?: any;
       params?: any;
-    } = {}
+    } = {},
   ): Promise<ApiResponse<T>> {
     if (!this.isApiAvailable()) {
       throw new Error("API non configurée - Mode démonstration actif");
@@ -171,7 +171,7 @@ class ApiService {
     try {
       const response: AxiosResponse<any> = await this.axiosInstance({
         url: endpoint,
-        method: options.method || 'GET',
+        method: options.method || "GET",
         data: options.data,
         params: options.params,
       });
@@ -383,26 +383,23 @@ class ApiService {
         : undefined,
     };
 
-    const response = await this.makeRequest<AuthResponse>(
-      "/users",
-      {
-        method: "POST",
-        data: {
-          email: sanitizedData.email,
-          password: sanitizedData.password,
-          nom: sanitizedData.nom,
-          prenom: sanitizedData.prenom,
-          type_utilisateur: sanitizedData.type_utilisateur,
-          civilite: sanitizedData.civilite,
-          telephone: sanitizedData.telephone,
-          adresse: sanitizedData.adresse,
-          compl_adresse: sanitizedData.compl_adresse,
-          code_postal: sanitizedData.code_postal,
-          ville: sanitizedData.ville,
-          pays: sanitizedData.pays || "France",
-        },
-      }
-    );
+    const response = await this.makeRequest<AuthResponse>("/users", {
+      method: "POST",
+      data: {
+        email: sanitizedData.email,
+        password: sanitizedData.password,
+        nom: sanitizedData.nom,
+        prenom: sanitizedData.prenom,
+        type_utilisateur: sanitizedData.type_utilisateur,
+        civilite: sanitizedData.civilite,
+        telephone: sanitizedData.telephone,
+        adresse: sanitizedData.adresse,
+        compl_adresse: sanitizedData.compl_adresse,
+        code_postal: sanitizedData.code_postal,
+        ville: sanitizedData.ville,
+        pays: sanitizedData.pays || "France",
+      },
+    });
 
     // Réinitialiser rate limiting en cas de succès
     RateLimiter.resetRateLimit(rateLimitKey);
